@@ -2,8 +2,10 @@ package services
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"search/config"
 	"search/dto"
 	client "search/services/repositories"
 	e "search/utils/errors"
@@ -27,7 +29,7 @@ func NewSolrServiceImpl(
 // agrega un hotel al motor de búsqueda Solr
 func (s *SolrService) Add(id string) e.ApiError {
 	var hotelDto dto.HotelDto
-	resp, err := http.Get("http://host.docker.internal:8090/properties/" + id + "/id") //corregir URL
+	resp, err := http.Get(fmt.Sprintf("http://%s:%d/items/%s", config.HOTELSHOST, config.HOTELSPORT, id))
 	if err != nil {
 		logger.Debugf("error getting hotel %s: %v", id, err)
 		return e.NewBadRequestApiError("error getting hotel " + id)

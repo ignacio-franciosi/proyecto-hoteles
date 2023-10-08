@@ -2,6 +2,7 @@ package solrController
 
 import (
 	"net/http"
+	"search/config"
 	"search/dto"
 	"search/services"
 	client "search/services/repositories"
@@ -14,7 +15,7 @@ import (
 
 var (
 	Solr = services.NewSolrServiceImpl(
-		(*client.SolrClient)(con.NewSolrClient("solr", 8983, "hotel")),
+		(*client.SolrClient)(con.NewSolrClient(config.SOLRHOST, config.SOLRPORT, config.SOLRCOLLECTION)),
 	)
 )
 

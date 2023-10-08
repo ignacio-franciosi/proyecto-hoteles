@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
-
+	"search/config"
 	"search/dto"
 	e "search/utils/errors"
 	"strings"
@@ -53,7 +54,7 @@ func (sc *SolrClient) GetQuery(query string) (dto.HotelsArrayDto, e.ApiError) {
 	var hotelsArrayDto dto.HotelsArrayDto
 	query = strings.Replace(query, " ", "%20", -1)
 
-	q, err := http.Get("http://host.docker.internal:8983/solr/property/select?q=" + query + "&df=text")
+	q, err := http.Get(fmt.Sprintf("http://%s:%d/solr/items/select?q=%s%s%s", config.SOLRHOST, config.SOLRPORT, "%3A", query))
 
 	if err != nil {
 		return hotelsArrayDto, e.NewBadRequestApiError("error getting from solr")
