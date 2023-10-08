@@ -29,7 +29,7 @@ func NewSolrServiceImpl(
 // agrega un hotel al motor de búsqueda Solr
 func (s *SolrService) Add(id string) e.ApiError {
 	var hotelDto dto.HotelDto
-	resp, err := http.Get(fmt.Sprintf("http://%s:%d/items/%s", config.HOTELSHOST, config.HOTELSPORT, id))
+	resp, err := http.Get(fmt.Sprintf("http://%s:%d/hotels/%s", config.HOTELSHOST, config.HOTELSPORT, id))
 	if err != nil {
 		logger.Debugf("error getting hotel %s: %v", id, err)
 		return e.NewBadRequestApiError("error getting hotel " + id)

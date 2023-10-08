@@ -54,7 +54,7 @@ func (sc *SolrClient) GetQuery(query string) (dto.HotelsArrayDto, e.ApiError) {
 	var hotelsArrayDto dto.HotelsArrayDto
 	query = strings.Replace(query, " ", "%20", -1)
 
-	q, err := http.Get(fmt.Sprintf("http://%s:%d/solr/items/select?q=%s%s%s", config.SOLRHOST, config.SOLRPORT, "%3A", query))
+	q, err := http.Get(fmt.Sprintf("http://%s:%d/solr/hotels/select?q=%s", config.SOLRHOST, config.SOLRPORT, query))
 
 	if err != nil {
 		return hotelsArrayDto, e.NewBadRequestApiError("error getting from solr")
