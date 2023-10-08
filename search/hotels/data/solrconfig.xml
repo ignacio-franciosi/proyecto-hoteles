@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <luceneMatchVersion>LUCENE_CURRENT</luceneMatchVersion>
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-core-.*\.jar" />
+  <lib dir="${solr.install.dir:../../../..}/dist/solrj-lib/" regex=".*\.jar" />
+  <dataDir>${solr.data.dir:}</dataDir>
+  <directoryFactory name="DirectoryFactory"
+                    class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}">
+    <int name="maxMergeSize">134217728</int>
+    <int name="maxCachedMB">128</int>
+  </directoryFactory>
+  <updateHandler class="solr.DirectUpdateHandler2">
+    <updateLog>
+      <str name="dir">${solr.ulog.dir:}</str>
+    </updateLog>
+  </updateHandler>
+  <requestDispatcher handleSelect="false" >
+    <requestParsers enableRemoteStreaming="false"
+                    multipartUploadLimitInKB="2048000"/>
+  </requestDispatcher>
+</config>

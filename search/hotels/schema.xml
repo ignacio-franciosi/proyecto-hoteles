@@ -1,0 +1,27 @@
+<schema name="hotels" version="1.5">
+  <fields>
+    <field name="id" type="int" indexed="true" stored="true" required="true"/>
+    <field name="tittle" type="string" indexed="true" stored="true"/>
+    <field name="description" type="text_general" indexed="true" stored="true"/>
+    <field name="rooms" type="int" indexed="true" stored="true"/>
+    <field name="assessment" type="int" indexed="true" stored="true"/>
+    <field name="price" type="float" indexed="true" stored="true"/>
+    <field name="gym" type="bool" indexed="true" stored="true"/>
+    <field name="wifi" type="bool" indexed="true" stored="true"/>
+    <field name="parking" type="bool" indexed="true" stored="true"/>
+    <field name="bidet" type="bool" indexed="true" stored="true"/>
+    <field name="pool" type="bool" indexed="true" stored="true"/>
+  </fields>
+  <uniqueKey>id</uniqueKey>
+  <types>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+    <fieldType name="float" class="solr.FloatPointField" sortMissingLast="true"/>
+    <fieldType name="int" class="solr.TrieIntField" sortMissingLast="true"/>
+    <fieldType name="text_General" class="solr.TextField" sortMissingLast="true">
+      <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+  </types>
+</schema>
