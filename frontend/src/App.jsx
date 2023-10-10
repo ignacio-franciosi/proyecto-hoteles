@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer.jsx';
-import Home from './pages/Home.jsx'
-import LoginButton from './components/LoginButton.jsx'
-import './App.css'
+import Home from './pages/Home.jsx';
+import Login from './pages/Login.jsx';
+import LoginButton from './components/LoginButton.jsx';
+import BackButton from "./components/BackButton.jsx";
+import './App.css';
 
 const App = ()=> {
 
@@ -13,9 +15,11 @@ const App = ()=> {
     <div>
         <Router>
             <Header />
+            <BackButton />
             <LoginButton />
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path ="/login" element={<Login />} />
             </Routes>
             <Footer />
         </Router>

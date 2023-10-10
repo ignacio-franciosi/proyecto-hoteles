@@ -4,7 +4,7 @@ import './Components.css'
 const Header = () => {
         return (
             <header id="header">
-                <h1> HOTELES LAS TRES LECHES</h1>
+                <h1> Hoteles.com</h1>
             </header>
 
         );
