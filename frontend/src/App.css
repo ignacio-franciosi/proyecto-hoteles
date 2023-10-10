@@ -1,42 +1,84 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/*ESTILOS DEL HOME*/
+#h1Home{
+  text-Align: center;
+  color: #ffffff;
+  font-family: Georgia, serif;
+  position: absolute;
+  top: 17%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+html,body{
+  background-color: #CBE4DE;
+  background-image: url('images/home/suiza.jpg');
+  background-size: cover;
+}
+#formHome{
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+  display: grid;
+  align-Items: center;
+  background-color: #424242;
+  padding: 2rem;
+  border-radius: 40px;
+  width: 30%;
+  box-shadow: 5px 5px 5px 5px rgb(104, 101, 101);
+  #inputCity, #inputFrom, #inputTo{
+    margin-Bottom: 10px;
+    padding: 15px;
+    background-color: #424242;
+    border: 1px solid;
+    border-radius: 15px;
+    font-size: 15px;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  #ButonSearchHome{
+    background-Color: #fd9e32;
+    color: #ffffff;
+    padding: 8px 16px;
+    text-shadow: 1px 1px 2px black;
   }
 }
-
-.card {
-  padding: 2em;
+/*ESTILOS DEL LOGIN*/
+#h1Login{
+  font-family: Georgia, serif;
+  text-Align: center;
+  color:#ffffff;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
-.read-the-docs {
-  color: #888;
+#formLogin{
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#formLogin{
+  text-align: center;
+  display: grid;
+  align-Items: center;
+  background-color: #424242;
+  padding: 2rem;
+  border-radius: 40px;
+  width: 30%;
+  padding-top: 30px;
+  box-shadow: 5px 5px 5px 5px rgb(104, 101, 101);
+}
+#inputEmailLogin,#inputPasswordLogin{
+  margin-Bottom: 10px;
+  padding: 15px;
+  background-color: #424242;
+  border: 1px solid;
+  border-radius: 15px;
+  font-size: 15px;
+}
+#botonLogin{
+  background-Color: #fd9e32;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-shadow: 1px 1px 2px black;
 }
