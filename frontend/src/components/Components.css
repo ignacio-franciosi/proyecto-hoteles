@@ -1,5 +1,6 @@
 /* comentario*/
 header{
+    font-family: Georgia, serif;
     text-Align: center;
     background-color: #714a31;
     color: #c1d3d4;
@@ -16,6 +17,13 @@ header{
     color: #ffffff;
     background-color: rgba(83, 91, 242, 0);
 
+}
+#backButton{
+    position: absolute;
+    left: 2%;
+    top: 8%;
+    color: #ffffff;
+    background-color: rgba(83, 91, 242, 0);
 }
 p{
     text-align: center;
