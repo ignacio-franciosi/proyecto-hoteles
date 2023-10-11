@@ -8,9 +8,11 @@ import (
 
 func mapUrls() {
 	// Hotels Mapping
-	
+
 	router.GET("/hotels/:HotelId", hotelController.GetHotelById)
-	
+
+	router.GET("/hotels", hotelController.GetHotels)
+
 	router.POST("/hotel", hotelController.InsertHotel)
 	// router.POST("/hotels", hotelController.QueueHotels)
 
