@@ -21,7 +21,7 @@ var (
 )
 
 func GetHotelById(c *gin.Context) {
-	var hotelDto dto.HotelResponseDto
+	var hotelDto dto.HotelDto
 	id := c.Param("HotelId")
 	hotelDto, err := hotelService.GetHotelById(id)
 
@@ -33,23 +33,10 @@ func GetHotelById(c *gin.Context) {
 	c.JSON(http.StatusOK, hotelDto)
 }
 
-func GetItemsByUserId(c *gin.Context) {
-	var itemsDto dto.ItemsResponseDto
-	id, _ := strconv.Atoi(c.Param("id"))
-	itemsDto, err := itemService.GetItemsByUserId(id)
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, itemsDto)
-
-}
-
-func InsertItem(c *gin.Context) {
-	var itemDto dto.ItemDto
-	err := c.BindJSON(&itemDto)
+func InsertHotel(c *gin.Context) {
+	var hotelDto dto.HotelDto
+	err := c.BindJSON(&hotelDto)
 
 	// Error Parsing json param
 	if err != nil {
@@ -59,7 +46,7 @@ func InsertItem(c *gin.Context) {
 		return
 	}
 
-	itemDto, er := itemService.InsertItem(itemDto)
+	hotelDto, er := hotelService.InsertHotel(hotelDto)
 
 	// Error del Insert
 	if er != nil {
@@ -67,12 +54,12 @@ func InsertItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, itemDto)
+	c.JSON(http.StatusCreated, hotelDto)
 }
 
-func QueueItems(c *gin.Context) {
-	var itemsDto dto.ItemsDto
-	err := c.BindJSON(&itemsDto)
+func QueueHotels(c *gin.Context) {
+	var hotelsDto dto.HotelsDto
+	err := c.BindJSON(&hotelsDto)
 
 	// Error Parsing json param
 	if err != nil {
@@ -81,7 +68,7 @@ func QueueItems(c *gin.Context) {
 		return
 	}
 
-	er := itemService.QueueItems(itemsDto)
+	er := hotelService.QueueHotels(hotelsDto)
 
 	// Error Queueing
 	if er != nil {
@@ -89,24 +76,13 @@ func QueueItems(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, itemsDto)
+	c.JSON(http.StatusCreated, hotelsDto)
 }
 
-func DeleteUserItems(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	err := itemService.DeleteUserItems(id)
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, nil)
-}
-
-func DeleteItemById(c *gin.Context) {
-	id := c.Param("item_id")
-	err := itemService.DeleteItemById(id)
+func DeleteHotelById(c *gin.Context) {
+	id := c.Param("HotelId")
+	err := hotelService.DeleteHotelById(id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
@@ -114,4 +90,29 @@ func DeleteItemById(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+func UpdateHotelById(c *gin.Context) {
+	id := c.Param("HotelId")
+
+	var hotelDto dto.HotelDto
+	err := c.BindJSON(&hotelDto)
+
+	// Error Parsing json param
+	if err != nil {
+
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	hotelDto, er := hotelService.UpdateHotelById(hotelDto)
+
+	// Error del Insert
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+
+	c.JSON(http.StatusOK, hotelDto)
 }
