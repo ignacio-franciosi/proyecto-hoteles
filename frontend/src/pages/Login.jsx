@@ -34,6 +34,7 @@ const Login = () => {
                         return response.json();
                     } else {
                         alert('Usuario Inválido');
+                        return { "id_user": -1}
                     }
                 });
                 if (response.id_user) {
@@ -42,7 +43,8 @@ const Login = () => {
                     console.log('Usuario válido');
 
                     localStorage.setItem('user_id', response.id_user);
-                    navigate('/home');
+                    localStorage.setItem('email', email);
+                    navigate(-1);
                 }
             } catch (error) {
                 console.log('Error al realizar la solicitud al backend:', error);

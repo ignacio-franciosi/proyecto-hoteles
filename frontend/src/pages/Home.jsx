@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import './../App.css'
 
 const Home = () => {
     const navigate = useNavigate(); //permite la navegación entre paginasd con las rutas
-     //se inicializan las variables vacias
+    //se inicializan las variables vacias
     const [city, setCity] = useState('');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
@@ -37,18 +37,17 @@ const Home = () => {
             document.getElementById("inputFrom").style.borderColor = 'red';
             document.getElementById("inputTo").style.borderColor = 'red';
             alert('La fecha "Fecha desde" no puede ser mayor que "Fecha hasta"');
-        }
-        else{
+        } else {
             try {   //envía la respuesta al back (postaman basicamente)
-                const response = await fetch('http://localhost:8080/login', {
+                const response = await fetch('http://localhost:8080/search', {
                     method: 'POST', headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({city, from, to}),
                 }).then(response => {
                     if (response.ok) {
+                        navigate("/search")
                         return response.json();
-                        navigate("/result")
                     } else {
                         alert("Error, datos inválidos");
                     }
@@ -58,13 +57,13 @@ const Home = () => {
             }
         }
 
-};
+    };
 
-    return(
+    return (
         <div id="body">
             <h1 id="h1Home">Encuentra tu hotel ;)</h1>
-                       <form id="formHome" onSubmit={handleSubmit} >
-                           <p>Ciudad</p>
+            <form id="formHome" onSubmit={handleSubmit}>
+                <p>Ciudad</p>
                 <input id={"inputCity"}
                        type="text"
                        placeholder="Ciudad"
@@ -72,21 +71,21 @@ const Home = () => {
                        onChange={(e) => setCity(e.target.value)}
 
                 />
-                           <p>Fecha desde: </p>
+                <p>Fecha desde: </p>
                 <input id={"inputFrom"}
                        type="date"
                        placeholder="Fecha desde"
                        value={from}
                        onChange={(e) => setFrom(e.target.value)}
                 />
-                           <p>Fecha hasta: </p>
+                <p>Fecha hasta: </p>
                 <input id={"inputTo"}
                        type="date"
                        placeholder="Fecha hasta"
                        value={to}
                        onChange={(e) => setTo(e.target.value)}
                 />
-<p> </p>
+                <p></p>
                 <button id="ButonSearchHome" type="submit">Buscar</button>
             </form>
         </div>
