@@ -39,7 +39,7 @@ const Home = () => {
             alert('La fecha "Fecha desde" no puede ser mayor que "Fecha hasta"');
         } else {
             try {   //envía la respuesta al back (postaman basicamente)
-                const response = await fetch('http://localhost:8080/search/:city/:startDate/:endDate', {
+                const response = await fetch('http://localhost:8080/search/', {
                     method: 'POST', headers: {
                         'Content-Type': 'application/json',
                     },
