@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './../App.css'
 import {useNavigate} from "react-router-dom";
 
 const Home = () => {
@@ -44,7 +45,9 @@ const Home = () => {
                     ))}
                 </div>
             ) : (
-                <p>No se encontraron hoteles.</p>
+                <div id="noHotels">
+                    <p >No se encontraron hoteles.</p>
+                </div>
             )}
         </div>
 
