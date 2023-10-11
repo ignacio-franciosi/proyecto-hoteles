@@ -1,103 +1,87 @@
 package services
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"hotels/config"
 	"hotels/dto"
+	client "hotels/services/repositories"
 	e "hotels/utils/errors"
+	"io"
+	"net/http"
+	"os"
+	"strings"
+
+	json "github.com/json-iterator/go"
+	log "github.com/sirupsen/logrus"
 )
 
 type HotelService interface {
 	GetHotelById(id string) (dto.HotelDto, e.ApiError)
-	InsertItem(hotel dto.HotelDto) (dto.HotelDto, e.ApiError)
-	QueueItems(hotels dto.HotelsDto) e.ApiError
-	DeleteUserItems(id int) e.ApiError
-	DeleteItem(id string) e.ApiError
+	InsertHotel(hotel dto.HotelDto) (dto.HotelDto, e.ApiError)
+	QueueHotels(hotels dto.HotelsDto) e.ApiError
+	DeleteHotel(id string) e.ApiError
 }
 
-type ItemServiceImpl struct {
-	hotel      *client.HotelClient
-	queue     *client.QueueClient
+type HotelServiceImpl struct {
+	hotel *client.HotelClient
+	queue *client.QueueClient
 }
 
-func NewItemServiceImpl(
-	item *client.ItemClient,
+func NewHotelServiceImpl(
+	item *client.HotelClient,
 	queue *client.QueueClient,
-) *ItemServiceImpl {
-	return &ItemServiceImpl{
-		item:      item,
-		queue:     queue,
+) *HotelServiceImpl {
+	return &HotelServiceImpl{
+		hotel: hotel,
+		queue: queue,
 	}
 }
 
+func (s *HotelServiceImpl) GetHotelById(id string) (dto.ItemResponseDto, e.ApiError) {
 
-func (s *ItemServiceImpl) GetItemById(id string) (dto.ItemResponseDto, e.ApiError) {
-
-	var itemDto dto.ItemDto
+	var hotelDto dto.HotelDto
 	var itemResponseDto dto.ItemResponseDto
 
-	itemDto, err := s.memcached.GetItemById(id)
+	hotelDto, err := s.hotel.GetHotelById(id)
+
 	if err != nil {
-		log.Debug("Error getting item from memcached")
-		itemDto, err2 := s.item.GetItemById(id)
-		if err2 != nil {
-			log.Debug("Error getting item from mongo")
-			return itemResponseDto, err2
-		}
-		if itemDto.ItemId == "000000000000000000000000" {
-			return itemResponseDto, e.NewBadRequestApiError("item not found")
-		}
-		_, err3 := s.memcached.InsertItem(itemDto)
-		if err3 != nil {
-			log.Debug("Error inserting in memcached")
-		}
-		log.Debug("mongo")
-		return s.GetUserById(itemDto.UsuarioId, itemDto)
-	} else {
-		log.Debug("memcached")
-		return s.GetUserById(itemDto.UsuarioId, itemDto)
-	}
-}
-
-func (s *ItemServiceImpl) GetItemsByUserId(id int) (dto.ItemsResponseDto, e.ApiError) {
-
-	var itemsDto dto.ItemsDto
-	var itemsResponseDto dto.ItemsResponseDto
-	itemsDto, err := s.item.GetItemsByUserId(id)
-	if err != nil {
-		log.Debug("Error getting items from mongo")
-		return itemsResponseDto, err
+		log.Debug("Error getting hotel from mongo")
+		return itemResponseDto, err
 	}
 
-	for i := range itemsDto {
-		item, err := s.GetUserById(itemsDto[i].UsuarioId, itemsDto[i])
-		if err != nil {
-			return itemsResponseDto, e.NewBadRequestApiError("error getting user for item")
-		}
-		itemsResponseDto = append(itemsResponseDto, item)
+	if hotelDto.HotelId == "000000000000000000000000" {
+		return hotelDto, e.NewBadRequestApiError("hotel not found")
 	}
 
-	return itemsResponseDto, nil
+	log.Debug("mongo")
+	return hotelDto
 
 }
 
-func (s *ItemServiceImpl) InsertItem(itemDto dto.ItemDto) (dto.ItemDto, e.ApiError) {
+func (s *HotelServiceImpl) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
 
-	var insertItem dto.ItemDto
+	var hotelInsertDto dto.HotelDto
 
-	insertItem, err := s.item.InsertItem(itemDto)
+	hotelInsertDto, err := s.hotel.InsertHotel(hotelDto)
 	if err != nil {
-		return itemDto, e.NewBadRequestApiError("error inserting item")
+		return hotelDto, e.NewBadRequestApiError("error inserting hotel")
 	}
 
-	if insertItem.ItemId == "000000000000000000000000" {
-		return itemDto, e.NewBadRequestApiError("error in insert")
+	if hotelInsertDto.ItemId == "000000000000000000000000" {
+		return hotelDto, e.NewBadRequestApiError("error in insert")
 	}
-	itemDto.ItemId = insertItem.ItemId
 
-	itemDto, err = s.memcached.InsertItem(itemDto)
+	hotelDto.ItemId = hotelInsertDto.ItemId
+
+	//HERE: INSERT TO QUEUE !! CHECK
+
+	hotelDto, err = s.queue.InsertItem(hotelDto)
 	if err != nil {
-		return itemDto, e.NewBadRequestApiError("Error inserting in memcached")
+		return hotelDto, e.NewBadRequestApiError("Error inserting in queue")
 	}
-	return itemDto, nil
+	return hotelDto, nil
 }
 
 func CheckQueue(processed chan string, total int, userid int) {
@@ -144,7 +128,7 @@ func DownloadImage(url string, name string) {
 	_, _ = io.Copy(file, resp.Body)
 }
 
-func (s *ItemServiceImpl) QueueItems(itemsDto dto.ItemsDto) e.ApiError {
+func (s *HotelServiceImpl) QueueHotels(itemsDto dto.ItemsDto) e.ApiError {
 	total := len(itemsDto)
 	processed := make(chan string, total)
 	for i := range itemsDto {
@@ -152,7 +136,7 @@ func (s *ItemServiceImpl) QueueItems(itemsDto dto.ItemsDto) e.ApiError {
 		item = itemsDto[i]
 		go func() {
 			url := item.UrlImg
-			item, err := s.item.InsertItem(item)
+			item, err := s.hotel.InsertItem(item)
 			go DownloadImage(url, item.UrlImg)
 			log.Debug(url)
 			log.Debug(item.UrlImg)
@@ -167,27 +151,6 @@ func (s *ItemServiceImpl) QueueItems(itemsDto dto.ItemsDto) e.ApiError {
 	}
 
 	go CheckQueue(processed, total, itemsDto[0].UsuarioId)
-	return nil
-}
-
-func (s *ItemServiceImpl) DeleteUserItems(id int) e.ApiError {
-	items, err := s.GetItemsByUserId(id)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	for i := range items {
-		var item dto.ItemResponseDto
-		item = items[i]
-		go func() {
-			err := s.item.DeleteItem(item.ItemId)
-			if err != nil {
-				log.Error(err)
-			}
-			err = s.queue.SendMessage(item.ItemId, "delete", fmt.Sprintf("%s.delete", item.ItemId))
-			log.Error(err)
-		}()
-	}
 	return nil
 }
 

@@ -5,11 +5,11 @@ import (
 	"hotels/dto"
 	service "hotels/services"
 	client "hotels/services/repositories"
-	
+
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -33,6 +33,18 @@ func GetHotelById(c *gin.Context) {
 	c.JSON(http.StatusOK, hotelDto)
 }
 
+func GetHotels(c *gin.Context) {
+	var hotelsDto dto.HotelsDto
+	hotelsDto, err := hotelService.GetHotels()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, hotelsDto)
+
+}
 
 func InsertHotel(c *gin.Context) {
 	var hotelDto dto.HotelDto
@@ -79,7 +91,6 @@ func QueueHotels(c *gin.Context) {
 	c.JSON(http.StatusCreated, hotelsDto)
 }
 
-
 func DeleteHotelById(c *gin.Context) {
 	id := c.Param("HotelId")
 	err := hotelService.DeleteHotelById(id)
@@ -93,9 +104,9 @@ func DeleteHotelById(c *gin.Context) {
 }
 
 func UpdateHotelById(c *gin.Context) {
-	id := c.Param("HotelId")
 
 	var hotelDto dto.HotelDto
+	hotelDto.HotelId = c.Param("HotelId")
 	err := c.BindJSON(&hotelDto)
 
 	// Error Parsing json param

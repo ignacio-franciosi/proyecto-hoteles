@@ -50,7 +50,7 @@ func (s *SolrClient) GetQuery(city string, startDate string, endDate string) (dt
 	var hotelsDto dto.HotelsDto
 
 	// Construye la URL de consulta de Solr
-	url := fmt.Sprintf("http://%s:%d/solr/items/select?q=city:%s+AND+startDate:%s+AND+endDate:%s", config.SOLRHOST, config.SOLRPORT, city, startDate, endDate)
+	url := fmt.Sprintf("http://%s:%d/solr/hotels/select?q=city:%s+AND+startDate:%s+AND+endDate:%s", config.SOLRHOST, config.SOLRPORT, city, startDate, endDate)
 
 	// Realiza una solicitud HTTP GET a la URL de Solr
 	q, err := http.Get(url)
