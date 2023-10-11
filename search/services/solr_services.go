@@ -10,6 +10,7 @@ import (
 	client "search/services/repositories"
 	e "search/utils/errors"
 	"strconv"
+	"strings"
 
 	logger "github.com/sirupsen/logrus"
 )
@@ -63,14 +64,22 @@ func (s *SolrService) Add(id string) e.ApiError {
 	return nil
 }
 
-// realizar una consulta al motor de búsqueda Solr utilizando la consulta proporcionada como argumento (query)
-func (s *SolrService) GetQuery(query string) (dto.HotelsArrayDto, e.ApiError) {
-	var hotelsArrayDto dto.HotelsArrayDto
+func (s *SolrService) GetQuery(query string) (dto.HotelsDto, e.ApiError) {
+	var hotelsDto dto.HotelsDto
 
-	hotelsArrayDto, err := s.solr.GetQuery(query)
-	if err != nil {
-		return hotelsArrayDto, e.NewBadRequestApiError("Solr failed")
+	// Dividir la consulta en tres partes: city, start_date y end_date
+	queryParams := strings.Split(query, "_")
+	if len(queryParams) != 3 {
+		return hotelsDto, e.NewBadRequestApiError("Invalid query format")
 	}
 
-	return hotelsArrayDto, nil
+	city, startDate, endDate := queryParams[0], queryParams[1], queryParams[2]
+
+	// Realizar la búsqueda en Solr utilizando los tres campos
+	hotelsDto, err := s.solr.GetQuery(city, startDate, endDate)
+	if err != nil {
+		return hotelsDto, e.NewBadRequestApiError("Solr failed")
+	}
+
+	return hotelsDto, nil
 }
