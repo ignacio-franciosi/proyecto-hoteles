@@ -43,7 +43,7 @@ const Home = () => {
                     method: 'POST', headers: {
                         'Content-Type': 'application/json',
                     },
-                    //body: JSON.stringify({city, startDate, endDate}),
+                    body: JSON.stringify({city, startDate, endDate}), //terminar
                 }).then(response => {
                     if (response.ok) {
                         navigate("/search")
