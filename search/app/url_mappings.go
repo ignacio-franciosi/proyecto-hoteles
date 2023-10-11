@@ -7,7 +7,7 @@ import (
 )
 
 func mapUrls() {
-	router.GET("/search/:solrQuery", solrController.GetQuery)
+	router.GET("/search/:city/:startDate/:endDate", solrController.GetQuery)
 	router.GET("/hotels/:id", solrController.Add)
 
 	log.Info("Finishing mappings configurations")
