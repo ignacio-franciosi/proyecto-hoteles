@@ -10,7 +10,9 @@
 }
 html,body{
   background-color: #CBE4DE;
-  background-image: url('images/home/suiza.jpg');
+ /* background-image: url('images/home/suiza.jpg');
+
+  */
   background-size: cover;
 }
 #formHome{

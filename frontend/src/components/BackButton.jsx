@@ -19,13 +19,9 @@ function ComponenteE() {
     const location = useLocation();
 
     // Lógica para determinar si el botón debe ocultarse en función de la ruta actual
-    const ocultarBoton = location.pathname === '/' || location.pathname === '/home';
-
-    return ocultarBoton ? null : (
-        <div>
+    const hideButton = location.pathname === '/' || location.pathname === '/home';
+    return hideButton ? null : (
             <BackButton />
-
-        </div>
     );
 }
 

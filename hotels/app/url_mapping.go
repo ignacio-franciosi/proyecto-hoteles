@@ -8,13 +8,15 @@ import (
 
 func mapUrls() {
 	// Hotels Mapping
-	
+
 	router.GET("/hotels/:HotelId", hotelController.GetHotelById)
-	
+
+	router.GET("/hotels", hotelController.GetHotels)
+
 	router.POST("/hotel", hotelController.InsertHotel)
 	// router.POST("/hotels", hotelController.QueueHotels)
 
-	router.PUT("/hotel/:HotelId", hotelController.UpdateHotel)
+	router.PUT("/hotel/:HotelId", hotelController.UpdateHotelById)
 	// router.PUT("/hotels", hotelController.QueueHotels)
 
 	router.DELETE("/hotel/:HotelId", hotelController.DeleteHotelById)
