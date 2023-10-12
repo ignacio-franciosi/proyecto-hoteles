@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
+import Search from "./pages/Search.jsx";
 import LoginButton from './components/LoginButton.jsx';
 import BackButton from "./components/BackButton.jsx";
 import './App.css';
@@ -20,6 +21,7 @@ const App = ()=> {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path ="/login" element={<Login />} />
+                <Route path="/search" element={<Search />} />
             </Routes>
             <Footer />
         </Router>

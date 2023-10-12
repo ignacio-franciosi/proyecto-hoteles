@@ -1,12 +1,12 @@
 package solrController
 
 import (
+	"fmt"
 	"net/http"
 	"search/config"
-	"search/dto"
 	"search/services"
 	client "search/services/repositories"
-	con "search/utils/solr"
+	con "search/utils/connections"
 
 	log "github.com/sirupsen/logrus"
 
@@ -19,20 +19,24 @@ var (
 	)
 )
 
-// Extrae la consulta de búsqueda de la solicitud HTTP, utiliza el solr_service.go para realizar la consulta
 func GetQuery(c *gin.Context) {
-	var hotelsArrayDto dto.HotelsArrayDto
-	query := c.Param("solrQuery")
+	// Obtener los valores de los tres campos desde la solicitud HTTP
+	city := c.Query("city")
+	startDate := c.Query("startDate")
+	endDate := c.Query("endDate")
 
-	hotelsArrayDto, err := Solr.GetQuery(query)
+	// Construir la consulta Solr que incluye los tres campos
+	query := fmt.Sprintf("city:%s AND startDate:%s AND endDate:%s", city, startDate, endDate)
+
+	// Llamar a la función GetQuery de SolrService con la nueva consulta
+	hotelsDto, err := Solr.GetQuery(query)
 	if err != nil {
-		log.Debug(hotelsArrayDto)
-		c.JSON(http.StatusBadRequest, hotelsArrayDto)
+		log.Debug(hotelsDto)
+		c.JSON(http.StatusBadRequest, hotelsDto)
 		return
 	}
 
-	c.JSON(http.StatusOK, hotelsArrayDto)
-
+	c.JSON(http.StatusOK, hotelsDto)
 }
 
 // Manejar las solicitudes de adición de hoteles al motor de búsqueda Solr.

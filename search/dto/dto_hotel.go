@@ -1,33 +1,14 @@
 package dto
 
 type HotelDto struct {
-	Id          int     `json:"id"`
-	Tittle      string  `json:"tittle"`
+	HotelId     int     `json:"hotel_id"`
+	Name        string  `json:"name"`
 	Description string  `json:"description"`
+	Amenities   string  `json:"amenities"`
+	Stars       string  `json:"stars"`
 	Rooms       int     `json:"rooms"`
-	Assessment  int     `json:"assessment"`
 	Price       float32 `json:"price"`
-	Gym         bool    `json:"gym"`
-	Wifi        bool    `json:"wifi"`
-	Parking     bool    `gorm:"parking"`
-	Bidet       bool    `gorm:"bidet"`
-	Pool        bool    `gorm:"pool"`
+	City        string  `json:"city"`
+	Photos      string  `json:"photos"`
 }
-
 type HotelsDto []HotelDto
-
-type HotelArrayDto struct {
-	Id          int       `json:"id"`
-	Tittle      []string  `json:"tittle"`
-	Description []string  `json:"description"`
-	Rooms       []int     `json:"rooms"`
-	Assessment  []int     `json:"assessment"`
-	Price       []float32 `json:"price"`
-	Gym         []bool    `json:"gym"`
-	Wifi        []bool    `json:"wifi"`
-	Parking     []bool    `gorm:"parking"`
-	Bidet       []bool    `gorm:"bidet"`
-	Pool        []bool    `gorm:"pool"`
-}
-
-type HotelsArrayDto []HotelArrayDto

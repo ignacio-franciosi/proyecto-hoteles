@@ -9,9 +9,7 @@ import (
 	"search/config"
 	"search/dto"
 	e "search/utils/errors"
-	"strings"
 
-	log "github.com/sirupsen/logrus"
 	logger "github.com/sirupsen/logrus"
 	"github.com/stevenferrer/solr-go"
 )
@@ -47,32 +45,32 @@ func (sc *SolrClient) AddClient(HotelDto dto.HotelDto) e.ApiError {
 	return nil
 }
 
-// envia una consulta al motor de búsqueda Solr, recibe la respuesta en formato JSON,
-// decodifica en una estructura de datos Go y devuelve los hoteles encontrados
-func (sc *SolrClient) GetQuery(query string) (dto.HotelsArrayDto, e.ApiError) {
-	var response dto.SolrResponseDto
-	var hotelsArrayDto dto.HotelsArrayDto
-	query = strings.Replace(query, " ", "%20", -1)
+func (s *SolrClient) GetQuery(city string, startDate string, endDate string) (dto.HotelsDto, e.ApiError) {
 
-	q, err := http.Get(fmt.Sprintf("http://%s:%d/solr/hotels/select?q=%s", config.SOLRHOST, config.SOLRPORT, query))
+	var hotelsDto dto.HotelsDto
+
+	// Construye la URL de consulta de Solr
+	url := fmt.Sprintf("http://%s:%d/solr/hotels/select?q=city:%s+AND+startDate:%s+AND+endDate:%s", config.SOLRHOST, config.SOLRPORT, city, startDate, endDate)
+
+	// Realiza una solicitud HTTP GET a la URL de Solr
+	q, err := http.Get(url)
 
 	if err != nil {
-		return hotelsArrayDto, e.NewBadRequestApiError("error getting from solr")
+		return hotelsDto, e.NewBadRequestApiError("error getting from solr")
 	}
 
 	defer q.Body.Close()
 
+	// Decodifica la respuesta JSON en la estructura de datos de SolrResponseDto
+	var response dto.SolrResponseDto
 	err = json.NewDecoder(q.Body).Decode(&response)
 
 	if err != nil {
-		log.Debug("error: ", err)
-		return hotelsArrayDto, e.NewBadRequestApiError("error in unmarshal")
+		return hotelsDto, e.NewBadRequestApiError("error in unmarshal")
 	}
 
-	for _, doc := range response.Response.Docs {
-		hotelArrayDto := doc
-		hotelsArrayDto = append(hotelsArrayDto, hotelArrayDto)
-	}
+	// Asigna los documentos de la respuesta (hotels) a la variable itemsDto
+	hotelsDto = response.Response.Docs
 
-	return hotelsArrayDto, nil
+	return hotelsDto, nil
 }

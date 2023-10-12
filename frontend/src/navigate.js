@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import Congrats from "pages/Congrats.jsx";
 import Home from "pages/Home.jsx";
-import Result from  "pages/Result.jsx";
+import Search from "frontend/src/pages/Search.jsx";
 import HotelDetails from "pages/HotelDetails.jsx";
 import id from "pages/Home.jsx";
 import Login from "pages/Login.jsx";
@@ -26,8 +26,8 @@ export const navigation = [
     },
     {
         id: 3,
-        path: "/result",
-        Element: Result,
+        path: '/search',
+        Element: Search,
     },
     {
         id: 4,
@@ -36,7 +36,7 @@ export const navigation = [
     },
     {
         id: 5,
-        path: "/congrats",
+        path: '/congrats',
         Element: Congrats,
     },
 ];

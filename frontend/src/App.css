@@ -10,7 +10,9 @@
 }
 html,body{
   background-color: #CBE4DE;
-  background-image: url('images/home/suiza.jpg');
+ /* background-image: url('images/home/suiza.jpg');
+
+  */
   background-size: cover;
 }
 #formHome{
@@ -81,4 +83,8 @@ html,body{
   color: #ffffff;
   padding: 8px 16px;
   text-shadow: 1px 1px 2px black;
+}
+/* estilos search*/
+#noHotels{
+  align-content: center;
 }
