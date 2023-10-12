@@ -17,7 +17,7 @@ type AmadeusCredentials struct {
 }
 
 func getAccessToken(credentials AmadeusCredentials) (string, error) {
-	u, err := url.Parse("https://test.api.amadeus.com/v2/security/oauth2/token")
+	u, err := url.Parse("https://test.api.amadeus.com/v3/security/oauth2/token")
 
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
@@ -50,7 +50,7 @@ func getAccessToken(credentials AmadeusCredentials) (string, error) {
 
 func getHotelAvailability(accessToken string, hotels []Hotel) error {
 	// Endpoint para obtener disponibilidad de hoteles
-	baseURL := "https://test.api.amadeus.com/v2/shopping/hotel-offers"
+	baseURL := "https://test.api.amadeus.com/v3/shopping/hotel-offers"
 
 	for _, hotel := range hotels {
 		queryParams := url.Values{}
