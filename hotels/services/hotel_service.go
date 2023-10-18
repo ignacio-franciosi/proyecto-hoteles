@@ -168,6 +168,7 @@ func CheckQueue(processed chan string, total int, userid int) {
 
 // Notifica a una cola de mensajes (RabbitMQ) cuando se crea o modifica un hotel
 func (s *HotelServiceImpl) QueueHotels(hotelsDto dto.HotelsDto) e.ApiError {
+
 	total := len(hotelsDto)
 	processed := make(chan string, total)
 
