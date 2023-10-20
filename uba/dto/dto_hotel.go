@@ -1,14 +1,10 @@
 package dto
 
 type HotelDto struct {
-	HotelId     int     `json:"hotel_id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Amenities   string  `json:"amenities"`
-	Stars       string  `json:"stars"`
-	Rooms       int     `json:"rooms"`
-	Price       float32 `json:"price"`
-	City        string  `json:"city"`
-	Photos      string  `json:"photos"`
+	Id        int     `json:"id"`
+	IdMongo   string  `json:"id_mongo"`
+	IdAmadeus string  `json:"id_amadeus"`
+	Price     float32 `json:"hotel_name"`
 }
+
 type HotelsDto []HotelDto
