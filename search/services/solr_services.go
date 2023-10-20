@@ -28,6 +28,8 @@ func NewSolrServiceImpl(
 }
 
 // agrega un hotel al motor de búsqueda Solr
+// se encarga de obtener información de un hotel, deserializarla, y
+// agregarla a un servidor Solr para su indexación
 func (s *SolrService) Add(id string) e.ApiError {
 	var hotelDto dto.HotelDto
 	resp, err := http.Get(fmt.Sprintf("http://%s:%d/hotels/%s", config.HOTELSHOST, config.HOTELSPORT, id))
@@ -64,6 +66,9 @@ func (s *SolrService) Add(id string) e.ApiError {
 	return nil
 }
 
+// se encarga de tomar una cadena de consulta que contiene tres campos
+// (ciudad, fecha de inicio y fecha de finalización), dividirla en partes,
+// y luego realizar una búsqueda en Solr utilizando esos campos
 func (s *SolrService) GetQuery(query string) (dto.HotelsDto, e.ApiError) {
 	var hotelsDto dto.HotelsDto
 

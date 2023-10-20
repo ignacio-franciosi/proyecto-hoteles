@@ -45,6 +45,9 @@ func (sc *SolrClient) AddClient(HotelDto dto.HotelDto) e.ApiError {
 	return nil
 }
 
+// toma parámetros de búsqueda (city, startDate, endDate), realiza una solicitud a Solr,
+// procesa la respuesta JSON y devuelve los resultados de la búsqueda de hoteles en el
+// formato especificado en dto.HotelsDto
 func (s *SolrClient) GetQuery(city string, startDate string, endDate string) (dto.HotelsDto, e.ApiError) {
 
 	var hotelsDto dto.HotelsDto
