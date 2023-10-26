@@ -1,9 +1,9 @@
 package db
 
 import (
-	bookingClient "repo/clients/booking_client"
-	userClient "repo/clients/user_client"
-	model2 "repo/model"
+	bookingClient "uba/clients/booking"
+	userClient "uba/clients/user"
+	model2 "uba/model"
 
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"

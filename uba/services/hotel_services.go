@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	hotelClient "uba/clients/hotel"
@@ -10,7 +10,7 @@ import (
 type hotelService struct{}
 
 type hotelServiceInterface interface {
-	InsertHotel(hotelDto dto.HotelPostDto, idAmadeus string) (dto.HotelDto, e.ApiError)
+	InsertHotel(hotelDto dto.InsertHotelDto, idAmadeus string) (dto.HotelDto, e.ApiError)
 	GetHotelById(id int) (dto.HotelDto, e.ApiError)
 }
 

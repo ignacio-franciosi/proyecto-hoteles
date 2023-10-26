@@ -22,7 +22,7 @@ type CityCodeMapping struct {
 
 func GetCityCode() string {
 
-	insertHotelDto := dto.InsertHotelDto
+	var insertHotelDto dto.InsertHotelDto
 	cityName := insertHotelDto.City
 
 	// slice de mapeo de City a código

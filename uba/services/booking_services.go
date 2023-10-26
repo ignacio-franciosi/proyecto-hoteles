@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	bookingClient "uba/clients/booking"
@@ -16,6 +16,10 @@ type bookingServiceInterface interface {
 	InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, e.ApiError)
 }
 
+var (
+	BookingService bookingServiceInterface
+)
+
 func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, e.ApiError) {
 	var booking model.Booking
 
@@ -25,16 +29,19 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 	booking.IdUser = bookingDto.IdUser
 	booking.IdHotel = bookingDto.IdHotel
 
+	timeStart, _ := time.Parse("2023-05-20", bookingDto.StartDate)
+	timeEnd, _ := time.Parse("2023-01-23", bookingDto.EndDate)
+
 	var hotel model.Hotel
 	var difference time.Duration
 	var totalDays int32
 
-	difference = booking.EndDate.Sub(booking.StartDate)
+	difference = timeEnd.Sub(timeStart)
 	totalDays = int32(difference.Hours() / 24)
 	booking.TotalPrice = float32(int32(hotel.Price) * totalDays)
 	booking = bookingClient.InsertBooking(booking)
 
-	var bookingResponseDto dto.BookingDtoDto
+	var bookingResponseDto dto.BookingDto
 
 	bookingResponseDto.Id = booking.Id
 	bookingResponseDto.StartDate = booking.StartDate
