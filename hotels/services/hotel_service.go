@@ -1,17 +1,13 @@
 package services
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"hotels/config"
 	"hotels/dto"
-	client "hotels/services/repositories"
-	e "hotels/utils/errors"
-	"net/http"
-	"search/dto"
 
-	json "github.com/json-iterator/go"
+	client "hotels/services/repositories"
+
+	e "hotels/utils/errors"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -39,7 +35,7 @@ func NewHotelServiceImpl(
 	}
 }
 
-func (s *HotelServiceImpl) GetHotelById(id string) (dto.ItemResponseDto, e.ApiError) {
+func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelResponseDto, e.ApiError) {
 
 	var hotelDto dto.HotelDto
 	var hotelResponseDto dto.HotelResponseDto
@@ -52,23 +48,23 @@ func (s *HotelServiceImpl) GetHotelById(id string) (dto.ItemResponseDto, e.ApiEr
 	}
 
 	if hotelDto.HotelId == "000000000000000000000000" {
-		return hotelDto, e.NewBadRequestApiError("hotel not found")
+		return hotelResponseDto, e.NewBadRequestApiError("hotel not found")
 	}
 
 	log.Debug("mongo")
-	return hotelDto
+
+	return hotelResponseDto, nil
 
 }
 
 func (s *HotelServiceImpl) GetHotels() (dto.HotelsDto, e.ApiError) {
 
 	var hotelsDto dto.HotelsDto
-	var hotelsResponseDto dto.hotelsResponseDto
 
 	hotelsDto, err := s.hotel.GetAllHotels()
 	if err != nil {
 		log.Debug("Error getting all hotels from mongo")
-		return hotelsResponseDto, err
+		return hotelsDto, err
 	}
 
 	return hotelsDto, nil
@@ -91,12 +87,14 @@ func (s *HotelServiceImpl) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.A
 	hotelDto.HotelId = hotelInsertDto.HotelId
 
 	//Inserta el ID del hotel en la cola RabbitMQ
-	err = s.queue.QueueHotels(hotelDto.HotelId)
+	err = s.queue.SendMessage(hotelDto.HotelId, "create", "") //err = s.queue.QueueHotels(hotelDto.HotelId)
+
 	if err != nil {
 		return hotelDto, e.NewBadRequestApiError("Error notifying hotel creation to RabbitMQ")
 	}
 
-	hotelDto, err = s.queue.InsertHotel(hotelDto)
+	err = s.queue.SendMessage(hotelDto.HotelId, "update", "") //hotelDto, err = s.queue.InsertHotel(hotelDto)
+
 	if err != nil {
 		return hotelDto, e.NewBadRequestApiError("Error inserting in queue")
 	}
@@ -110,7 +108,7 @@ func (s *HotelServiceImpl) UpdateHotelById(hotelDto dto.HotelDto) (dto.HotelDto,
 	var updatedHotelDto dto.HotelDto
 
 	// Actualiza el hotel en la base de datos
-	updatedHotelDto, err := s.hotel.UpdateHotel(hotelDto)
+	updatedHotelDto, err := s.hotel.UpdateHotelById(hotelDto)
 	if err != nil {
 		return hotelDto, e.NewBadRequestApiError("error updating hotel")
 	}
@@ -121,7 +119,8 @@ func (s *HotelServiceImpl) UpdateHotelById(hotelDto dto.HotelDto) (dto.HotelDto,
 	}
 
 	// Inserta el ID del hotel actualizado en la cola RabbitMQ
-	err = s.queue.QueueHotels(updatedHotelDto.HotelId)
+	err = s.queue.SendMessage(updatedHotelDto.HotelId, "update", "") //err = s.queue.QueueHotels(updatedHotelDto.HotelId)
+
 	if err != nil {
 		return hotelDto, e.NewBadRequestApiError("Error notifying hotel update to RabbitMQ")
 	}
@@ -129,53 +128,16 @@ func (s *HotelServiceImpl) UpdateHotelById(hotelDto dto.HotelDto) (dto.HotelDto,
 	return updatedHotelDto, nil
 }
 
-// Rastrea el procesamiento de elementos en una cola y notifica al
-// usuario una vez que se han procesado todos los elementos
-func CheckQueue(processed chan string, total int, userid int) {
-	var complete int
-	var errors int
-	for loop := true; loop; {
-		select {
-		case data := <-processed:
-			if data == "error" {
-				errors++
-			} else {
-				complete++
-			}
-			if errors+complete == total {
-				loop = false
-			}
-		default:
-			log.Debugf("waiting for %d more messages", total-complete-errors)
-		}
-	}
-	var body []byte
-	var message dto.MessageDto
-	message.UserId = userid
-	message.System = true
-	message.Body = fmt.Sprintf("Processed items total = %d, Completed: %d, Errors: %d", complete+errors, complete, errors)
-	body, err := json.Marshal(&message)
-
-	if err != nil {
-		panic(e.NewInternalServerApiError("Error marshaling in sending message", err))
-	}
-	_, err = http.Post(fmt.Sprintf("http://%s:%d/%s", config.MESSAGESHOST, config.MESSAGESPORT, config.MESSAGESENDPOINT), "application/json", bytes.NewBuffer(body))
-	if err != nil {
-		panic(e.NewInternalServerApiError("Error sending message to message service", err))
-
-	}
-}
-
-// Notifica a una cola de mensajes (RabbitMQ) cuando se crea o modifica un hotel
 func (s *HotelServiceImpl) QueueHotels(hotelsDto dto.HotelsDto) e.ApiError {
-
-	total := len(hotelsDto)
-	processed := make(chan string, total)
+	// Crea un canal para mantener el seguimiento del progreso de procesamiento.
+	processed := make(chan string, len(hotelsDto))
 
 	for i := range hotelsDto {
-		var hotel dto.HotelDto
-		hotel = hotelsDto[i]
+		hotel := hotelsDto[i]
 		go func() {
+
+			// Variable para almacenar la acción (create o update).
+			var action string
 
 			// Insertar el hotel en MongoDB
 			hotel, err := s.hotel.InsertHotel(hotel)
@@ -185,14 +147,15 @@ func (s *HotelServiceImpl) QueueHotels(hotelsDto dto.HotelsDto) e.ApiError {
 				return
 			}
 
-			// Notificar a RabbitMQ cuando se crea o modifica un hotel
-			var action string
+			// Define la acción en función de si se creó o actualizó el hotel
 			if hotel.HotelId == "" {
 				action = "create"
 			} else {
 				action = "update"
 			}
-			err = s.queue.SendMessage(hotel.HotelId, action, hotel.HotelId)
+
+			// Notificar a RabbitMQ cuando se crea o modifica un hotel
+			err = s.queue.SendMessage(hotel.HotelId, action, "")
 			if err != nil {
 				processed <- "error"
 				log.Debug(err)
@@ -203,7 +166,33 @@ func (s *HotelServiceImpl) QueueHotels(hotelsDto dto.HotelsDto) e.ApiError {
 		}()
 	}
 
-	go CheckQueue(processed, total, hotelsDto[0].UsuarioId)
+	// Notifica cuando se completa la operación.
+	go func() {
+		// Verifica si hubo errores en el procesamiento antes de notificar.
+		completeCount := 0
+		errorCount := 0
+		for i := 0; i < len(hotelsDto); i++ {
+			result := <-processed
+			if result == "error" {
+				errorCount++
+			} else if result == "complete" {
+				completeCount++
+			}
+		}
+
+		// Determina si hubo errores de procesamiento
+		action := "processed"
+		if errorCount > 0 {
+			action = "processed with errors"
+		}
+
+		// Llama a SendMessage para notificar la operación
+		err := s.queue.SendMessage("all-hotels", action, fmt.Sprintf("Processed %d hotels with %d errors", completeCount, errorCount))
+		if err != nil {
+			log.Debug(err)
+		}
+	}()
+
 	return nil
 }
 
