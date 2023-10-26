@@ -30,7 +30,7 @@ type HotelClient struct {
 }
 
 // crea un cliente para interactuar con una base de datos MongoDB
-func NewHotelnterface(host string, port int, collection string) *HotelClient {
+func NewHotelInterface(host string, port int, collection string) *HotelClient {
 
 	//crea una conexión con la base de datos MongoDB
 	client, err := mongo.Connect(
