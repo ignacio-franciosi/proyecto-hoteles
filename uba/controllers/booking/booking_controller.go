@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 	"uba/dto"
 	service "uba/services"
@@ -22,8 +20,8 @@ func GetAmadeustoken() string {
 	// credenciales
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
-	data.Set("client_id", "8O9tG0NdPxxEA90mbxbAgRrJxGU002Yb")
-	data.Set("client_secret", "qfurhUwj1OB0AjlE")
+	data.Set("client_id", "rZ5NyDeG74mzhfaFqk2V7VaM2yUQtZux")
+	data.Set("client_secret", "IoO2Wocmr1Aqrw2X")
 
 	// obtengo el token
 	resp, err := http.Post("https://test.api.amadeus.com/v3/security/oauth2/token", "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
@@ -32,7 +30,7 @@ func GetAmadeustoken() string {
 		return ""
 	}
 	defer resp.Body.Close()
-	// leo la respuesta
+	// leo la response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -53,7 +51,8 @@ func GetAmadeustoken() string {
 
 }
 
-func GetAvailabilityByIdAndDate(c *gin.Context) {
+func InsertBooking(c *gin.Context) {
+
 	var bookingDto dto.BookingDto
 
 	err := c.BindJSON(&bookingDto)
@@ -63,12 +62,12 @@ func GetAvailabilityByIdAndDate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	// ahora con los datos del booking dto rellenamos una nueva estructura para la requesta  amadeus
-	// Serializa el objeto BookingDto a formato JSON
+	// Serializo el BookingDto a formato JSON
+
 	id := bookingDto.HotelId
 	fmt.Println("El id mysql del hotel es:", id)
 	// necesito llmara a una funcion que me traiga el id amadeus del hotel con el id que ya tengo (tengo el id mysql)
-	// GetHotelById(id int) (dto.HotelDto, e.ApiError)
+
 	hotelDto, err := service.HotelService.GetHotelById(id)
 
 	if err != nil {
@@ -77,90 +76,73 @@ func GetAvailabilityByIdAndDate(c *gin.Context) {
 		return
 	}
 
-	idAm := hotelDto.IdAmadeus
+	idAmad := hotelDto.IdAmadeus
+	startDateBooking := bookingDto.StartDate
+	endDateBooking := bookingDto.EndDate
 
-	startdatebooking := strconv.Itoa(bookingDto.StartDate)
-	fechaConGuiones := startdatebooking
-	startdateconguiones := fmt.Sprintf(
-		"%s-%s-%s",
-		fechaConGuiones[:4],
-		fechaConGuiones[4:6],
-		fechaConGuiones[6:8],
-	)
-	enddatebooking := strconv.Itoa(bookingDto.EndDate)
-	fechaConGuiones2 := enddatebooking
-	enddateconguiones := fmt.Sprintf(
-		"%s-%s-%s",
-		fechaConGuiones2[:4],
-		fechaConGuiones2[4:6],
-		fechaConGuiones2[6:8],
-	)
+	fmt.Println("fecha de ida", startDateBooking)
+	fmt.Println("fecha de vuelta")
 
-	fmt.Println("fecha de ida", startdateconguiones)
-	fmt.Println("fecha de vuelta", enddateconguiones)
-
-	// Construye la URL manualmente
+	// Construyo la URL concatenando los parametros
 	apiUrl := "https://test.api.amadeus.com/v3/shopping/hotel-offers"
-	apiUrl += "?hotelIds=" + idAm
-	apiUrl += "&checkInDate=" + startdateconguiones
-	apiUrl += "&checkOutDate=" + enddateconguiones
+	apiUrl += "?hotelIds=" + idAmad
+	apiUrl += "&checkInDate=" + startDateBooking
+	apiUrl += "&checkOutDate=" + endDateBooking
 
 	fmt.Println(apiUrl)
 
-	// Crear una solicitud HTTP GET
-	solicitud, err := http.NewRequest("GET", apiUrl, nil)
+	// Hago la request HTTP GET
+	request, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
-		fmt.Println("Error al crear la solicitud:", err)
+		fmt.Println("Error al crear la request:", err)
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	// Agregar el encabezado de autorización Bearer con tu token
-	token := GetAmadeustoken() // Reemplaza con tu token real
+	// Llamo a la funcion que obtiene el token
+	token := GetAmadeustoken()
 
-	solicitud.Header.Set("Authorization", "Bearer "+token)
-	// solicitud.Header.Set("Content-Type", "application/json") // Especifica el tipo de contenido si es necesario
+	request.Header.Set("Authorization", "Bearer "+token)
+	// request.Header.Set("Content-Type", "application/json")
 
-	fmt.Println(solicitud)
-	// Realiza la solicitud HTTP
-	cliente := &http.Client{}
-	respuesta, err := cliente.Do(solicitud)
+	fmt.Println(request)
+	// Realiza la request HTTP
+	client := &http.Client{}
+	response, err := client.Do(request)
 	if err != nil {
-		fmt.Println("Error al realizar la solicitud:", err)
+		fmt.Println("Error al realizar la request:", err)
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	} else if err == nil {
-		// Verifica el código de estado de la respuesta
-		if respuesta.StatusCode != http.StatusOK {
-			fmt.Printf("La solicitud a la API de Amadeus no fue exitosa. Código de estado: %d\n", respuesta.StatusCode)
-			c.JSON(http.StatusInternalServerError, "La solicitud a la API de Amadeus no fue exitosa.")
+		// Verifica el código de estado de la response
+		if response.StatusCode != http.StatusOK {
+			fmt.Printf("La request a la API de Amadeus no fue exitosa. Código: %d\n", response.StatusCode)
+			c.JSON(http.StatusInternalServerError, "La request a la API de Amadeus no fue exitosa.")
 			return
 		}
-		// Lee el cuerpo de la respuesta
-		responseBody, err := ioutil.ReadAll(respuesta.Body)
+		// Lee el cuerpo de la response
+		responseBody, err := io.ReadAll(response.Body)
 		if err != nil {
-			fmt.Println("Error al leer la respuesta:", err)
+			fmt.Println("Error al leer la response:", err)
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
-		// Crear una estructura para deserializar el JSON de la respuesta
+		// Crear una estructura para deserializar el JSON de la response
 		var responseStruct struct {
 			Data []struct {
-				Type                   string `json:"type"`
-				ID                     string `json:"id"`
-				ProviderConfirmationID string `json:"providerConfirmationId"`
+				HotelId string `json:"hotelId"`
 			} `json:"data"`
 		}
 
 		// Decodificar el JSON y extraer el campo "id"
 		if err := json.Unmarshal(responseBody, &responseStruct); err != nil {
-			fmt.Println("Error al decodificar el JSON de la respuesta:", err)
+			fmt.Println("Error al decodificar el JSON de la response:", err)
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
 		// Obtén el ID del hotel del primer elemento en "data"
 		if len(responseStruct.Data) > 0 {
-			// si el largo de la respuesta es mayor q cero es pq hay disponibilidad --> llamo al service
+			// si la response no esta vacia, es porque algo me devolvio o sea si esta disponible
 
 			bookingDto, err := service.BookingService.InsertBooking(bookingDto)
 			// Error del Insert
@@ -170,30 +152,10 @@ func GetAvailabilityByIdAndDate(c *gin.Context) {
 			}
 			c.JSON(http.StatusCreated, bookingDto)
 		} else {
-			fmt.Println("No hay disponibilidad en esas fechas")
+			fmt.Println("No hay disponibilidad en ese periodo")
 		}
 
-		defer respuesta.Body.Close()
+		defer response.Body.Close()
 
 	}
-}
-
-func InsertBooking(c *gin.Context) {
-	var bookingDto dto.BookingDto
-	err := c.BindJSON(&bookingDto)
-
-	if err != nil {
-		log.Error(err.Error())
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	bookingDto, er := service.BookingService.InsertBooking(bookingDto)
-	if er != nil {
-		c.JSON(er.Status(), er)
-		return
-	}
-
-	c.JSON(http.StatusCreated, bookingDto)
-
 }

@@ -19,3 +19,12 @@ func InsertHotel(hotel model.Hotel) model.Hotel {
 	log.Debug("Hotel Created: ", hotel.Id)
 	return hotel
 }
+
+func GetHotelById(id int) model.Hotel {
+	var hotel model.Hotel
+
+	Db.Where("id = ?", id).First(&hotel)
+	log.Debug("Hotel: ", hotel)
+
+	return hotel
+}

@@ -1,8 +1,8 @@
 package app
 
 import (
+	bookingController "repo/controllers/booking"
 	hotelController "repo/controllers/hotel"
-	reservaController "repo/controllers/reserva"
 	userController "repo/controllers/user"
 
 	log "github.com/sirupsen/logrus"
@@ -18,10 +18,10 @@ func mapUrls() {
 
 	//Hotel Mapping (listo)
 	router.POST("/hotel", hotelController.InsertHotel)
+	router.GET("/hotel/:id", hotelController.GetHotelById)
 
-	//Reserva Mapping (pendiente)
-	router.POST("/reserva", reservaController.ReservaInsert)
-	router.GET("/reservaUser/:idUser", reservaController.GetReservasByIdUser)
+	//Reserva Mapping (listo)
+	router.POST("/booking", bookingController.InsertBooking)
 
 	log.Info("Listo el mapeo de configuraciones :)")
 }
