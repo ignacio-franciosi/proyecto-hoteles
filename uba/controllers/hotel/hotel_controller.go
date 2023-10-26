@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	bookingController "uba/controllers/booking"
 	"uba/dto"
 	service "uba/services"
@@ -11,6 +12,40 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
+
+type CityCodeMapping struct {
+	City string
+	Code string
+}
+
+//Primero hago la funcion para obtener el city code que despues le tengo que pasar al url de amadeus
+
+func GetCityCode() string {
+
+	insertHotelDto := dto.InsertHotelDto
+	cityName := insertHotelDto.City
+
+	// slice de mapeo de City a código
+	mapCityCode := []CityCodeMapping{
+		{City: "Barcelona", Code: "BCN"},
+		{City: "New York", Code: "NYC"},
+		{City: "Paris", Code: "PAR"},
+		{City: "Milan", Code: "MIL"},
+		{City: "Toronto", Code: "YTO"},
+		{City: "Sydney", Code: "SYD"},
+		{City: "Seoul", Code: "SEL"},
+		{City: "Moscow", Code: "MOW"},
+		{City: "London", Code: "LON"},
+	}
+
+	for _, mapp := range mapCityCode {
+		if mapp.City == cityName {
+			return mapp.Code
+		}
+	}
+
+	return ""
+}
 
 // esta funcion se llama cuando desde mongo se hace un post de hotel
 func InsertHotel(c *gin.Context) {
@@ -25,7 +60,8 @@ func InsertHotel(c *gin.Context) {
 		return
 	}
 
-	apiUrl := "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=MIA&radius=5&radiusUnit=KM&hotelSource=ALL"
+	apiUrl := "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city"
+	apiUrl += "?cityCode=" + GetCityCode()
 	// Crear una request HTTP GET
 	request, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
@@ -76,4 +112,20 @@ func InsertHotel(c *gin.Context) {
 
 	}
 
+}
+
+func GetHotelById(c *gin.Context) {
+
+	log.Debug("Hotel id: " + c.Param("id"))
+
+	id, _ := strconv.Atoi(c.Param("id"))
+	var hotelDto dto.HotelDto
+
+	hotelDto, err := service.HotelService.GetHotelById(id)
+
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, hotelDto)
 }

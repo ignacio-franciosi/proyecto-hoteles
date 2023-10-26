@@ -1,6 +1,5 @@
 package booking
 
-//ORM traductor
 import (
 	"repo/model"
 
@@ -10,12 +9,12 @@ import (
 
 var Db *gorm.DB
 
-func InsertReserva(reserva model.Booking) model.Booking {
+func InsertBooking(booking model.Booking) model.Booking {
 	result := Db.Create(&booking)
 
 	if result.Error != nil {
 		log.Error("")
 	}
-	log.Debug("Reserva creada: ", booking.Id)
+	log.Debug("Reserva Creada: ", booking.Id)
 	return booking
 }
