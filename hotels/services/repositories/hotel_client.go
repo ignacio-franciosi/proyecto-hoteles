@@ -116,7 +116,7 @@ func (s *HotelClient) GetAllHotels() (dto.HotelsDto, e.ApiError) {
 
 		// Convierte el hotel recuperado en un DTO y agrégalo a la lista de hoteles.
 		hotelDto := dto.HotelDto{
-			HotelId:     hotel.ID.Hex(),
+			HotelId:     hotel.HotelId.Hex(),
 			Name:        hotel.Name,
 			Description: hotel.Description,
 			Amenities:   hotel.Amenities,
