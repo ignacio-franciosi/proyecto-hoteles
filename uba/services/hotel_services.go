@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	hotelClient "uba/clients/hotel"
@@ -10,7 +10,7 @@ import (
 type hotelService struct{}
 
 type hotelServiceInterface interface {
-	InsertHotel(hotelDto dto.HotelPostDto, idAmadeus string) (dto.HotelDto, e.ApiError)
+	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
 	GetHotelById(id int) (dto.HotelDto, e.ApiError)
 }
 
@@ -22,17 +22,22 @@ func init() {
 	HotelService = &hotelService{}
 }
 
-func (s *hotelService) InsertHotel(hotelDto dto.InsertHotelDto, idAmadeus string) (dto.HotelDto, e.ApiError) {
+func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
 	var hotel model.Hotel
-	var response dto.HotelDto
 
+	hotel.Id = hotelDto.Id
 	hotel.Price = hotelDto.Price
-	hotel.IdAmadeus = idAmadeus
+	hotel.IdAmadeus = hotelDto.IdAmadeus
 	hotel.IdMongo = hotelDto.IdMongo
 
 	hotel = hotelClient.InsertHotel(hotel)
 
-	hotelDto.Id = hotel.Id
+	var response dto.HotelDto
+
+	response.Id = hotel.Id
+	response.IdAmadeus = hotel.IdAmadeus
+	response.IdMongo = hotel.IdMongo
+	response.Price = hotel.Price
 
 	return response, nil
 }

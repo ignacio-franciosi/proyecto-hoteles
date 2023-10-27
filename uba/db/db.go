@@ -1,9 +1,10 @@
 package db
 
 import (
-	bookingClient "repo/clients/booking_client"
-	userClient "repo/clients/user_client"
-	model2 "repo/model"
+	bookingClient "uba/clients/booking"
+	hotelClient "uba/clients/hotel"
+	userClient "uba/clients/user"
+	model2 "uba/model"
 
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
@@ -41,13 +42,14 @@ func init() {
 	// We need to add all CLients that we build
 	userClient.Db = db
 	bookingClient.Db = db
-
+	hotelClient.Db = db
 }
 
 func StartDbEngine() {
 	// We need to migrate all classes model.
 	db.AutoMigrate(&model2.User{})
 	db.AutoMigrate(&model2.Booking{})
+	db.AutoMigrate(&model2.Hotel{})
 
 	log.Info("Finishing Migration Database Tables :)")
 }

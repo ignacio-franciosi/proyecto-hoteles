@@ -1,10 +1,10 @@
-package userController
+package user
 
 import (
 	"net/http"
-	dto2 "repo/dto"
-	service "repo/services"
 	"strconv"
+	dto2 "uba/dto"
+	service "uba/services"
 
 	_ "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"

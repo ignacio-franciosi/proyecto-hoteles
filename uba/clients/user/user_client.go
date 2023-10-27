@@ -1,7 +1,7 @@
 package user
 
 import (
-	"repo/model"
+	"uba/model"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"

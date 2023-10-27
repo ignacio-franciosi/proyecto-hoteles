@@ -1,9 +1,9 @@
 package app
 
 import (
-	bookingController "repo/controllers/booking"
-	hotelController "repo/controllers/hotel"
-	userController "repo/controllers/user"
+	bookingController "uba/controllers/booking"
+	hotelController "uba/controllers/hotel"
+	userController "uba/controllers/user"
 
 	log "github.com/sirupsen/logrus"
 )

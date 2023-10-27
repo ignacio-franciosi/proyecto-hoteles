@@ -3,10 +3,10 @@ package services
 import (
 	"crypto/md5"
 	"encoding/hex"
-	userClient "repo/clients/user"
-	dto2 "repo/dto"
-	"repo/model"
-	e "repo/utils/errors"
+	userClient "uba/clients/user"
+	dto2 "uba/dto"
+	"uba/model"
+	e "uba/utils/errors"
 
 	"github.com/dgrijalva/jwt-go"
 
