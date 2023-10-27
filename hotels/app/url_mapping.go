@@ -14,10 +14,12 @@ func mapUrls() {
 	router.GET("/hotels", hotelController.GetHotels)
 
 	router.POST("/hotel", hotelController.InsertHotel)
-	// router.POST("/hotels", hotelController.QueueHotels)
+
+	router.POST("/hotels", hotelController.QueueHotels)
 
 	router.PUT("/hotel/:HotelId", hotelController.UpdateHotelById)
-	// router.PUT("/hotels", hotelController.QueueHotels)
+
+	router.PUT("/hotels", hotelController.QueueHotels)
 
 	router.DELETE("/hotel/:HotelId", hotelController.DeleteHotelById)
 
