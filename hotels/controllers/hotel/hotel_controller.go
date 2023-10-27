@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	// controlar
 	hotelService = service.NewHotelServiceImpl(
 		client.NewHotelInterface(config.MONGOHOST, config.MONGOPORT, config.MONGOCOLLECTION),
 		client.NewQueueClient(config.RABBITUSER, config.RABBITPASSWORD, config.RABBITHOST, config.RABBITPORT),
