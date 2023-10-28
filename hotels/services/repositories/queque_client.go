@@ -24,7 +24,8 @@ type QueueClient struct {
 
 // crea una conexión al servidor RabbitMQ
 func NewQueueClient(user string, pass string, host string, port int) *QueueClient {
-	Connection, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%d/", user, pass, host, port))
+	//Connection, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%d/", user, pass, host, port))
+	Connection, err := amqp.Dial("amqp://user:password@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	return &QueueClient{
 		Connection: Connection,
@@ -47,6 +48,7 @@ type HotelMessage struct {
 // enviar mensajes a una cola RabbitMQ y notifica eventos de modificacion o creacion de un hotel
 func (qc *QueueClient) SendMessage(id string, action string, message string /*hotelDetails HotelMessage*/) e.ApiError {
 
+	//channel, err := qc.Connection.Channel()
 	channel, err := qc.Connection.Channel()
 
 	err = channel.ExchangeDeclare(

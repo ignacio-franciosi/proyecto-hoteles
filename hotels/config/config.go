@@ -8,7 +8,7 @@ var (
 	RABBITUSER     = "user"
 	RABBITPASSWORD = "password"
 	RABBITHOST     = "rabbit"
-	RABBITPORT     = 15672
+	RABBITPORT     = 5672
 
 	MESSAGESHOST     = "messages"
 	MESSAGESPORT     = 9001
