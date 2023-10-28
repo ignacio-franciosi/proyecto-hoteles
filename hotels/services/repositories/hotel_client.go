@@ -35,7 +35,9 @@ func NewHotelInterface(host string, port int, collection string) *HotelClient {
 	//crea una conexión con la base de datos MongoDB
 	client, err := mongo.Connect(
 		context.TODO(),
-		options.Client().ApplyURI(fmt.Sprintf("mongodb://root:root@%s:%d/?authSource=admin&authMechanism=SCRAM-SHA-256", host, port)))
+		options.Client().ApplyURI("mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"))
+	//mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb (chinada)
+	//mongodb://root:root@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-256 (anterior)
 	//para conectar a MongoDB. Incluye la dirección del servidor, el puerto y la autenticación
 
 	if err != nil {
@@ -49,7 +51,7 @@ func NewHotelInterface(host string, port int, collection string) *HotelClient {
 	}
 
 	fmt.Println("[MongoDB] Initialized connection")
-	fmt.Println(fmt.Sprintf("[MongoDB] Available databases: %s", names))
+	fmt.Println(names)
 
 	return &HotelClient{
 		Client:     client,
