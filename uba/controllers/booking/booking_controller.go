@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"strings"
 	"uba/dto"
 	service "uba/services"
@@ -14,41 +13,48 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// funcion que genera el token de amadeus
-func GetAmadeustoken() string {
+type TokenResponse struct {
+	AccessToken string `json:"access_token"`
+}
 
-	// credenciales
-	data := url.Values{}
-	data.Set("grant_type", "client_credentials")
-	data.Set("client_id", "rZ5NyDeG74mzhfaFqk2V7VaM2yUQtZux")
-	data.Set("client_secret", "IoO2Wocmr1Aqrw2X")
+func GetAmadeusToken() (string, error) {
 
-	// obtengo el token
-	resp, err := http.Post("https://test.api.amadeus.com/v3/security/oauth2/token", "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
+	url := "https://test.api.amadeus.com/v1/security/oauth2/token"
+	method := "POST"
+
+	payload := strings.NewReader("grant_type=client_credentials&client_id=rZ5NyDeG74mzhfaFqk2V7VaM2yUQtZux&client_secret=IoO2Wocmr1Aqrw2X")
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payload)
+
 	if err != nil {
-		fmt.Println("Error:", err)
-		return ""
+		fmt.Println(err)
+		return "", err
 	}
-	defer resp.Body.Close()
-	// leo la response
-	body, err := io.ReadAll(resp.Body)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error:", err)
-		return ""
+		fmt.Println(err)
+		return "", err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	var response TokenResponse
+
+	// Decodificar la respuesta JSON en la estructura AccessTokenResponse.
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return "", err
 	}
 
-	// Decodifico el JSON
-	var response map[string]interface{}
-	if err := json.Unmarshal(body, &response); err != nil {
-		return ""
-	}
-	// Obtengo el token
-	token := response["access_token"].(string)
-
-	fmt.Println("token:", token)
-
-	return token
-
+	// Devolver el valor de access_token.
+	return string(response.AccessToken), nil
 }
 
 func InsertBooking(c *gin.Context) {
@@ -81,7 +87,7 @@ func InsertBooking(c *gin.Context) {
 	endDateBooking := bookingDto.EndDate
 
 	fmt.Println("fecha de ida", startDateBooking)
-	fmt.Println("fecha de vuelta")
+	fmt.Println("fecha de vuelta", endDateBooking)
 
 	// Construyo la URL concatenando los parametros
 	apiUrl := "https://test.api.amadeus.com/v3/shopping/hotel-offers"
@@ -100,10 +106,14 @@ func InsertBooking(c *gin.Context) {
 	}
 
 	// Llamo a la funcion que obtiene el token
-	token := GetAmadeustoken()
+	token, er := GetAmadeusToken()
+	if er != nil {
+		fmt.Println("Error:", er)
+		return
+	}
+	fmt.Println(token)
 
 	request.Header.Set("Authorization", "Bearer "+token)
-	// request.Header.Set("Content-Type", "application/json")
 
 	fmt.Println(request)
 	// Realiza la request HTTP
@@ -116,8 +126,8 @@ func InsertBooking(c *gin.Context) {
 	} else if err == nil {
 		// Verifica el código de estado de la response
 		if response.StatusCode != http.StatusOK {
-			fmt.Printf("La request a la API de Amadeus no fue exitosa. Código: %d\n", response.StatusCode)
-			c.JSON(http.StatusInternalServerError, "La request a la API de Amadeus no fue exitosa.")
+			fmt.Printf("No se pudo hacer la reserva. Código: %d\n", response.StatusCode)
+			c.JSON(http.StatusInternalServerError, "No se pudo hacer la reserva.")
 			return
 		}
 		// Lee el cuerpo de la response
