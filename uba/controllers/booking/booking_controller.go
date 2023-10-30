@@ -139,9 +139,7 @@ func InsertBooking(c *gin.Context) {
 		}
 		// Crear una estructura para deserializar el JSON de la response
 		var responseStruct struct {
-			Data []struct {
-				HotelId string `json:"hotelId"`
-			} `json:"data"`
+			Data []map[string]interface{} `json:"data"`
 		}
 
 		// Decodificar el JSON y extraer el campo "id"
@@ -162,7 +160,9 @@ func InsertBooking(c *gin.Context) {
 			}
 			c.JSON(http.StatusCreated, bookingDto)
 		} else {
-			fmt.Println("No hay disponibilidad en ese periodo")
+			errorMessage := "No hay disponibilidad en ese período"
+			c.JSON(http.StatusBadRequest, gin.H{"error": errorMessage})
+			return
 		}
 
 		defer response.Body.Close()
