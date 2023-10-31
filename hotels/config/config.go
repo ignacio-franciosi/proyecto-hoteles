@@ -5,9 +5,9 @@ var (
 	MONGOPORT       = 27017
 	MONGOCOLLECTION = "hotels"
 
-	RABBITUSER     = "user"
-	RABBITPASSWORD = "password"
-	RABBITHOST     = "rabbit"
+	RABBITUSER     = "guest"
+	RABBITPASSWORD = "guest"
+	RABBITHOST     = "localhost"
 	RABBITPORT     = 5672
 
 	MESSAGESHOST     = "messages"
