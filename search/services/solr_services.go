@@ -58,7 +58,7 @@ func (s *SolrService) Add(id string) e.ApiError {
 		return e.NewBadRequestApiError("error in unmarshal of hotel")
 	}
 
-	err = s.solr.AddClient(hotelDto)
+	err = s.solr.Add(hotelDto)
 	if err != nil {
 		logger.Debugf("error adding to solr: %v", err)
 		return e.NewInternalServerApiError("Adding to Solr error", err)
@@ -87,4 +87,13 @@ func (s *SolrService) GetQuery(query string) (dto.HotelsDto, e.ApiError) {
 	}
 
 	return hotelsDto, nil
+}
+
+// eliminación de un hotel del índice Solr
+func (s *SolrService) Delete(id string) e.ApiError {
+	err := s.solr.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

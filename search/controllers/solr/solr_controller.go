@@ -51,3 +51,15 @@ func Add(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{})
 }
+
+// recibe la solicitud para eliminar un hotel, llama al servicio Solr y
+// luego envía una respuesta HTTP al cliente según el resultado de la eliminación.
+func Delete(c *gin.Context) {
+	id := c.Param("id")
+	err := Solr.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusCreated, err)
+}
