@@ -11,6 +11,6 @@ func init() {
 }
 
 func main() {
-	log.Info("Starting worker")
+	log.Info("Starting consumer")
 	consumer.StartConsumer()
 }
