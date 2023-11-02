@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"producer/config"
-	client "producer/services/repositories"
+	"producer_hotels/config"
+	client "producer_hotels/services/repositories"
 
 	log "github.com/sirupsen/logrus"
 )

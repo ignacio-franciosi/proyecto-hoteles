@@ -1,7 +1,7 @@
 package main
 
 import (
-	producer "producer/controllers/producer"
+	producer "producer_hotels/controllers/producer"
 
 	log "github.com/sirupsen/logrus"
 )

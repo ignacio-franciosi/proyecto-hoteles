@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"producer/config"
-	e "producer/utils/errors"
+	"producer_hotels/config"
+	e "producer_hotels/utils/errors"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 	log "github.com/sirupsen/logrus"

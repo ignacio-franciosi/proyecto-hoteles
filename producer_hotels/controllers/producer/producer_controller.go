@@ -1,10 +1,10 @@
 package producer
 
 import (
-	"producer/config"
-	"producer/services"
-	client "producer/services/repositories"
-	con "producer/utils/connections"
+	"producer_hotels/config"
+	"producer_hotels/services"
+	client "producer_hotels/services/repositories"
+	con "producer_hotels/utils/connections"
 )
 
 var (
@@ -15,6 +15,6 @@ var (
 
 func StartProducer() {
 
-	Producer.TopicProducer("*.*")
+	Producer.TopicProducer("*.*", "-", "")
 
 }
