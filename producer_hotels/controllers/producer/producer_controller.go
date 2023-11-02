@@ -15,6 +15,6 @@ var (
 
 func StartProducer() {
 
-	Producer.TopicProducer("*.delete")
+	Producer.TopicProducer("*.*")
 
 }
