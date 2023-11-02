@@ -1,8 +1,8 @@
 package config
 
 var (
-	QUEUENAME = "worker_items" //producer_hotels
-	EXCHANGE  = "users"        //revisar
+	QUEUENAME = "producer_hotels" //worker_items
+	EXCHANGE  = "hotels"          //revisar: users
 
 	ITEMSHOST = "hotels"
 	ITEMSPORT = 8090
