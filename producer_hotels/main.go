@@ -12,5 +12,5 @@ func init() {
 
 func main() {
 	log.Info("Starting producer")
-	producer.StartWorker()
+	producer.StartProducer()
 }
