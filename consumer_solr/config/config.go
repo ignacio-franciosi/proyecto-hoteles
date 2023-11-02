@@ -1,8 +1,8 @@
 package config
 
 var (
-	QUEUENAME = "worker_solr" //consumer_solr
-	EXCHANGE  = "items"       //hotels
+	QUEUENAME = "consumer_solr" //worker_solr
+	EXCHANGE  = "hotels"        //items
 
 	LBHOST = "lbbusqueda"
 	LBPORT = 80 //a chequear
