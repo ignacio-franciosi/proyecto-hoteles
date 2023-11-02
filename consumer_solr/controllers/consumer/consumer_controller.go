@@ -1,10 +1,10 @@
 package consumer
 
 import (
-	"consumer/config"
-	"consumer/services"
-	client "consumer/services/repositories"
-	con "consumer/utils/connections"
+	"consumer_solr/config"
+	"consumer_solr/services"
+	client "consumer_solr/services/repositories"
+	con "consumer_solr/utils/connections"
 )
 
 var (

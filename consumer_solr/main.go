@@ -1,7 +1,7 @@
 package main
 
 import (
-	"consumer/controllers/consumer"
+	"consumer_solr/controllers/consumer"
 
 	log "github.com/sirupsen/logrus"
 )

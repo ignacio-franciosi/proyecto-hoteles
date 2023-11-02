@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"consumer/config"
-	e "consumer/utils/errors"
+	"consumer_solr/config"
+	e "consumer_solr/utils/errors"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 	log "github.com/sirupsen/logrus"

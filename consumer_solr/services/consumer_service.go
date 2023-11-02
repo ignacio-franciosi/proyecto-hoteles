@@ -1,8 +1,8 @@
 package services
 
 import (
-	"consumer/config"
-	client "consumer/services/repositories"
+	"consumer_solr/config"
+	client "consumer_solr/services/repositories"
 	"fmt"
 	"net/http"
 	"strings"
