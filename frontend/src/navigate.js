@@ -3,7 +3,7 @@ import Congrats from "pages/Congrats.jsx";
 import Home from "pages/Home.jsx";
 import Search from "frontend/src/pages/Search.jsx";
 import HotelDetails from "pages/HotelDetails.jsx";
-import id from "pages/Home.jsx";
+import hotel_id from "pages/Search.jsx";
 import Login from "pages/Login.jsx";
 
 const Home = lazy(() => import("pages/Home.jsx"));
@@ -31,7 +31,7 @@ export const navigation = [
     },
     {
         id: 4,
-        path: `/result/'${id}`, //muy dudoso de que sea así
+        path: `/hotelDetails/'${hotel_id}`, //muy dudoso de que sea así
         Element:HotelDetails,
     },
     {

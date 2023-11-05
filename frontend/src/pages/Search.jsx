@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import './../App.css'
 import {useNavigate} from "react-router-dom";
 
-const Home = () => {
+const Search = () => {
     const [hoteles, setHoteles] = useState([]);
     const navigate = useNavigate();
-    const selectHotels = (id) => {
-        navigate(`/hotel/${id}`);
+    const selectHotels = (hotel_id) => {
+        navigate(`/hotelDetails/${hotel_id}`);
     };
 
 
-    useEffect(() => {
+    useEffect(key => {
         // Realizar la solicitud al backend para obtener la lista de hoteles a
         const fetchHoteles = async () => {
             try {
-                const response = await fetch('http://localhost:8080/hotel');
+                const response = await fetch('http://localhost:8090/hotels');
                 const data = await response.json();
                 setHoteles(data);
             } catch (error) {
@@ -32,14 +32,16 @@ const Home = () => {
             {hoteles.length > 0 ? (
                 <div>
                     {hoteles.map((hotel) => (
-                        <div key={hotel.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '20px' }}>
-                            <img src={hotel.imagen} style={{ width: '150px', height: '150px', marginRight: '10px', marginLeft:'30px' }} />
+                        <div key={hotel.hotel_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '20px' }}>
+                            <img src={hotel.photos} style={{ width: '150px', height: '150px', marginRight: '10px', marginLeft:'30px' }} />
                             <div>
-                                <h2 style={{color: '#0E8388' }}>{hotel.nombre}</h2>
-                                <p style={{ color: '#2C3333' }}>Estrellas: {hotel.valoracion}</p>
-                                <p style={{ color: '#2C3333', marginRight: 'auto' }}>Precio por noche: ${hotel.precio}</p>
+                                <h2 style={{color: '#0E8388' }}>{hotel.name}</h2>
+                                <h2 style={{color: '#0E8388' }}>{hotel.hotel_id}</h2>
+                                <p style={{ color: '#2C3333' }}>Estrellas: {hotel.stars}</p>
+                                <p style={{ color: '#2C3333', marginRight: 'auto' }}>Precio por noche: ${hotel.price}</p>
+                                <p style={{ color: '#2C3333', marginRight: 'auto' }}>Ciudad: {hotel.city}</p>
                             </div>
-                            <button style={{ marginRight: 'auto', backgroundColor:'#2E4F4F' }} type="submit" onClick={() => selectHotels(hotel.id)}>Ver</button>
+                            <button style={{ marginRight: 'auto', backgroundColor:'#2E4F4F' }} type="submit" onClick={() => selectHotels(hotel.hotel_id)}>Ver</button>
 
                         </div>
                     ))}
@@ -54,4 +56,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Search;

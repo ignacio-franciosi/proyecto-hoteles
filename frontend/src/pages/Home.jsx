@@ -39,7 +39,7 @@ const Home = () => {
             alert('La fecha "Fecha desde" no puede ser mayor que "Fecha hasta"');
         } else {
             try {   //envía la respuesta al back (postaman basicamente)
-                const response = await fetch('http://localhost:8080/search/', {
+                const response = await fetch('http://localhost:8080/hotels/', {
                     method: 'POST', headers: {
                         'Content-Type': 'application/json',
                     },
@@ -48,6 +48,7 @@ const Home = () => {
                         startDate: startDate,
                         endDate: endDate
                     }),
+
                 }).then(response => {
                     if (response.ok) {
                         navigate("/search")
@@ -56,6 +57,9 @@ const Home = () => {
                         alert("Error, datos inválidos");
                     }
                 });
+                localStorage.setItem('city', city);
+                localStorage.setItem('startDate', startDate);
+                localStorage.setItem('endDate', endDate);
             } catch (error) {
                 console.log('Error al realizar la solicitud al backend:', error);
             }
