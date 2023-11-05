@@ -51,7 +51,6 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 	bookingResponseDto.Id = booking.Id
 	bookingResponseDto.StartDate = booking.StartDate
 	bookingResponseDto.EndDate = booking.EndDate
-	bookingResponseDto.TotalPrice = booking.TotalPrice
 	bookingResponseDto.IdUser = booking.IdUser
 	bookingResponseDto.IdMongo = booking.IdMongo
 
