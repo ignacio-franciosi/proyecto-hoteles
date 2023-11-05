@@ -36,7 +36,6 @@ const Search = () => {
                             <img src={hotel.photos} style={{ width: '150px', height: '150px', marginRight: '10px', marginLeft:'30px' }} />
                             <div>
                                 <h2 style={{color: '#0E8388' }}>{hotel.name}</h2>
-                                <h2 style={{color: '#0E8388' }}>{hotel.hotel_id}</h2>
                                 <p style={{ color: '#2C3333' }}>Estrellas: {hotel.stars}</p>
                                 <p style={{ color: '#2C3333', marginRight: 'auto' }}>Precio por noche: ${hotel.price}</p>
                                 <p style={{ color: '#2C3333', marginRight: 'auto' }}>Ciudad: {hotel.city}</p>

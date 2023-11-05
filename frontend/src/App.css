@@ -88,3 +88,8 @@ html,body{
 #noHotels{
   align-content: center;
 }
+/* estilos de reserva*/
+#confirmacion{
+  color: #0fe332;
+  text-shadow: 1px 1px 2px black;
+}
