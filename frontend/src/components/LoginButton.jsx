@@ -12,7 +12,7 @@ const LoginButton = () => {
 
     useEffect(() => {
         // Lógica para verificar la autenticación (usando JWT u otra lógica)
-        const token = localStorage.getItem("jwt_token"); // Recupera el token JWT almacenado en localStorage
+        const token = localStorage.getItem("token"); // Recupera el token JWT almacenado en localStorage
         if (token) {
             // Verifica si el token es válido
             setIsAuthenticated(true);
@@ -24,6 +24,7 @@ const LoginButton = () => {
             {isAuthenticated ? ( // Usamos un operador ternario para mostrar el botón adecuado
                 <header id="header">
                     <button id="loginButton">{userEmail || "Bienvenido"}</button>
+
                 </header>
             ) : (
                 <header id="header">

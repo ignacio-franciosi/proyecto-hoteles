@@ -28,16 +28,18 @@ const Login = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    }),
+                    body: JSON.stringify({email, password}),
                 }).then((response) => {
+                    console.log(response.status)
                     if (response.ok) {
+                        console.log("hizo el return")
                         return response.json();
+
+
                     } else {
                         alert('Usuario Inválido');
-                        return { "id_user": -1}
+                        console.log("hizo el error")
+
                     }
                 });
                 if (response.id_user) {
@@ -47,6 +49,8 @@ const Login = () => {
 
                     localStorage.setItem('user_id', response.id_user);
                     localStorage.setItem('email', email);
+                    localStorage.setItem("token", response.token);
+
                     navigate(-1);
                 }
             } catch (error) {
