@@ -26,7 +26,6 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	var hotel model.Hotel
 
 	hotel.Id = hotelDto.Id
-	hotel.Price = hotelDto.Price
 	hotel.IdAmadeus = hotelDto.IdAmadeus
 	hotel.IdMongo = hotelDto.IdMongo
 
@@ -37,7 +36,6 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	response.Id = hotel.Id
 	response.IdAmadeus = hotel.IdAmadeus
 	response.IdMongo = hotel.IdMongo
-	response.Price = hotel.Price
 
 	return response, nil
 }
@@ -51,7 +49,6 @@ func (s *hotelService) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
 	}
 
 	hotelDto.Id = hotel.Id
-	hotelDto.Price = hotel.Price
 	hotelDto.IdMongo = hotel.IdMongo
 	hotelDto.IdAmadeus = hotel.IdAmadeus
 	return hotelDto, nil
