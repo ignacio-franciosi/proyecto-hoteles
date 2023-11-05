@@ -35,6 +35,8 @@ func NewHotelServiceImpl(
 	}
 }
 
+//get hotelid de antes por si acaso
+/*
 func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelResponseDto, e.ApiError) {
 
 	var hotelDto dto.HotelDto
@@ -54,6 +56,28 @@ func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelResponseDto, e.ApiE
 	log.Debug("mongo")
 
 	return hotelResponseDto, nil
+
+}*/
+
+func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
+
+	var hotelDto dto.HotelDto
+	//var hotelResponseDto dto.HotelResponseDto
+
+	hotelDto, err := s.hotel.GetHotelById(id)
+
+	if err != nil {
+		log.Debug("Error getting hotel from mongo")
+		return hotelDto, err
+	}
+
+	if hotelDto.HotelId == "000000000000000000000000" {
+		return hotelDto, e.NewBadRequestApiError("hotel not found")
+	}
+
+	log.Debug("mongo")
+
+	return hotelDto, nil
 
 }
 

@@ -21,8 +21,12 @@ var (
 
 // Maneja las solicitudes para obtener un hotel por su ID. Llama al service para
 // recuperar la información del hotel y envía una respuesta JSON al client.
-func GetHotelById(c *gin.Context) {
+
+// ESTE DE LA MICHELSON NI ANDA KKKK
+
+/*func GetHotelById(c *gin.Context) {
 	//var hotelDto dto.HotelDto
+
 	id := c.Param("HotelId")
 	hotelResponseDto, err := hotelService.GetHotelById(id)
 
@@ -32,6 +36,21 @@ func GetHotelById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, hotelResponseDto)
+}*/
+
+// VERSION NACHELSON
+func GetHotelById(c *gin.Context) {
+	var hotelDto dto.HotelDto
+
+	id := c.Param("HotelId")
+	hotelDto, err := hotelService.GetHotelById(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, hotelDto)
 }
 
 // Maneja las solicitudes para obtener la lista de hoteles. Llama al service
