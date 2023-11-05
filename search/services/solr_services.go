@@ -97,3 +97,11 @@ func (s *SolrService) Delete(id string) e.ApiError {
 	}
 	return nil
 }
+
+func (s *SolrService) AddHotelsToSolr(hotels []dto.HotelDto) e.ApiError {
+	err := s.solr.AddHotelsToSolr(hotels)
+	if err != nil {
+		return err
+	}
+	return nil
+}

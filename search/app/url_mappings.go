@@ -12,6 +12,8 @@ func mapUrls() {
 
 	router.GET("/hotels/:id", solrController.Add)
 
+	router.POST("/solr/hotels", solrController.AddHotelsToSolr)
+
 	router.DELETE("/hotels/:id", solrController.Delete)
 
 	log.Info("Finishing mappings configurations")

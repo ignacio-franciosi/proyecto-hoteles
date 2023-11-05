@@ -45,6 +45,81 @@ func (sc *SolrClient) Add(HotelDto dto.HotelDto) e.ApiError {
 	return nil
 }
 
+// toma una lista de objetos HotelDto y los convierte en formato JSON antes de enviarlos a Solr.
+func (sc *SolrClient) AddHotelsToSolr(hotels []dto.HotelDto) e.ApiError {
+	// Crear un slice de datos en formato JSON
+	var jsonData []byte
+	for _, hotel := range hotels {
+		hotelData, err := json.Marshal(hotel)
+		if err != nil {
+			fmt.Println("Error al convertir a JSON:", err)
+			return nil
+		}
+		jsonData = append(jsonData, hotelData...)
+	}
+
+	// URL de la colección en Solr
+	solrURL := "http://localhost:8983/solr/hotels"
+
+	// Realizar una solicitud HTTP POST para agregar los documentos a Solr
+	resp, err := http.Post(solrURL, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Error al enviar la solicitud:", err)
+		return nil
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		fmt.Println("Hoteles agregados exitosamente a Solr")
+	} else {
+		fmt.Println("Error al agregar los hoteles a Solr. Código de estado:", resp.Status)
+	}
+
+	return nil
+}
+
+/*
+func (sc *SolrClient) AddDocToSolr(HotelDto dto.HotelDto) e.ApiError {
+	// Crear una instancia de tu objeto HotelDto y asignar valores
+	hotel := HotelDto{
+		HotelId:     "hotel123",
+		Name:        "Ejemplo Hotel",
+		Description: "Un gran lugar para alojarse",
+		Amenities:   "Piscina, Gimnasio, Restaurante",
+		Stars:       "4",
+		Rooms:       100,
+		Price:       150.50,
+		City:        "Ejemplo Ciudad",
+		Photos:      "imagen1.jpg,imagen2.jpg",
+	}
+
+	// Convertir el objeto en JSON
+	jsonData, err := json.Marshal(hotel)
+	if err != nil {
+		fmt.Println("Error al convertir a JSON:", err)
+		return nil
+	}
+
+	// URL de la colección en Solr
+	solrURL := "http://localhost:8983/solr/hotels/"
+
+	// Realizar una solicitud HTTP POST para agregar el documento a Solr
+	resp, err := http.Post(solrURL, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Error al enviar la solicitud:", err)
+		return nil
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		fmt.Println("Documento agregado exitosamente a Solr")
+	} else {
+		fmt.Println("Error al agregar el documento a Solr. Código de estado:", resp.Status)
+	}
+	return nil
+}
+*/
+
 // toma parámetros de búsqueda (city, startDate, endDate), realiza una solicitud a Solr,
 // procesa la respuesta JSON y devuelve los resultados de la búsqueda de hoteles en el
 // formato especificado en dto.HotelsDto

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"search/config"
+	"search/dto"
 	"search/services"
 	client "search/services/repositories"
 	con "search/utils/connections"
@@ -18,6 +19,24 @@ var (
 		(*client.SolrClient)(con.NewSolrClient(config.SOLRHOST, config.SOLRPORT, config.SOLRCOLLECTION)),
 	)
 )
+
+func AddHotelsToSolr(c *gin.Context) {
+	var hotels dto.HotelsDto
+	err := c.BindJSON(&hotels)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	er := Solr.AddHotelsToSolr(hotels)
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{})
+}
 
 func GetQuery(c *gin.Context) {
 	// Obtener los valores de los tres campos desde la solicitud HTTP
