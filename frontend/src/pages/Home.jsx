@@ -9,7 +9,7 @@ const Home = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const handleSubmit = async (e) => { //recibe los datos del formulario a
-
+        console.log(startDate);
         e.preventDefault(); // para que no recarga la página
         if (city === '') {
             document.getElementById("inputCity").style.borderColor = 'red';

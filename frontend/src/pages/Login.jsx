@@ -50,7 +50,9 @@ const Login = () => {
                     localStorage.setItem('user_id', response.id_user);
                     localStorage.setItem('email', email);
                     localStorage.setItem("token", response.token);
-
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
                     navigate(-1);
                 }
             } catch (error) {
