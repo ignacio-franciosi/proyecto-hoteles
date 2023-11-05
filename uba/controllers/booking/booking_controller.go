@@ -70,8 +70,7 @@ func InsertBooking(c *gin.Context) {
 	}
 	// Serializo el BookingDto a formato JSON
 
-	id := bookingDto.IdHotel
-	fmt.Println("El id mysql del hotel es:", id)
+	id := bookingDto.IdMongo
 	// necesito llmara a una funcion que me traiga el id amadeus del hotel con el id que ya tengo (tengo el id mysql)
 
 	hotelDto, err := service.HotelService.GetHotelById(id)

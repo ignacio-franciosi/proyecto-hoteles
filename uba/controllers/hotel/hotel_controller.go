@@ -2,7 +2,6 @@ package hotel
 
 import (
 	"net/http"
-	"strconv"
 	"uba/dto"
 	service "uba/services"
 
@@ -39,7 +38,7 @@ func GetHotelById(c *gin.Context) {
 
 	log.Debug("Hotel id: " + c.Param("id"))
 
-	id, _ := strconv.Atoi(c.Param("id"))
+	id := (c.Param("id"))
 	var hotelDto dto.HotelDto
 
 	hotelDto, err := service.HotelService.GetHotelById(id)
