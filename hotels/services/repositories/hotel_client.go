@@ -55,7 +55,7 @@ func NewHotelInterface(host string, port int, collection string) *HotelClient {
 
 	return &HotelClient{
 		Client:     client,
-		Database:   client.Database("publicaciones"),
+		Database:   client.Database("hotels_db"),
 		Collection: collection,
 	}
 }

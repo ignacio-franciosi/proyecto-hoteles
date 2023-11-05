@@ -27,7 +27,7 @@ func init() {
 	DBHost := "localhost"
 	// ------------------------
 
-	db, err = gorm.Open(mysql.Open(DBUser+":"+DBPass+"@tcp("+DBHost+":3307)/"+DBName+"?charset=utf8&parseTime=True"),
+	db, err = gorm.Open(mysql.Open(DBUser+":"+DBPass+"@tcp("+DBHost+":3306)/"+DBName+"?charset=utf8&parseTime=True"),
 		&gorm.Config{
 			Logger: logger.Default.LogMode(logger.Info),
 		})
