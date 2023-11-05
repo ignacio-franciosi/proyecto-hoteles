@@ -11,7 +11,7 @@ type hotelService struct{}
 
 type hotelServiceInterface interface {
 	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError)
-	GetHotelById(id int) (dto.HotelDto, e.ApiError)
+	GetHotelById(id string) (dto.HotelDto, e.ApiError)
 }
 
 var (
@@ -42,11 +42,11 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	return response, nil
 }
 
-func (s *hotelService) GetHotelById(id int) (dto.HotelDto, e.ApiError) {
+func (s *hotelService) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
 	var hotel model.Hotel = hotelClient.GetHotelById(id)
 	var hotelDto dto.HotelDto
 
-	if hotel.Id == 0 {
+	if hotel.IdMongo == "000000000000000000000000" {
 		return hotelDto, e.NewBadRequestApiError("Hotel no encontrado")
 	}
 

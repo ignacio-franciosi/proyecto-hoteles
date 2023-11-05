@@ -20,10 +20,10 @@ func InsertHotel(hotel model.Hotel) model.Hotel {
 	return hotel
 }
 
-func GetHotelById(id int) model.Hotel {
+func GetHotelById(id string) model.Hotel {
 	var hotel model.Hotel
 
-	Db.Where("id = ?", id).First(&hotel)
+	Db.Where("id_mongo = ?", id).First(&hotel)
 	log.Debug("Hotel: ", hotel)
 
 	return hotel

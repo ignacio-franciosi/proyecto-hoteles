@@ -5,7 +5,7 @@ type BookingDto struct {
 	StartDate  string  `json:"startDate"`
 	EndDate    string  `json:"endDate"`
 	TotalPrice float32 `json:"totalPrice"`
-	IdHotel    int     `json:"idHotel"`
+	IdMongo    string  `json:"idMongo"`
 	IdUser     int     `json:"idUser"`
 }
 

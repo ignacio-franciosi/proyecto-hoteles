@@ -31,7 +31,7 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 	booking.StartDate = bookingDto.StartDate
 	booking.EndDate = bookingDto.EndDate
 	booking.IdUser = bookingDto.IdUser
-	booking.IdHotel = bookingDto.IdHotel
+	booking.IdMongo = bookingDto.IdMongo
 	/*
 		timeStart, _ := time.Parse("2023-05-20", bookingDto.StartDate)
 		timeEnd, _ := time.Parse("2023-01-23", bookingDto.EndDate)
@@ -53,7 +53,7 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 	bookingResponseDto.EndDate = booking.EndDate
 	bookingResponseDto.TotalPrice = booking.TotalPrice
 	bookingResponseDto.IdUser = booking.IdUser
-	bookingResponseDto.IdHotel = booking.IdHotel
+	bookingResponseDto.IdMongo = booking.IdMongo
 
 	return bookingResponseDto, nil
 

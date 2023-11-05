@@ -5,7 +5,7 @@ type Booking struct {
 	StartDate  string  `gorm:"type:date;not null"`
 	EndDate    string  `gorm:"type:date;not null"`
 	TotalPrice float32 `gorm:"type:decimal;unsigned;not null"`
-	IdHotel    int     `gorm:"type:integer;not null"`
+	IdMongo    string  `gorm:"type:varchar(250);not null"`
 	IdUser     int     `gorm:"type:integer;not null"`
 }
 
