@@ -40,7 +40,7 @@ const HotelDetails = () => {
                     alert("Su reserva ha sido confirmada");
                         navigate("/home");
                 } else {
-                    alert("Su reserva ha sido rechazada");
+                    alert("No hay habitaciones disponibles");
                 }
             } catch (error) {
                 console.log('Error al realizar la solicitud al backend:', error);
