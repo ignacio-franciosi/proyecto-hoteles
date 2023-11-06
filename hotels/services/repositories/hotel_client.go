@@ -35,7 +35,7 @@ func NewHotelInterface(host string, port int, collection string) *HotelClient {
 	//crea una conexión con la base de datos MongoDB
 	client, err := mongo.Connect(
 		context.TODO(),
-		options.Client().ApplyURI("mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"))
+		options.Client().ApplyURI("mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb")) // sacarlo en un config
 	//mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb (chinada)
 	//mongodb://root:root@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-256 (anterior)
 	//para conectar a MongoDB. Incluye la dirección del servidor, el puerto y la autenticación

@@ -20,7 +20,7 @@ var (
 
 func init() {
 	// DB Connections Paramters
-	DBName := "arqsw2"
+	DBName := "arqsw2" //sacar a un config
 	DBUser := "root"
 	DBPass := ""
 	//DBPass := os.Getenv("MVC_DB_PASS")

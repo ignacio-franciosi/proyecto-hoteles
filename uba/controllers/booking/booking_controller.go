@@ -17,7 +17,7 @@ type TokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
-func GetAmadeusToken() (string, error) {
+func GetAmadeusToken() (string, error) { //refrescar el token cada media hora aproximadamente, no en cada request
 
 	url := "https://test.api.amadeus.com/v1/security/oauth2/token"
 	method := "POST"

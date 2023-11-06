@@ -23,7 +23,7 @@ type QueueClient struct {
 }
 
 // crea una conexión al servidor RabbitMQ
-func NewQueueClient(user string, pass string, host string, port int) *QueueClient {
+func NewQueueClient(user string, pass string, host string, port int) *QueueClient { //meterlo en un config
 	//Connection, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%d/", user, pass, host, port))
 	Connection, err := amqp.Dial("amqp://localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
