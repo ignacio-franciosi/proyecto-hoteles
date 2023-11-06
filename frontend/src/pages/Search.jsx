@@ -8,10 +8,10 @@ const Search = () => {
     const selectHotels = (hotel_id) => {
         navigate(`/hotelDetails/${hotel_id}`);
     };
-
+    const city = localStorage.getItem("city");
 
     useEffect(key => {
-        // Realizar la solicitud al backend para obtener la lista de hoteles a
+        // Realizar la solicitud al backend para obtener la lista de hoteles
         const fetchHoteles = async () => {
             try {
                 const response = await fetch('http://localhost:8090/hotels');
@@ -27,20 +27,19 @@ const Search = () => {
 
     return (
 
-        <div style={{ alignItems: 'left', backgroundColor: '#CBE4DE', minHeight: '100vh' }}>
-            <h1 style={{ textAlign: 'center', color:'#0E8388'}}>Hoteles:</h1>
+        <div id="backHotelSearch">
             {hoteles.length > 0 ? (
                 <div>
                     {hoteles.map((hotel) => (
-                        <div key={hotel.hotel_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '20px' }}>
-                            <img src={hotel.photos} style={{ width: '150px', height: '150px', marginRight: '10px', marginLeft:'30px' }} />
+                        <div id="hotelSearch">
+                            <img id="imgSearch" src={hotel.photos}/>
                             <div>
-                                <h2 style={{color: '#0E8388' }}>{hotel.name}</h2>
-                                <p style={{ color: '#2C3333' }}>Estrellas: {hotel.stars}</p>
-                                <p style={{ color: '#2C3333', marginRight: 'auto' }}>Precio por noche: ${hotel.price}</p>
-                                <p style={{ color: '#2C3333', marginRight: 'auto' }}>Ciudad: {hotel.city}</p>
+                                <h2 id="h2HotelSearch">{hotel.name}</h2>
+                                <p id="paragraphSearch">Estrellas: {hotel.stars}</p>
+                                <p id="paragraphSearch">Precio por noche: ${hotel.price}</p>
+                                <p id="paragraphSearch">Ciudad: {hotel.city}</p>
                             </div>
-                            <button style={{ marginRight: 'auto', backgroundColor:'#2E4F4F' }} type="submit" onClick={() => selectHotels(hotel.hotel_id)}>Ver</button>
+                            <button id="butonSearch" type="submit" onClick={() => selectHotels(hotel.hotel_id)}>Ver</button>
 
                         </div>
                     ))}

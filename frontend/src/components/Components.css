@@ -2,7 +2,7 @@
 header{
     font-family: Georgia, serif;
     text-Align: center;
-    background-color: #714a31;
+    background-color: #007f7f;
     color: #c1d3d4;
     position: absolute;
     top: 8%;
@@ -40,7 +40,7 @@ footer{
     color: #fdfdfd;
     text-shadow: 1px 1px 2px black;
     text-Align: center;
-    background-color: #704a31;
+    background-color: #007f7f;
 
 
 }

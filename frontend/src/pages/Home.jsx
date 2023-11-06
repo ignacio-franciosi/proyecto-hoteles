@@ -68,7 +68,7 @@ const Home = () => {
     };
 
     return (
-        <div id="body">
+        <div id="bodyHome">
             <h1 id="h1Home">Encuentra tu hotel ;)</h1>
             <form id="formHome" onSubmit={handleSubmit}>
                 <p>Ciudad</p>

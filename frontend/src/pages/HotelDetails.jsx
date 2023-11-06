@@ -13,16 +13,17 @@ const HotelDetails = () => {
     const endDate1 = localStorage.getItem("endDate");
     const user_id = Number(localStorage.getItem('user_id'));
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const inputValue = e.target[0].value;
         const splitValues = inputValue.split(' - ');
 
-
             try {
-
-
-                const response = await fetch(`http://localhost:8090/booking`, {
+                if(user_id === -1){
+                    alert("Debes iniciar sesión para poder reservar!");
+                }
+                const response = await fetch(`http://localhost:8080/booking`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -36,9 +37,10 @@ const HotelDetails = () => {
                 });
 
                 if (response.ok) {
-                    console.log('Se ha registrado su reserva');
+                    alert("Su reserva ha sido confirmada");
+                        navigate("/home");
                 } else {
-                    console.log('No hay habitaciones disponibles');
+                    alert("Su reserva ha sido rechazada");
                 }
             } catch (error) {
                 console.log('Error al realizar la solicitud al backend:', error);
@@ -61,21 +63,18 @@ const HotelDetails = () => {
     }, [hotel_id]);
 
     return (
-        <div style={{ alignItems: 'left', backgroundColor: '#CBE4DE', minHeight: '100vh' }}>
+        <div id="backHotelDetails">
             {hotel ? (
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: '80px', marginBottom: '20px', marginLeft: '60px' }}>
-                    <div style={{ alignItems: 'left', maxWidth: '100%' }}>
-                        <h1 style={{ textAlign: 'left', color: '#0E8388' }}>Hotel {hotel.name}</h1>
-                        <p style={{ textAlign: 'left', color: '#2C3333' }}>Estrellas: {hotel.stars}</p>
-                        <p style={{ textAlign: 'left', color: '#2C3333', maxWidth: '80%' }}>Descripción: {hotel.description}</p>
-                        <p style={{ textAlign: 'left', color: '#2C3333' }}>Precio por noche: ${hotel.price}</p>
-                        <p style={{ textAlign: 'left', color: '#2C3333' }}>Amenities: {hotel.amenities}</p>
+                <div id="hotelDetails">
+                        <h1 id="h1HotelDetails" >Hotel {hotel.name}</h1>
+                        <p id="paragraphDetails" >Estrellas: {hotel.stars}</p>
+                        <p id="paragraphDetails">Descripción: {hotel.description}</p>
+                        <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
+                        <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
                         <form onSubmit={handleSubmit}>
-                        <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
-                            <button id="botonLogin" type="submit" style={{ textAlign: 'right', backgroundColor: '#2E4F4F', marginLeft: '15px' }}>Reservar</button>
+                            <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
+                            <button id="butonDetails" type="submit" >Reservar</button>
                         </form>
-                    </div>
-
                 </div>
             ) : (
                 <p>No se encontró el hotel</p>

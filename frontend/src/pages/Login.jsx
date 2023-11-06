@@ -50,14 +50,14 @@ const Login = () => {
                     localStorage.setItem('user_id', response.id_user);
                     localStorage.setItem('email', email);
                     localStorage.setItem("token", response.token);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                    navigate(-1);
+
                 }
             } catch (error) {
+                localStorage.setItem('user_id', "-1");
+
                 console.log('Error al realizar la solicitud al backend:', error);
             }
+        window.location.reload();
 
     };
 

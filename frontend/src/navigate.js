@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import Congrats from "pages/Congrats.jsx";
 import Home from "pages/Home.jsx";
 import Search from "frontend/src/pages/Search.jsx";
 import HotelDetails from "pages/HotelDetails.jsx";
@@ -31,12 +30,8 @@ export const navigation = [
     },
     {
         id: 4,
-        path: `/hotelDetails/'${hotel_id}`, //muy dudoso de que sea así
+        path: `/hotelDetails/'${hotel_id}`,
         Element:HotelDetails,
     },
-    {
-        id: 5,
-        path: '/congrats',
-        Element: Congrats,
-    },
+
 ];

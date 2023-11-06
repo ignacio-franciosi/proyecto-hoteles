@@ -1,95 +1,201 @@
 /*ESTILOS DEL HOME*/
-#h1Home{
-  text-Align: center;
-  color: #ffffff;
-  font-family: Georgia, serif;
-  position: absolute;
-  top: 17%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+#h1Home {
+    text-Align: center;
+    color: #000000;
+    font-family: Georgia, serif;
+    position: absolute;
+    top: 17%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-html,body{
-  background-color: #CBE4DE;
- /* background-image: url('images/home/suiza.jpg');
 
-  */
-  background-size: cover;
+html, body {
+    background-color: #d7b6a2;
+
+
 }
-#formHome{
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  display: grid;
-  align-Items: center;
-  background-color: #424242;
-  padding: 2rem;
-  border-radius: 40px;
-  width: 30%;
-  box-shadow: 5px 5px 5px 5px rgb(104, 101, 101);
-  #inputCity, #inputFrom, #inputTo{
+#bodyHome{
+
+}
+#formHome {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: grid;
+    align-Items: center;
+    background-color: #424242;
+    padding: 2rem;
+    border-radius: 40px;
+    width: 30%;
+    box-shadow: 5px 5px 5px 5px rgb(104, 101, 101);
+
+    #inputCity, #inputFrom, #inputTo {
+        margin-Bottom: 10px;
+        padding: 15px;
+        background-color: #424242;
+        border: 1px solid;
+        border-radius: 15px;
+        font-size: 15px;
+    }
+
+    #ButonSearchHome {
+        background-Color: #007f7f;
+        color: #ffffff;
+        padding: 8px 16px;
+        text-shadow: 1px 1px 2px black;
+    }
+}
+
+/*ESTILOS DEL LOGIN*/
+#h1Login {
+    font-family: Georgia, serif;
+    text-Align: center;
+    color: #2a443b;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#formLogin {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#formLogin {
+    text-align: center;
+    display: grid;
+    align-Items: center;
+    background-color: #424242;
+    padding: 2rem;
+    border-radius: 40px;
+    width: 30%;
+    padding-top: 30px;
+    box-shadow: 5px 5px 5px 5px rgb(104, 101, 101);
+}
+
+#inputEmailLogin, #inputPasswordLogin {
     margin-Bottom: 10px;
     padding: 15px;
     background-color: #424242;
     border: 1px solid;
     border-radius: 15px;
     font-size: 15px;
-  }
-  #ButonSearchHome{
-    background-Color: #fd9e32;
+}
+
+#botonLogin {
+    background-Color: #007f7f;
     color: #ffffff;
     padding: 8px 16px;
     text-shadow: 1px 1px 2px black;
-  }
 }
-/*ESTILOS DEL LOGIN*/
-#h1Login{
-  font-family: Georgia, serif;
-  text-Align: center;
-  color:#ffffff;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
+/*estilos del search*/
+#hotelSearch {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
 }
-#formLogin{
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
+#imgSearch {
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
 }
-#formLogin{
-  text-align: center;
-  display: grid;
-  align-Items: center;
-  background-color: #424242;
-  padding: 2rem;
-  border-radius: 40px;
-  width: 30%;
-  padding-top: 30px;
-  box-shadow: 5px 5px 5px 5px rgb(104, 101, 101);
+
+#backHotelSearch {
+    position: relative;
+    left: 110%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
 }
-#inputEmailLogin,#inputPasswordLogin{
-  margin-Bottom: 10px;
-  padding: 15px;
-  background-color: #424242;
-  border: 1px solid;
-  border-radius: 15px;
-  font-size: 15px;
+
+#h1HotelSearch {
+    font-size: 24px;
+    color: #0E8388;
+    margin-bottom: 20px;
 }
-#botonLogin{
-  background-Color: #fd9e32;
-  color: #ffffff;
-  padding: 8px 16px;
-  text-shadow: 1px 1px 2px black;
+
+#h2HotelSearch {
+    font-size: 18px;
+    color: #0E8388;
+    margin-bottom: 10px;
 }
-/* estilos search*/
-#noHotels{
-  align-content: center;
+
+#paragraphSearch {
+    font-size: 14px;
+    color: #2C3333;
+    margin-bottom: 10px;
 }
-/* estilos de reserva*/
-#confirmacion{
-  color: #0fe332;
-  text-shadow: 1px 1px 2px black;
+
+#butonSearch {
+    background-color: #2E4F4F;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#noHotels {
+    text-align: center;
+}
+
+#butonSearch {
+    background-color: #2E4F4F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#noHotels {
+    align-content: center;
+}
+
+/* estilos de details*/
+#hotelDetails {
+    position: absolute;
+    top: 15%;
+    left: 25%;
+    text-align: center;
+    display: grid;
+    align-Items: center;
+}
+
+#backHotelDetails {
+    align-items: center;
+
+}
+
+#h1HotelDetails {
+    color: #ffffff;
+    font-family: Georgia, serif;
+}
+
+#paragraphDetails {
+    text-align: left;
+    color: #2C3333;
+}
+
+#confirmacion {
+    color: #0fe332;
+    text-shadow: 1px 1px 2px black;
+}
+
+#butonDetails {
+    background-color: #2E4F4F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
 }
