@@ -36,9 +36,9 @@ const Home = () => {
         if (startDate1 > endDate1) {
             document.getElementById("inputFrom").style.borderColor = 'red';
             document.getElementById("inputTo").style.borderColor = 'red';
-            alert('La fecha "Fecha desde" no puede ser mayor que "Fecha hasta"');
+            alert('La fecha de ingreso no puede ser posterior a la fecha de salida"');
         } else {
-            try {   //envía la respuesta al back (postaman basicamente)
+            try {   //envía la respuesta al back (postman basicamente)
                 const response = await fetch('http://localhost:8080/hotels/', {
                     method: 'POST', headers: {
                         'Content-Type': 'application/json',
@@ -68,33 +68,34 @@ const Home = () => {
     };
 
     return (
-        <div id="bodyHome">
-            <h1 id="h1Home">Encuentra tu hotel ;)</h1>
+        <div id="bodyHome" class="row">
+            
             <form id="formHome" onSubmit={handleSubmit}>
-                <p>Ciudad</p>
-                <input id={"inputCity"}
-                       type="text"
-                       placeholder="Ciudad"
-                       value={city}
-                       onChange={(e) => setCity(e.target.value)}
 
+                <input id={"inputCity"}
+                    type="text"
+                    placeholder="Ciudad"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    
                 />
-                <p>Fecha desde: </p>
+
                 <input id={"inputFrom"}
-                       type="date"
-                       placeholder="Fecha desde"
-                       value={startDate}
-                       onChange={(e) => setStartDate(e.target.value)}
+                    type="date"
+                    placeholder="Fecha desde"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
                 />
-                <p>Fecha hasta: </p>
+
                 <input id={"inputTo"}
-                       type="date"
-                       placeholder="Fecha hasta"
-                       value={endDate}
-                       onChange={(e) => setEndDate(e.target.value)}
+                    type="date"
+                    placeholder="Fecha hasta"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
                 />
-                <p></p>
+
                 <button id="ButonSearchHome" type="submit">Buscar</button>
+            
             </form>
         </div>
     );

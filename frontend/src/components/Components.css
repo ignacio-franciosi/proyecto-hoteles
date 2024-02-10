@@ -1,19 +1,40 @@
 /* comentario*/
-header{
-    font-family: Georgia, serif;
+#header{
+    font-family: impact, serif;
+    font-size: 100%;
     text-Align: center;
-    background-color: #007f7f;
-    color: #c1d3d4;
-    position: absolute;
-    top: 8%;
-    left: 50%;
+    background-color: #7d7373;
+    color: #ffffff;
+    position: fixed;
     width: 100%;
-    transform: translate(-50%, -50%);
+    z-index: 1000;
+    top: 0;
 }
+
+#footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #7d7373;
+    text-Align: center;
+    color: #ffffff;
+    font-size: 70%;
+    /* display: none; */
+    padding: 10px 0;
+    z-index: 1000;
+
+}
+
+.scrolled #footer {
+    display: block;
+    position: fixed;
+}
+
 #loginButton{
     position: absolute;
     right: 2%;
-    top: 8%;
+    top: 4%;
     color: #ffffff;
     background-color: rgba(83, 91, 242, 0);
 
@@ -21,7 +42,7 @@ header{
 #backButton{
     position: absolute;
     left: 2%;
-    top: 8%;
+    top: 4%;
     color: #ffffff;
     background-color: rgba(83, 91, 242, 0);
 }
@@ -32,15 +53,4 @@ p{
     align-Items: center;
     background-Color: #ffffff;
     min-Height: 100vh
-}
-footer{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    color: #fdfdfd;
-    text-shadow: 1px 1px 2px black;
-    text-Align: center;
-    background-color: #007f7f;
-
-
 }

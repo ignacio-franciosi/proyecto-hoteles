@@ -8,7 +8,7 @@ const Header = () => {
     const navigate = useNavigate();
         return (
             <header id="header">
-                <h1 > Hoteles.com</h1>
+                <h1 > hoteles.com</h1>
             </header>
 
         );

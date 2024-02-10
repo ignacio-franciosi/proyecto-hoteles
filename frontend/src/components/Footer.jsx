@@ -1,13 +1,31 @@
-import React from 'react';
-//import './components.css'
-const Footer = ()=>{
-    return(
-        <footer id= "footer">
-            <p>Autors: Elliott Victoria, Franciosi Ignacio, Havenstein Carolina, Morabito Leonardo</p>
-            <p>Copyright© 2023. Todos los derechos reservados </p>
-        </footer>)
+import './Components.css'
+import React, { useEffect, useState } from 'react';
 
+const Footer = () => {
+    const [scrolled, setScrolled] = useState(false);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const isScrolled = window.scrollY > 5;
+            console.log("Scrolling:", isScrolled);
+            setScrolled(isScrolled);
+        };
 
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    return (
+        <div className={scrolled ? 'scrolled' : 'block'}>
+            <div id="footer">
+                {"Autores: Elliott Victoria, Franciosi Ignacio, Havenstein Carolina, Morabito Leonardo "+
+                    "Copyright© 2023. Todos los derechos reservados"}
+            </div>
+        </div>
+    );
 };
+
 export default Footer;

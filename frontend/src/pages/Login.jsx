@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import CustomModal from '../components/CustomModal.jsx';
 import { useNavigate } from 'react-router-dom';
 import './../App.css';
 
@@ -7,6 +9,26 @@ const Login = () => {
     const navigate = useNavigate(); // Permite la navegación entre páginas con las rutas
     const [email, setEmail] = useState(''); // Se inicializan las variables vacías
     const [password, setPassword] = useState('');
+
+    const register = () => { // funbcion que te redirige a  register
+        navigate("/register");
+    };
+    let [emptyRegister] = useState(false);
+    const [showAlert1, setShowAlert1] = useState(false);
+    const [showAlert2, setShowAlert2] = useState(false);
+
+    const openAlert1 = () => {
+        setShowAlert1(true);
+    };
+    const closeAlert1 = () => {
+        setShowAlert1(false);
+    };
+    const openAlert2 = () => {
+        setShowAlert2(true);
+    };
+    const closeAlert2 = () => {
+        setShowAlert2(false);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Para que no recargue la página
@@ -20,6 +42,7 @@ const Login = () => {
         } else{
             document.getElementById('inputEmailLogin').style.borderColor = '';
         }
+        if (!emptyRegister) {
 
             try {
                 // Envía la respuesta al backend (Postman, básicamente)
@@ -47,24 +70,39 @@ const Login = () => {
                     // El usuario está en la base de datos
                     console.log('Usuario válido');
 
-                    localStorage.setItem('user_id', response.id_user);
-                    localStorage.setItem('email', email);
-                    localStorage.setItem("token", response.token);
+                    Cookies.set('user_id', response.id_user);
+                    Cookies.set('email', email);
+                    Cookies.set("token", response.token);
+                    Cookies.set("type", response.tipo)
+                    navigate('/home');
+                    window.location.reload();
 
                 }
             } catch (error) {
-                localStorage.setItem('user_id', "-1");
+                Cookies.set('user_id', "-1");
 
                 console.log('Error al realizar la solicitud al backend:', error);
             }
-        window.location.reload();
+        } else {
+            openAlert2()
+            emptyRegister = true;
+        }
 
     };
 
     // Parte visible
     return (
         <div id="body">
-            <h1 id="h1Login">Iniciar sesión</h1>
+            <CustomModal
+                showModal={showAlert2}
+                closeModal={closeAlert2}
+                content="Debes completar todos los campos"
+            />
+            <CustomModal
+                showModal={showAlert1}
+                closeModal={closeAlert1}
+                content="Usuario no registrado"
+            />
             <form id="formLogin" onSubmit={handleSubmit}>
                 <input
                     id={'inputEmailLogin'}
@@ -81,9 +119,9 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <button id="botonLogin" type="submit">
-                    Iniciar sesión
-                </button>
+                <button id="botonLogin" type="submit">Iniciar sesión</button>
+                <br/>
+                <button id="botonLogin" onClick={register}>Registrarse</button>
             </form>
         </div>
     );
