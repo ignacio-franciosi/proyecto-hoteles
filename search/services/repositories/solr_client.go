@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
 	"search/config"
 	"search/dto"
@@ -19,6 +21,99 @@ type SolrClient struct {
 	Collection string
 }
 
+func (sc *SolrClient) GetQuery(query string, field string) (dto.HotelsDto, e.ApiError) {
+	var response dto.SolrResponseDto
+	var hotelsDto dto.HotelsDto
+	q, err := http.Get(fmt.Sprintf("http://%s:%d/solr/hotelSearch/select?q=%s%s%s", config.SOLRHOST, config.SOLRPORT, field, "%3A", query))
+
+	if err != nil {
+		return hotelsDto, e.NewBadRequestApiError("error getting from solr")
+	}
+
+	defer q.Body.Close()
+	err = json.NewDecoder(q.Body).Decode(&response)
+	if err != nil {
+		log.Printf("Response Body: %s", q.Body) // Add this line
+		log.Printf("Error: %s", err.Error())
+		return hotelsDto, e.NewBadRequestApiError("error in unmarshal")
+	}
+	hotelsDto = response.Response.Docs
+
+	log.Printf("hotels:", hotelsDto)
+
+	return hotelsDto, nil
+}
+
+func (sc *SolrClient) GetQueryAllFields(query string) (dto.HotelsDto, e.ApiError) {
+	var response dto.SolrResponseDto
+	var hotelsDto dto.HotelsDto
+
+	q, err := http.Get(
+		fmt.Sprintf("http://%s:%d/solr/hotelSearch/select?q=*:*", config.SOLRHOST, config.SOLRPORT))
+	if err != nil {
+		return hotelsDto, e.NewBadRequestApiError("error getting from solr")
+	}
+
+	var body []byte
+	body, err = io.ReadAll(q.Body)
+	if err != nil {
+		return hotelsDto, e.NewBadRequestApiError("error reading body")
+	}
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return hotelsDto, e.NewBadRequestApiError("error in unmarshal")
+	}
+
+	hotelsDto = response.Response.Docs
+	return hotelsDto, nil
+}
+
+func (sc *SolrClient) Add(hotelDto dto.HotelDto) e.ApiError {
+	var addHotelDto dto.AddDto
+	addHotelDto.Add = dto.DocDto{Doc: hotelDto}
+	data, err := json.Marshal(addHotelDto)
+
+	reader := bytes.NewReader(data)
+	if err != nil {
+		return e.NewBadRequestApiError("Error getting json")
+	}
+	resp, err := sc.Client.Update(context.TODO(), sc.Collection, solr.JSON, reader)
+	logger.Debug(resp)
+	if err != nil {
+		return e.NewBadRequestApiError("Error in solr")
+	}
+
+	er := sc.Client.Commit(context.TODO(), sc.Collection)
+	if er != nil {
+		logger.Debug("Error committing load")
+		return e.NewInternalServerApiError("Error committing to solr", er)
+	}
+	return nil
+}
+
+func (sc *SolrClient) Delete(id string) e.ApiError {
+	var deleteDto dto.DeleteDto
+	deleteDto.Delete = dto.DeleteDoc{Query: fmt.Sprintf("id:%s", id)}
+	data, err := json.Marshal(deleteDto)
+	reader := bytes.NewReader(data)
+	if err != nil {
+		return e.NewBadRequestApiError("Error getting json")
+	}
+	resp, err := sc.Client.Update(context.TODO(), sc.Collection, solr.JSON, reader)
+	logger.Debug(resp)
+	if err != nil {
+		return e.NewBadRequestApiError("Error in solr")
+	}
+
+	er := sc.Client.Commit(context.TODO(), sc.Collection)
+	if er != nil {
+		logger.Debug("Error committing load")
+		return e.NewInternalServerApiError("Error committing to solr", er)
+	}
+	return nil
+}
+
+/*
 // serializa una busqueda de hotel a JSON y lo envia a Solr para su indexación y
 // confirmar la carga para asegurarse de que los cambios se reflejen en el índice Solr
 func (sc *SolrClient) Add(HotelDto dto.HotelDto) e.ApiError {
@@ -78,7 +173,6 @@ func (sc *SolrClient) AddHotelsToSolr(hotels []dto.HotelDto) e.ApiError {
 	return nil
 }
 
-/*
 func (sc *SolrClient) AddDocToSolr(HotelDto dto.HotelDto) e.ApiError {
 	// Crear una instancia de tu objeto HotelDto y asignar valores
 	hotel := HotelDto{
@@ -118,7 +212,6 @@ func (sc *SolrClient) AddDocToSolr(HotelDto dto.HotelDto) e.ApiError {
 	}
 	return nil
 }
-*/
 
 // toma parámetros de búsqueda (city, startDate, endDate), realiza una solicitud a Solr,
 // procesa la respuesta JSON y devuelve los resultados de la búsqueda de hoteles en el
@@ -153,6 +246,7 @@ func (s *SolrClient) GetQuery(city string, startDate string, endDate string) (dt
 	return hotelsDto, nil
 }
 
+
 // Enviar una solicitud de eliminación a Solr para eliminar
 // un documento específico basado en el ID
 func (sc *SolrClient) Delete(id string) e.ApiError {
@@ -178,3 +272,5 @@ func (sc *SolrClient) Delete(id string) e.ApiError {
 	}
 	return nil
 }
+
+*/

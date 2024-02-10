@@ -8,13 +8,9 @@ import (
 
 func mapUrls() {
 
-	router.GET("/search/:city/:startDate/:endDate", solrController.GetQuery)
+	router.GET("/search=:searchQuery", solrController.GetQuery)
 
-	router.GET("/hotels/:id", solrController.Add)
-
-	router.POST("/solr/hotels", solrController.AddHotelsToSolr)
-
-	router.DELETE("/hotels/:id", solrController.Delete)
+	router.GET("/searchAll=:searchQuery", solrController.GetQueryAllFields)
 
 	log.Info("Finishing mappings configurations")
 }
