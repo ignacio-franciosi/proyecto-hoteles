@@ -7,10 +7,10 @@ import (
 var (
 	SOLRHOST       = "solr"
 	SOLRPORT       = 8983
-	SOLRCOLLECTION = "hotels"
+	SOLRCOLLECTION = "hotelsSearch"
 
 	HOTELSHOST = "hotels"
-	HOTELSPORT = 8090
+	HOTELSPORT = 8000
 
 	QUEUENAME = "consumer_solr" //worker_solr
 	EXCHANGE  = "hotels"        //items
@@ -18,13 +18,13 @@ var (
 	LBHOST = "lbbusqueda"
 	LBPORT = 80 //a chequear
 
-	RABBITUSER     = "guest"
-	RABBITPASSWORD = "guest"
-	RABBITHOST     = "localhost"
+	RABBITUSER     = "user"     //guest
+	RABBITPASSWORD = "password" //guest
+	RABBITHOST     = "rabbit"   //localhost
 	RABBITPORT     = 5672
 
 	AMPQConnectionURL = fmt.Sprintf("amqp://%s:%s@%s:%d/", RABBITUSER, RABBITPASSWORD, RABBITHOST, RABBITPORT)
 
 	USERAPIHOST = "uba" //"user-res-api"
-	USERAPIPORT = 8070
+	USERAPIPORT = 8080
 )

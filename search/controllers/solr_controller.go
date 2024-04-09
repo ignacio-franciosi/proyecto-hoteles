@@ -1,12 +1,12 @@
-package solrController
+package controller
 
 import (
 	"fmt"
 	"net/http"
+	client "search/client"
 	"search/config"
 	"search/dto"
 	"search/services"
-	client "search/services/repositories"
 	con "search/utils/connections"
 	e "search/utils/errors"
 
