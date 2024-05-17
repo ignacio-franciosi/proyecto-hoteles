@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"sync"
+	"time"
 	"uba/dto"
 	service "uba/services"
 
@@ -17,8 +19,29 @@ type TokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
-func GetAmadeusToken() (string, error) { //refrescar el token cada media hora aproximadamente, no en cada request
+var (
+	amadeusToken    string
+	mutex           sync.Mutex
+	lastTokenUpdate time.Time
+)
 
+func GetAmadeusToken() (string, error) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	// Verificar si el token necesita actualización (más de 30 minutos desde la última actualización)
+	if time.Since(lastTokenUpdate) > 30*time.Minute {
+		err := updateAmadeusToken()
+		if err != nil {
+			return "", err
+		}
+	}
+
+	// Devolver el token actual
+	return amadeusToken, nil
+}
+
+func updateAmadeusToken() error {
 	url := "https://test.api.amadeus.com/v1/security/oauth2/token"
 	method := "POST"
 
@@ -26,35 +49,36 @@ func GetAmadeusToken() (string, error) { //refrescar el token cada media hora ap
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)
-
 	if err != nil {
-		fmt.Println(err)
-		return "", err
+		return err
 	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
-		return "", err
+		return err
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
-		return "", err
+		return err
 	}
+
 	var response TokenResponse
 
-	// Decodificar la respuesta JSON en la estructura AccessTokenResponse.
+	// Decodificar la respuesta JSON en la estructura TokenResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	// Devolver el valor de access_token.
-	return string(response.AccessToken), nil
+	// Actualizar el token y la hora de la última actualización
+	amadeusToken = response.AccessToken
+	lastTokenUpdate = time.Now()
+
+	fmt.Println("Token actualizado:", amadeusToken)
+	return nil
 }
 
 func InsertBooking(c *gin.Context) {
@@ -125,8 +149,8 @@ func InsertBooking(c *gin.Context) {
 	} else if err == nil {
 		// Verifica el código de estado de la response
 		if response.StatusCode != http.StatusOK {
-			fmt.Printf("No se pudo hacer la reserva. Código: %d\n", response.StatusCode)
-			c.JSON(http.StatusInternalServerError, "No se pudo hacer la reserva.")
+			fmt.Printf("No hay disponibilidad. Código: %d\n", response.StatusCode)
+			c.JSON(http.StatusInternalServerError, "No hay disponibilidad.")
 			return
 		}
 		// Lee el cuerpo de la response
