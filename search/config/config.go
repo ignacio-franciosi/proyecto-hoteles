@@ -26,5 +26,7 @@ var (
 	AMPQConnectionURL = fmt.Sprintf("amqp://%s:%s@%s:%d/", RABBITUSER, RABBITPASSWORD, RABBITHOST, RABBITPORT)
 
 	USERAPIHOST = "uba" //"user-res-api"
+	//UBAAPIHOST
 	USERAPIPORT = 8080
+	//UBAAPIPORT
 )

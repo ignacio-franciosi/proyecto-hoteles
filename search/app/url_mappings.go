@@ -1,7 +1,7 @@
 package app
 
 import (
-	solrController "search/controllers"
+	solrController "search/controller"
 
 	log "github.com/sirupsen/logrus"
 )
