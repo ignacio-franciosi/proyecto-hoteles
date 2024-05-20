@@ -1,6 +1,5 @@
 package connections
 
-/*
 import (
 	"encoding/json"
 	"log"
@@ -8,7 +7,7 @@ import (
 	"search/config"
 	"search/dto"
 
-	controller "search/controllers"
+	controller "search/controller"
 
 	"github.com/streadway/amqp"
 )
@@ -106,4 +105,3 @@ func QueueConnection() {
 	<-stopChan
 
 }
-*/

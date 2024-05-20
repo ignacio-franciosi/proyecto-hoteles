@@ -8,9 +8,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"search-api/config"
-	"search-api/dto"
-	e "search-api/utils/errors"
+	"search/config"
+	"search/dto"
+	e "search/utils/errors"
 
 	logger "github.com/sirupsen/logrus"
 	"github.com/stevenferrer/solr-go"

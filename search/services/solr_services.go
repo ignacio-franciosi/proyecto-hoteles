@@ -115,9 +115,10 @@ func (s *SolrService) GetQuery(query string) (dto.HotelsDto, e.ApiError) {
 func (s *SolrService) GetHotelInfo(id string, startdate int, enddate int) (bool, error) {
 
 	resp, err := http.Get(fmt.Sprintf("http://%s:%d/hotel/availability/%s/%d/%d", config.USERAPIHOST, config.USERAPIPORT, id, startdate, enddate))
+	// resp, err := http.Get(fmt.Sprintf("http://%s:%d/hotel/availability/%s/%d/%d", config.UBAAPIHOST, config.UBAAPIPORT, id, startdate, enddate))
 
 	if err != nil {
-		return false, e.NewBadRequestApiError("user-res-api failed")
+		return false, e.NewBadRequestApiError("user-res-api failed") //"uba failed"
 	}
 
 	var body []byte

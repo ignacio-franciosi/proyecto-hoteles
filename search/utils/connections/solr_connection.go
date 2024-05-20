@@ -1,3 +1,4 @@
+/*
 package connections
 
 import (
@@ -18,3 +19,4 @@ func NewSolrClient(host string, port int, collection string) *SolrClient {
 		Collection: collection,
 	}
 }
+*/

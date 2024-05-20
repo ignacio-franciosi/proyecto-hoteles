@@ -7,7 +7,9 @@ import (
 	"search/config"
 	"search/dto"
 	"search/services"
-	con "search/utils/connections"
+
+	//con "search/utils/connections"
+	con "search/db"
 	e "search/utils/errors"
 
 	log "github.com/sirupsen/logrus"
@@ -54,15 +56,32 @@ func GetQueryAllFields(c *gin.Context) {
 
 }
 
+/*
 func AddFromId(id string) error { // agregar e.NewBadResquest para manejar el error
+
+		err := Solr.AddFromId(id)
+		if err != nil {
+			e.NewBadRequestApiError("Error adding hotel to Solr")
+			return err
+		}
+
+		fmt.Println(http.StatusOK)
+
+		return nil
+	}
+*/
+func AddFromId(id string) error {
 	err := Solr.AddFromId(id)
 	if err != nil {
-		e.NewBadRequestApiError("Error adding hotel to Solr")
-		return err
+		// Registrar el error en los registros
+		log.Errorf("Error adding hotel with ID %s to Solr: %v", id, err)
+		// Devolver un error HTTP 500 - Internal Server Error
+		return e.NewInternalServerApiError("Failed to add hotel to Solr", err)
 	}
 
 	fmt.Println(http.StatusOK)
 
+	// Si se agregó el hotel correctamente, devolver nil
 	return nil
 }
 
@@ -71,8 +90,7 @@ func AddFromId(id string) error { // agregar e.NewBadResquest para manejar el er
 func Delete(id string) error {
 	err := Solr.Delete(id)
 	if err != nil {
-		e.NewBadRequestApiError("Error deleting hotel from Solr")
-		return err
+		return e.NewBadRequestApiError("Error deleting hotel from Solr")
 	}
 
 	fmt.Println(http.StatusOK)
