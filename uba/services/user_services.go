@@ -6,7 +6,7 @@ import (
 	userClient "uba/clients/user"
 	dto2 "uba/dto"
 	"uba/model"
-	e "uba/utils/errors"
+	e "uba/utils"
 
 	"github.com/dgrijalva/jwt-go"
 

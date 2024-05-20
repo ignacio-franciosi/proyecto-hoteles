@@ -1,11 +1,12 @@
 package model
 
 type Booking struct {
-	Id        int    `gorm:"primaryKey"`
-	StartDate string `gorm:"type:date;not null"`
-	EndDate   string `gorm:"type:date;not null"`
-	IdMongo   string `gorm:"type:varchar(250);not null"`
-	IdUser    int    `gorm:"type:integer;not null"`
+	Id         int     `gorm:"primaryKey"`
+	StartDate  string  `gorm:"type:varchar(16);not null"`
+	EndDate    string  `gorm:"type:varchar(16);not null"`
+	IdMongo    string  `gorm:"type:varchar(250);not null"`
+	IdUser     int     `gorm:"type:integer;not null"`
+	TotalPrice float64 `gorm:"type:decimal(10,2); not null"`
 }
 
 type Bookings []Booking
