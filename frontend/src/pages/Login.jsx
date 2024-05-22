@@ -104,6 +104,7 @@ const Login = () => {
                 content="Usuario no registrado"
             />
             <form id="formLogin" onSubmit={handleSubmit}>
+                <div className ={"TitleForm1"}> <h2> ¡Hola de vuelta!</h2></div>
                 <input
                     id={'inputEmailLogin'}
                     type="email"
