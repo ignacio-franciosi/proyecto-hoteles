@@ -106,6 +106,9 @@ html, body {
     border: 1px solid;
     border-radius: 10px;
     width: 20%;
+    @media(orientation: portrait){
+        width: 80%;
+    }
 }
 
 #inputEmailLogin, #inputPasswordLogin {
