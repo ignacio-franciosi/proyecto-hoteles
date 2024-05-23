@@ -1,6 +1,7 @@
 package dto
 
 type TokenDto struct {
-	Token  string `json:"token"`
-	IdUser int    `json:"id_user"`
+	Token    string `json:"token"`
+	IdUser   int    `json:"id_user"`
+	UserType bool   `json:"user_type"`
 }
