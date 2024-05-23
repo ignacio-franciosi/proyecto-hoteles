@@ -5,6 +5,7 @@ import './../App.css'
 const Home = () => {
     const navigate = useNavigate(); //permite la navegación entre paginasd con las rutas
     //se inicializan las variables vacias
+
     const [city, setCity] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -68,10 +69,11 @@ const Home = () => {
     };
 
     return (
-        <div id="bodyHome" class="row">
-            
-            <form id="formHome" onSubmit={handleSubmit}>
+        <div id="bodyHome" className="row">
 
+            <form className={"formHome"} onSubmit={handleSubmit}>
+                <div className={"TitleForm"}> <h2> Elija cual será su destino soñado</h2></div>
+                <div className ={"TitleForm1"}> <h2> Seleccione Ciudad,<br/>Fecha desde y Fecha Hasta</h2></div>
                 <input id={"inputCity"}
                     type="text"
                     placeholder="Ciudad"
