@@ -1,3 +1,5 @@
+
+/*
 package repositories
 
 import (
@@ -11,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Client interface {
@@ -29,36 +30,40 @@ type HotelClient struct {
 	Collection string          //colección dentro de la base de datos donde se almacenarán los datos de hoteles
 }
 
+/*
 // crea un cliente para interactuar con una base de datos MongoDB
 func NewHotelInterface(host string, port int, collection string) *HotelClient {
+		//crea una conexión con la base de datos MongoDB
+		client, err := mongo.Connect(
+			context.TODO(),
+			options.Client().ApplyURI("mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb")) // sacarlo en un config
+		//mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb (chinada)
+		//mongodb://root:root@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-256 (anterior)
+		//para conectar a MongoDB. Incluye la dirección del servidor, el puerto y la autenticación
 
-	//crea una conexión con la base de datos MongoDB
-	client, err := mongo.Connect(
-		context.TODO(),
-		options.Client().ApplyURI("mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb")) // sacarlo en un config
-	//mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb (chinada)
-	//mongodb://root:root@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-256 (anterior)
-	//para conectar a MongoDB. Incluye la dirección del servidor, el puerto y la autenticación
+		if err != nil {
+			panic(fmt.Sprintf("Error initializing MongoDB: %v", err))
+		}
 
-	if err != nil {
-		panic(fmt.Sprintf("Error initializing MongoDB: %v", err))
-	}
+		//lista los nombres de las bases de datos disponibles
+		names, err := client.ListDatabaseNames(context.TODO(), bson.M{})
+		if err != nil {
+			panic(fmt.Sprintf("Error initializing MongoDB: %v", err))
+		}
 
-	//lista los nombres de las bases de datos disponibles
-	names, err := client.ListDatabaseNames(context.TODO(), bson.M{})
-	if err != nil {
-		panic(fmt.Sprintf("Error initializing MongoDB: %v", err))
-	}
+		fmt.Println("[MongoDB] Initialized connection")
+		fmt.Println(names)
 
-	fmt.Println("[MongoDB] Initialized connection")
-	fmt.Println(names)
-
-	return &HotelClient{
-		Client:     client,
-		Database:   client.Database("hotels_db"),
-		Collection: collection,
-	}
+		return &HotelClient{
+			Client:     client,
+			Database:   client.Database("hotels_db"),
+			Collection: collection,
+		}
 }
+
+
+
+
 
 func (s *HotelClient) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
 
@@ -224,3 +229,4 @@ func (s *HotelClient) UpdateHotelById(hotelDto dto.HotelDto) (dto.HotelDto, e.Ap
 
 	return hotelDto, nil
 }
+*/

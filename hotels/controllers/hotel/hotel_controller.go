@@ -1,24 +1,23 @@
+
+/*
 package hotel
 
 import (
-	"hotels/config"
-	"hotels/dto"
-	service "hotels/services"
-	client "hotels/services/repositories"
-
 	"fmt"
+	"hotels/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+/*
 var (
 	hotelService = service.NewHotelServiceImpl(
 		client.NewHotelInterface(config.MONGOHOST, config.MONGOPORT, config.MONGOCOLLECTION),
 		client.NewQueueClient(config.RABBITUSER, config.RABBITPASSWORD, config.RABBITHOST, config.RABBITPORT),
 	)
 )
-
+*/
 // Maneja las solicitudes para obtener un hotel por su ID. Llama al service para
 // recuperar la información del hotel y envía una respuesta JSON al client.
 
@@ -36,7 +35,6 @@ var (
 	}
 
 	c.JSON(http.StatusOK, hotelResponseDto)
-}*/
 
 // VERSION NACHELSON
 func GetHotelById(c *gin.Context) {
@@ -151,3 +149,5 @@ func UpdateHotelById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, hotelDto)
 }
+
+}*/
