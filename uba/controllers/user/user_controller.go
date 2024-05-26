@@ -1,4 +1,4 @@
-package user
+package userController
 
 import (
 	"net/http"
@@ -12,20 +12,27 @@ import (
 )
 
 func GetUserByEmail(c *gin.Context) {
-	var userDto dto2.UserDto
-	c.JSON(http.StatusOK, userDto)
 
+	email := c.Param("email")
+	var userDto dto2.UserDto
+	userDto, err := service.UserService.GetUserByEmail(email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, userDto)
 }
 
 func GetUserById(c *gin.Context) {
-	log.Debug("User ID to upload: " + c.Param("id"))
+	log.Debug("ID de usuario a cargar: " + c.Param("id"))
 	id, _ := strconv.Atoi(c.Param("id"))
 	var userDto dto2.UserDto
 
 	userDto, err := service.UserService.GetUserById(id)
 
 	if err != nil {
-		c.JSON(err.Status(), err)
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, userDto)
@@ -45,7 +52,7 @@ func UserLogin(c *gin.Context) {
 	tokenDto, er := service.UserService.LoginUser(loginDto)
 
 	if er != nil {
-		c.JSON(er.Status(), er)
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, tokenDto)
@@ -66,7 +73,7 @@ func InsertUser(c *gin.Context) {
 	tokenDto, er := service.UserService.InsertUser(userDto)
 	// Error del Insert
 	if er != nil {
-		c.JSON(er.Status(), er)
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 

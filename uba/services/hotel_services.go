@@ -4,7 +4,7 @@ import (
 	hotelClient "uba/clients/hotel"
 	"uba/dto"
 	"uba/model"
-	e "uba/utils/errors"
+	e "uba/utils"
 )
 
 type hotelService struct{}
@@ -28,6 +28,9 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	hotel.Id = hotelDto.Id
 	hotel.IdAmadeus = hotelDto.IdAmadeus
 	hotel.IdMongo = hotelDto.IdMongo
+	hotel.Rooms = hotelDto.Rooms
+	hotel.Price = hotelDto.Price
+	hotel.City = hotelDto.City
 
 	hotel = hotelClient.InsertHotel(hotel)
 
@@ -36,6 +39,9 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 	response.Id = hotel.Id
 	response.IdAmadeus = hotel.IdAmadeus
 	response.IdMongo = hotel.IdMongo
+	response.Rooms = hotel.Rooms
+	response.Price = hotel.Price
+	response.City = hotel.City
 
 	return response, nil
 }
@@ -51,6 +57,9 @@ func (s *hotelService) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
 	hotelDto.Id = hotel.Id
 	hotelDto.IdMongo = hotel.IdMongo
 	hotelDto.IdAmadeus = hotel.IdAmadeus
+	hotelDto.Rooms = hotel.Rooms
+	hotelDto.Price = hotel.Price
+	hotelDto.City = hotel.City
 	return hotelDto, nil
 
 }

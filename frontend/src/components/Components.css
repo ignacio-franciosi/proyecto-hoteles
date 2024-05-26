@@ -9,8 +9,12 @@
     width: 100%;
     z-index: 1000;
     top: 0;
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
 }
-
+h1{
+    color: #ffffff;
+}
 #footer{
     position: fixed;
     bottom: 0;

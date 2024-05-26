@@ -15,7 +15,7 @@ type CacheInterface interface {
 }
 
 func InitCache() {
-	cache = memcache.New("memcached:11211")
+	cache = memcache.New("localhost:11211")
 }
 
 func (c *Cache) Set(key string, value []byte) {

@@ -13,7 +13,7 @@ func InsertHotel(hotel model.Hotel) model.Hotel {
 	result := Db.Create(&hotel)
 
 	if result.Error != nil {
-		log.Error("")
+		log.Error("Error creating hotel: ", result.Error)
 	}
 
 	log.Debug("Hotel Created: ", hotel.Id)
