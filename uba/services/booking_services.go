@@ -5,28 +5,28 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strings"
 	"sync"
 	"time"
+
 	bookingClient "uba/clients/booking"
 	hotelClient "uba/clients/hotel"
 	userClient "uba/clients/user"
 	"uba/dto"
 	"uba/model"
-	"uba/utils"
+	cache "uba/utils/cache"
+	httpUtils "uba/utils/http"
 
 	log "github.com/sirupsen/logrus"
 )
 
 type bookingService struct {
-	HTTPClient utils.HttpClientInterface
-	Cache      utils.CacheInterface
+	HTTPClient httpUtils.HttpClientInterface
 }
 
 type bookingServiceInterface interface {
 	InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, error)
 	GetHotelInfo(idMongo string) (dto.HotelDto, error)
-	GetAllHotelsByCity(city string) dto.HotelsDto
+	GetAllHotelsByCity(city string) (dto.HotelsDto, error)
 	CheckAvailability(idMongo string, startDate time.Time, endDate time.Time) bool
 	CheckAllAvailability(city string, startDate string, endDate string) (dto.HotelsDto, error)
 }
@@ -37,8 +37,7 @@ var (
 
 func init() {
 	BookingService = &bookingService{
-		HTTPClient: &utils.HttpClient{},
-		Cache:      &utils.Cache{},
+		HTTPClient: &httpUtils.HttpClient{},
 	}
 }
 
@@ -107,13 +106,7 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 		fmt.Println("El valor de diferencia es:", diferencia)
 		fmt.Println("El valor de cant dias es:", cantDias)
 		fmt.Println("El valor de precio total es:", booking.TotalPrice)
-		/*
-			hoursAmount := timeEnd.Sub(timeStart).Hours()
-			nightsAmount := math.Ceil(hoursAmount / 24)
-			price := hotelDto.Price
-			booking.TotalPrice = price * nightsAmount
-		*/
-		//------------------------------------------------------
+
 		booking = bookingClient.InsertBooking(booking)
 
 		bookingDto.Id = booking.Id
@@ -154,35 +147,25 @@ func (s *bookingService) GetHotelInfo(idMongo string) (dto.HotelDto, error) {
 	return hotelDto, nil
 }
 
-func (s *bookingService) GetAllHotelsByCity(city string) dto.HotelsDto {
+func (s *bookingService) GetAllHotelsByCity(city string) (dto.HotelsDto, error) {
 
-	cityFormatted := strings.ReplaceAll(city, " ", "+")
-	resp, err := s.HTTPClient.Get("http://localhost:8080/hotel?city=" + cityFormatted)
-
-	if err != nil {
-		log.Error("Error in HTTP request ", err)
-		return dto.HotelsDto{}
-	}
-
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		log.Error("Error reading response ", err)
-		return dto.HotelsDto{}
-	}
-
+	var hotels model.Hotels = bookingClient.GetAllHotelsByCity(city)
 	var hotelsDto dto.HotelsDto
 
-	err = json.Unmarshal(body, &hotelsDto)
+	for _, hotel := range hotels {
+		var hotelDto dto.HotelDto
 
-	if err != nil {
-		log.Error("Error parsing JSON ", err)
-		return dto.HotelsDto{}
+		hotelDto.Id = hotel.Id
+		hotelDto.IdMongo = hotel.IdMongo
+		hotelDto.IdAmadeus = hotel.IdAmadeus
+		hotelDto.City = hotel.City
+		hotelDto.Price = hotel.Price
+		hotelDto.Rooms = hotel.Rooms
+
+		hotelsDto = append(hotelsDto, hotelDto)
 	}
 
-	return hotelsDto
+	return hotelsDto, nil
 }
 
 func (s *bookingService) CheckAvailability(idMongo string, startDate time.Time, endDate time.Time) bool {
@@ -226,7 +209,6 @@ func (s *bookingService) CheckAvailability(idMongo string, startDate time.Time, 
 }
 
 func (s *bookingService) CheckAllAvailability(city string, startDate string, endDate string) (dto.HotelsDto, error) {
-
 	//espera a que se completen las go routines
 	var wg sync.WaitGroup
 	var hotelsAvailable dto.HotelsDto
@@ -238,6 +220,7 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 		return hotelsAvailable, errors.New("error, la reserva no puede terminar antes de comenzar")
 	}
 
+	//agarro las 3 primeras letras de la ciudad
 	var cityFormatted string
 	if len(city) >= 3 {
 		cityFormatted = city[0:3]
@@ -245,22 +228,27 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 		cityFormatted = city
 	}
 	//crea una clave de cacheo única basada en la ciudad y las fechas de reserva
-	cacheKey := fmt.Sprintf("%s/%s/%s", cityFormatted, bookingStart.Format("02-01-06"), bookingEnd.Format("02-01-06"))
+	cacheKey := fmt.Sprintf("%s/%s/%s", cityFormatted, bookingStart.Format("02-01-2006"), bookingEnd.Format("02-01-2006"))
+	fmt.Println("La cache key es:", cacheKey)
+
 	//intenta obtener el resultado del cache. Parsea el resultado JSON y lo devuelve.
-	if s.Cache != nil {
-		result, err := s.Cache.Get(cacheKey)
-		if err == nil {
-			err = json.Unmarshal(result, &hotelsAvailable)
-			if err != nil {
-				return dto.HotelsDto{}, fmt.Errorf("error unmarshaling json: %v", err)
-			}
-			return hotelsAvailable, nil
-		}
-	} else {
-		log.Error("Cache is not initialized")
+
+	fmt.Println("llego 1")
+	cacheDTO, err := cache.Get(cacheKey)
+	fmt.Println("result", cacheDTO)
+
+	if err == nil {
+		fmt.Println("hit de cache")
+		return cacheDTO, nil
 	}
 
-	hotels := s.GetAllHotelsByCity(city)
+	hotels, err2 := s.GetAllHotelsByCity(city)
+	if err2 != nil {
+		// Manejar el error, por ejemplo, imprimirlo o devolverlo
+		log.Println("Error al obtener los hoteles POR CIUDAD:", err2)
+		return nil, err2
+	}
+
 	//canal para pasar los resultados de las goroutines que verifican la disponibilidad de los hoteles
 	resultsCh := make(chan dto.HotelDto)
 
@@ -295,8 +283,8 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 	}
 
 	jsonResult, _ := json.Marshal(hotelsAvailable)
-	s.Cache.Set(cacheKey, jsonResult)
+	//ttl 10 seg
+	cache.Set(cacheKey, jsonResult, 10)
 
 	return hotelsAvailable, nil
-
 }

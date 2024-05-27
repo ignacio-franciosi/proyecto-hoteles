@@ -4,7 +4,7 @@ import (
 	hotelClient "uba/clients/hotel"
 	"uba/dto"
 	"uba/model"
-	e "uba/utils"
+	e "uba/utils/errors"
 )
 
 type hotelService struct{}

@@ -23,6 +23,7 @@ func mapUrls() {
 	//Reserva Mapping (listo)
 	router.POST("/booking", bookingController.InsertBooking)
 	router.GET("/available", bookingController.CheckAvailability)
+	router.GET("/booking/:city", bookingController.GetAllHotelsByCity)
 
 	log.Info("Listo el mapeo de configuraciones :)")
 }

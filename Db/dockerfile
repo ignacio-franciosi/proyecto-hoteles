@@ -1,0 +1,9 @@
+FROM mysql:latest
+
+COPY ./db.sql /docker-entrypoint-initdb.d 
+
+# Establecer la variable de entorno para el puerto
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=arqsw2
+ENV MYSQL_PORT=3306
+

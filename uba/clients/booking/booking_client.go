@@ -1,6 +1,7 @@
 package booking
 
 import (
+	"strings"
 	"uba/model"
 
 	log "github.com/sirupsen/logrus"
@@ -26,4 +27,14 @@ func GetBookingsByHotel(idMongo string) model.Bookings {
 	log.Debug("Bookings: ", bookings)
 
 	return bookings
+}
+
+func GetAllHotelsByCity(city string) model.Hotels {
+
+	cityFormatted := strings.ReplaceAll(city, "+", " ")
+	var hotels model.Hotels
+
+	Db.Where("city = ?", cityFormatted).Find(&hotels)
+
+	return hotels
 }

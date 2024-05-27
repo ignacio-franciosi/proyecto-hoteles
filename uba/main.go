@@ -10,5 +10,5 @@ func main() {
 
 	db.StartDbEngine()
 	app.StartRoute()
-	utils.InitCache()
+	utils.Init_Cache()
 }

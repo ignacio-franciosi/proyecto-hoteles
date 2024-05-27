@@ -1,7 +1,9 @@
 package booking
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 	"uba/dto"
 	service "uba/services"
 
@@ -35,12 +37,28 @@ func CheckAvailability(c *gin.Context) {
 	startDate := c.Query("startDate")
 	endDate := c.Query("endDate")
 
+	fmt.Println("Los valores que entran al checkALL:", city, startDate, endDate)
 	hotelsAvailable, err := service.BookingService.CheckAllAvailability(city, startDate, endDate)
-
+	fmt.Println("hotelsAv", hotelsAvailable)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, hotelsAvailable)
+}
+
+func GetAllHotelsByCity(c *gin.Context) {
+
+	var hotelsDto dto.HotelsDto
+	city := c.Param("city")
+	cityFormatted := strings.ReplaceAll(city, " ", "+")
+	hotelsDto, err := service.BookingService.GetAllHotelsByCity(cityFormatted)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, hotelsDto)
+
 }
