@@ -1,5 +1,6 @@
 package services
 
+/*
 import (
 	"fmt"
 	"hotels/dto"
@@ -57,7 +58,7 @@ func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelResponseDto, e.ApiE
 
 	return hotelResponseDto, nil
 
-}*/
+}
 
 func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
 
@@ -234,3 +235,4 @@ func (s *HotelServiceImpl) DeleteHotelById(id string) e.ApiError {
 
 	return nil
 }
+*/

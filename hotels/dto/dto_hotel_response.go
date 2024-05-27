@@ -1,5 +1,6 @@
 package dto
 
+/*
 type HotelResponseDto struct {
 	HotelId     string  `json:"hotel_id"`
 	Name        string  `json:"name"`
@@ -11,4 +12,4 @@ type HotelResponseDto struct {
 	City        string  `json:"city"`
 	Photos      string  `json:"photos"`
 }
-type HotelsResponseDto []HotelResponseDto
+type HotelsResponseDto []HotelResponseDto */

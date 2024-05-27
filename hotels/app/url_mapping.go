@@ -1,7 +1,8 @@
 package app
 
 import (
-	hotelController "hotels/controllers/hotel"
+	hotelController "hotels/controllers"
+	//"Hotel/controller"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -11,17 +12,17 @@ func mapUrls() {
 
 	router.GET("/hotels/:HotelId", hotelController.GetHotelById)
 
-	router.GET("/hotels", hotelController.GetHotels)
+	router.GET("/hotels", hotelController.GetAllHotels)
 
 	router.POST("/hotel", hotelController.InsertHotel)
 
-	router.POST("/hotels", hotelController.QueueHotels)
+	//router.POST("/hotels", hotelController.QueueHotels)
 
-	router.PUT("/hotel/:HotelId", hotelController.UpdateHotelById)
+	router.PUT("/hotel/:HotelId", hotelController.UpdateHotel)
 
-	router.PUT("/hotels", hotelController.QueueHotels)
+	//router.PUT("/hotels", hotelController.QueueHotels)
 
-	router.DELETE("/hotel/:HotelId", hotelController.DeleteHotelById)
+	router.DELETE("/hotel/:HotelId", hotelController.DeleteHotel)
 
 	log.Info("Finishing mappings configurations")
 }
