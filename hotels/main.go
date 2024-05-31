@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	db.Init_db()
-	queue.QueueProducer.InitQueue()
+	//db.Init_db()
+	//queue.QueueProducer.InitQueue()
 	app.StartRoute()
 }

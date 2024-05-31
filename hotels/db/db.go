@@ -23,6 +23,7 @@ func Init_db() {
 
 	//crea una conexión con la base de datos MongoDB
 	clientOpts := options.Client().ApplyURI("mongodb://root:pass@mongodatabase:27017/?authSource=admin&authMechanism=SCRAM-SHA-256")
+
 	cli, err := mongo.Connect(context.TODO(), clientOpts)
 	client = cli
 
@@ -48,6 +49,15 @@ func Init_db() {
 	HotelsCollection = MongoDb.Collection("hotels")
 
 }
+
+//clientOpts := options.Client().ApplyURI("mongodb://admin:pass@mongodatabase:27017/?authSource=admin&authMechanism=SCRAM-SHA-256")
+/*clientOpts := options.Client().ApplyURI("mongodb://mongo:27017").
+SetAuth(options.Credential{
+	AuthSource:    "admin",         // Reemplaza "admin" con el nombre de la base de datos de autenticación que desees utilizar.
+	AuthMechanism: "SCRAM-SHA-256", // Reemplaza con el mecanismo de autenticación adecuado si no es el predeterminado.
+	Username:      "admin",         // Reemplaza con tu nombre de usuario.
+	Password:      "pass",          // Reemplaza con tu contraseña.
+})*/
 
 /*
 
