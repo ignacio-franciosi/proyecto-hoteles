@@ -1,45 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
+import {useNavigate} from "react-router-dom";
 import Cookies from 'js-cookie';
 import CustomModal from '../components/CustomModal.jsx';
-import { useNavigate } from 'react-router-dom';
-import './../App.css';
+import './../App.css'
 
-// Parte funcional
+
 const Login = () => {
-    const navigate = useNavigate(); // Permite la navegación entre páginas con las rutas
     const [email, setEmail] = useState(''); // Se inicializan las variables vacías
     const [password, setPassword] = useState('');
-
-    const register = () => { // funbcion que te redirige a  register
-        navigate("/register");
-    };
     let [emptyRegister] = useState(false);
     const [showAlert1, setShowAlert1] = useState(false);
     const [showAlert2, setShowAlert2] = useState(false);
+    const navigate = useNavigate();
+    const register = () => { // funbcion que te redirige a  register
+        navigate("/register");
+    };
 
     const openAlert1 = () => {
         setShowAlert1(true);
+        Cookies.set('user_id', "-1")
+        Cookies.set('user_id', "")
+        Cookies.set('email', "")
+        Cookies.set('name', "")
+        Cookies.set('token', "")
     };
     const closeAlert1 = () => {
         setShowAlert1(false);
     };
     const openAlert2 = () => {
         setShowAlert2(true);
+        Cookies.set('user_id', "-1")
+        Cookies.set('user_id', "")
+        Cookies.set('email', "")
+        Cookies.set('name', "")
+        Cookies.set('token', "")
     };
     const closeAlert2 = () => {
         setShowAlert2(false);
     };
 
+    function navigateTo(responseData) {
+        if (responseData.user.userType) {
+            navigate("/dashboardAdmin")
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault(); // Para que no recargue la página
         if (email === '') {
             document.getElementById('inputEmailLogin').style.borderColor = 'red';
-        } else{
+            emptyRegister = true;
+        } else {
             document.getElementById('inputEmailLogin').style.borderColor = '';
         }
         if (password === '') {
             document.getElementById('inputPasswordLogin').style.borderColor = 'red';
-        } else{
+            emptyRegister = true;
+        } else {
             document.getElementById('inputEmailLogin').style.borderColor = '';
         }
         if (!emptyRegister) {
@@ -52,35 +69,27 @@ const Login = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({email, password}),
-                }).then((response) => {
-                    console.log(response.status)
-                    if (response.ok) {
-                        console.log("hizo el return")
-                        return response.json();
-
-
-                    } else {
-                        alert('Usuario Inválido');
-                        console.log("hizo el error")
-
-                    }
                 });
-                if (response.id_user) {
-                    // Si el usuario existe
-                    // El usuario está en la base de datos
+                if (response.ok) {
                     console.log('Usuario válido');
+                    const responseData = await response.json();
+                    Cookies.set('user_id', responseData.user.id)
+                    Cookies.set('email', email)
+                    Cookies.set('name', responseData.user.name)
+                    Cookies.set('token', responseData.token)
 
-                    Cookies.set('user_id', response.id_user);
-                    Cookies.set('email', email);
-                    Cookies.set("token", response.token);
-                    Cookies.set("type", response.tipo)
-                    navigate('/home');
-                    window.location.reload();
-
+                    navigateTo(responseData);
+                    window.location.reload()
+                } else {
+                    openAlert1();
+                    console.log("hizo el error")
                 }
             } catch (error) {
-                Cookies.set('user_id', "-1");
-
+                Cookies.set('user_id', "")
+                Cookies.set('email', "")
+                Cookies.set('name', "")
+                Cookies.set('token', "")
+                Cookies.set('client_id', "")
                 console.log('Error al realizar la solicitud al backend:', error);
             }
         } else {
@@ -89,8 +98,6 @@ const Login = () => {
         }
 
     };
-
-    // Parte visible
     return (
         <div id="body">
             <CustomModal
@@ -103,6 +110,7 @@ const Login = () => {
                 closeModal={closeAlert1}
                 content="Usuario no registrado"
             />
+
             <form id="formLogin" onSubmit={handleSubmit}>
                 <div className ={"TitleForm1"}> <h2> ¡Hola de vuelta!</h2></div>
                 <input
@@ -125,7 +133,7 @@ const Login = () => {
                 <button id="botonLogin" onClick={register}>Registrarse</button>
             </form>
         </div>
+
     );
 };
-
 export default Login;

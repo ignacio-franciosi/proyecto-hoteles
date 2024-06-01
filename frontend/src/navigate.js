@@ -1,8 +1,8 @@
 import { lazy } from "react";
 import Home from "pages/Home.jsx";
-import Search from "frontend/src/pages/Search.jsx";
+import HotelsList from "frontend/src/pages/HotelsList.jsx";
 import HotelDetails from "pages/HotelDetails.jsx";
-import hotel_id from "pages/Search.jsx";
+import hotel_id from "frontend/src/pages/HotelsList.jsx";
 import Login from "pages/Login.jsx";
 
 const Home = lazy(() => import("pages/Home.jsx"));
@@ -25,12 +25,12 @@ export const navigation = [
     },
     {
         id: 3,
-        path: '/search',
-        Element: Search,
+        path: '/hotels-list',
+        Element: HotelsList,
     },
     {
         id: 4,
-        path: `/hotelDetails/'${hotel_id}`,
+        path: `/hotels-list/'${hotel_id}`,
         Element:HotelDetails,
     },
 
