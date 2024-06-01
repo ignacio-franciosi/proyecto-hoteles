@@ -31,10 +31,10 @@ SET time_zone = "+00:00";
 CREATE TABLE `hotels` (
   `id` bigint(20) NOT NULL,
   `idMongo` varchar(300) NOT NULL,
-  `idAmadeus` varchar(300) NOT NULL
+  `idAmadeus` varchar(300) NOT NULL,
   `rooms` bigint(20) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `city` varchar(250) NOT NULL,
+  `city` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -42,14 +42,13 @@ CREATE TABLE `hotels` (
 --
 
 INSERT INTO `hotels` (`id`, `idMongo`, `idAmadeus`, `rooms`, `price`, `city`) VALUES
-(1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 10, 25, 'New York'),
-(1, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10, 'Cordoba')
-
+(1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 10, 25.00, 'New York'),
+(2, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10.00, 'Cordoba');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `reservas`
+-- Estructura de tabla para la tabla `bookings`
 --
 
 CREATE TABLE `bookings` (
@@ -59,7 +58,6 @@ CREATE TABLE `bookings` (
   `id_mongo` varchar(300) NOT NULL,
   `id_user` int(11) NOT NULL,
   `total_price` decimal(10,2) NOT NULL
-  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -89,21 +87,20 @@ INSERT INTO `users` (`id`, `name`, `last_name`, `email`, `password`, `user_type`
 -- Índices para tablas volcadas
 --
 
-
 --
--- Indices de la tabla `hotels`
+-- Índices de la tabla `hotels`
 --
 ALTER TABLE `hotels`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `reservas`
+-- Índices de la tabla `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `users`
+-- Índices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -114,16 +111,13 @@ ALTER TABLE `users`
 --
 
 --
-
-
---
 -- AUTO_INCREMENT de la tabla `hotels`
 --
 ALTER TABLE `hotels`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT de la tabla `reservas`
+-- AUTO_INCREMENT de la tabla `bookings`
 --
 ALTER TABLE `bookings`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
@@ -137,7 +131,6 @@ ALTER TABLE `users`
 --
 -- Restricciones para tablas volcadas
 --
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
