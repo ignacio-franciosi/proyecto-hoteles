@@ -86,7 +86,9 @@ const HotelDetails = () => {
                     </form>
                 </div>
             ) : (
-                <p>No se encontró el hotel</p>
+                <div className={"noHotels"}>
+                    <h2>No se encontraron hoteles.</h2>
+                </div>
             )}
             {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
         </div>

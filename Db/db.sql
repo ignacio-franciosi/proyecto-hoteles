@@ -1,3 +1,4 @@
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -27,13 +28,15 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `hotels`
 --
-
+use arqsw2;
 CREATE TABLE `hotels` (
   `id` bigint(20) NOT NULL,
   `idMongo` varchar(300) NOT NULL,
   `idAmadeus` varchar(300) NOT NULL,
+  `idAmadeus` varchar(300) NOT NULL,
   `rooms` bigint(20) NOT NULL,
   `price` decimal(10,2) NOT NULL,
+  `city` varchar(250) NOT NULL
   `city` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -42,6 +45,9 @@ CREATE TABLE `hotels` (
 --
 
 INSERT INTO `hotels` (`id`, `idMongo`, `idAmadeus`, `rooms`, `price`, `city`) VALUES
+(1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 10, 25, 'New York'),
+(1, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10, 'Cordoba');
+
 (1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 10, 25.00, 'New York'),
 (2, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10.00, 'Cordoba');
 

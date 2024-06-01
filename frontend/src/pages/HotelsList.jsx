@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import './../App.css'
-import {useNavigate} from "react-router-dom";
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import './../App.css';
 
-const Search = () => {
-    const [hoteles, setHoteles] = useState([]);
+const HotelsList = () => {
+    const [hotels, setHotels] = useState([]);
     const navigate = useNavigate();
     const selectHotels = (hotel_id) => {
-        navigate(`/hotelDetails/${hotel_id}`);
+        Cookies.set("hotel_id", hotel_id);
+        navigate(`/details/${hotel_id}`);
     };
-    const city = localStorage.getItem("city");
 
-    useEffect(key => {
-        // Realizar la solicitud al backend para obtener la lista de hoteles
-        const fetchHoteles = async () => {
+
+    useEffect( () => {
+        const fetchHotels = async () => {
             try {
                 const response = await fetch('http://localhost:8090/hotels');
                 const data = await response.json();
-                setHoteles(data);
+                setHotels(data);
             } catch (error) {
                 console.log('Error al obtener la lista de hoteles:', error);
             }
         };
 
-        fetchHoteles();
+        fetchHotels();
     }, []);
 
     return (
-
         <div id="backHotelSearch">
-            {hoteles.length > 0 ? (
-                <div>
-                    {hoteles.map((hotel) => (
+            {hotels.length > 0 ? (
+                <div className="hotelContainer">
+                    {hotels.map((hotel) => (
                         <div id="hotelSearch">
                             <img id="imgSearch" src={hotel.photos}/>
                             <div>
@@ -45,13 +45,12 @@ const Search = () => {
                     ))}
                 </div>
             ) : (
-                <div id="noHotels">
-                    <p >No se encontraron hoteles.</p>
+                <div className={"noHotels"}>
+                    <h2>No se encontraron hoteles.</h2>
                 </div>
             )}
         </div>
-
     );
 };
 
-export default Search;
+export default HotelsList;

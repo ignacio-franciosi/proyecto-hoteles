@@ -5,10 +5,11 @@ import Header from './components/Header';
 import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
-import Search from "./pages/Search.jsx";
+import HotelsList from "./pages/HotelsList.jsx";
 import LoginButton from './components/LoginButton.jsx';
 import BackButton from "./components/BackButton.jsx";
 import HotelDetails from "./pages/HotelDetails.jsx"
+import ContainerPage from "./pages/ContainerView.jsx"
 import './App.css';
 
 const App = ()=> {
@@ -23,8 +24,10 @@ const App = ()=> {
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path ="/login" element={<Login />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/hotelDetails/:hotel_id" element={<HotelDetails />} />
+                <Route path="/hotels-list" element={<HotelsList />} />
+                <Route path="/hotel-list/:hotel_id" element={<HotelDetails />} />
+                <Route path="/dashAdmin" element={<HotelDetails />} />
+                <Route path="/dashAdmin/container" element={<ContainerPage />} />
             </Routes>
             <Footer />
         </Router>

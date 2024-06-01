@@ -123,78 +123,100 @@ html, body {
 }
 
 #botonLogin {
-    background-Color: black;
+    background-Color: #2b2a33;
     color: #ffffff;
     padding: 8px 16px;
     align-items: center;
 }
 
 /*estilos del search*/
-#hotelSearch {
-    width: 100%;
+.hotelContainer {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-#imgSearch {
-    width: 150px;
-    height: 150px;
-    margin-right: 10px;
+.hotelCard {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px;
+    width: 300px;
+    text-align: center;
+    background-color: #f9f9f9;
+    min-height: 25em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hotelCard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #0E8388;
+}
+
+.hotelCard img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.hotelCard p {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.hotelCard button {
+    background-color: #007f7f;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.hotelCard button:hover {
+    background-color: #005f5f;
 }
 
 #backHotelSearch {
     position: relative;
-    left: 110%;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
     text-align: center;
+    margin-top: 10%;
 }
 
-#h1HotelSearch {
-    font-size: 24px;
-    color: #0E8388;
-    margin-bottom: 20px;
+.imageGallery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
 }
 
-#h2HotelSearch {
-    font-size: 18px;
-    color: #0E8388;
-    margin-bottom: 10px;
+.thumbnailGallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 5px;
 }
 
-#paragraphSearch {
-    font-size: 14px;
-    color: #2C3333;
-    margin-bottom: 10px;
+.thumbnailGallery img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    max-width: 800px;
+    max-height: 400px;
+
 }
 
-#butonSearch {
-    background-color: #1706b5;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-}
-
-#noHotels {
-    text-align: center;
-}
-
-#butonSearch {
-    background-color: #1706b5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-#noHotels {
+.noHotels {
     align-content: center;
+    color: #704a31;
+
 }
 
 /* estilos de details*/

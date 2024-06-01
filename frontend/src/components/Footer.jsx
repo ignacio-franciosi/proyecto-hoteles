@@ -22,7 +22,7 @@ const Footer = () => {
         <div className={scrolled ? 'scrolled' : 'block'}>
             <div id="footer">
                 {"Autores: Elliott Victoria, Franciosi Ignacio, Havenstein Carolina, Morabito Leonardo "+
-                    "Copyright© 2023. Todos los derechos reservados"}
+                    "Copyright© 2024. Todos los derechos reservados"}
             </div>
         </div>
     );
