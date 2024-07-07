@@ -8,12 +8,12 @@ import (
 	"sync"
 	"time"
 
-	bookingClient "uba/clients/booking"
-	hotelClient "uba/clients/hotel"
-	userClient "uba/clients/user"
+	"uba/clients/booking"
+	"uba/clients/hotel"
+	"uba/clients/user"
 	"uba/dto"
 	"uba/model"
-	cache "uba/utils/cache"
+
 	httpUtils "uba/utils/http"
 
 	log "github.com/sirupsen/logrus"
@@ -43,7 +43,7 @@ func init() {
 
 func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, error) {
 
-	userDto := userClient.GetUserById(bookingDto.IdUser)
+	userDto := user.GetUserById(bookingDto.IdUser)
 	hotelDto, err := s.GetHotelInfo(bookingDto.IdMongo)
 
 	if err != nil {
@@ -73,7 +73,7 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 		return bookingDto, errors.New("la reserva no puede terminar antes de empezar")
 	}
 
-	amadeusMap := hotelClient.GetHotelById(bookingDto.IdMongo)
+	amadeusMap := hotel.GetHotelById(bookingDto.IdMongo)
 	if amadeusMap.IdMongo == "" {
 		return bookingDto, errors.New("no amadeus id set")
 	}
@@ -89,28 +89,28 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 
 	if s.CheckAvailability(bookingDto.IdMongo, timeStart, timeEnd) {
 
-		var booking model.Booking
+		var booking2 model.Booking
 		var diferencia time.Duration
 		var cantDias int32
 
-		booking.StartDate = bookingDto.StartDate
-		booking.EndDate = bookingDto.EndDate
-		booking.Id = bookingDto.Id
-		booking.IdUser = bookingDto.IdUser
-		booking.IdMongo = bookingDto.IdMongo
+		booking2.StartDate = bookingDto.StartDate
+		booking2.EndDate = bookingDto.EndDate
+		booking2.Id = bookingDto.Id
+		booking2.IdUser = bookingDto.IdUser
+		booking2.IdMongo = bookingDto.IdMongo
 		//------------------------------------------------------
 		diferencia = timeEnd.Sub(timeStart)
 		cantDias = int32(diferencia.Hours() / 24)
-		booking.TotalPrice = float64(int32(hotelDto.Price) * cantDias)
+		booking2.TotalPrice = float64(int32(hotelDto.Price) * cantDias)
 
 		fmt.Println("El valor de diferencia es:", diferencia)
 		fmt.Println("El valor de cant dias es:", cantDias)
-		fmt.Println("El valor de precio total es:", booking.TotalPrice)
+		fmt.Println("El valor de precio total es:", booking2.TotalPrice)
 
-		booking = bookingClient.InsertBooking(booking)
+		booking2 = booking.InsertBooking(booking2)
 
-		bookingDto.Id = booking.Id
-		bookingDto.TotalPrice = booking.TotalPrice
+		bookingDto.Id = booking2.Id
+		bookingDto.TotalPrice = booking2.TotalPrice
 
 		return bookingDto, nil
 	}
@@ -149,7 +149,7 @@ func (s *bookingService) GetHotelInfo(idMongo string) (dto.HotelDto, error) {
 
 func (s *bookingService) GetAllHotelsByCity(city string) (dto.HotelsDto, error) {
 
-	var hotels model.Hotels = bookingClient.GetAllHotelsByCity(city)
+	var hotels model.Hotels = booking.GetAllHotelsByCity(city)
 	var hotelsDto dto.HotelsDto
 
 	for _, hotel := range hotels {
@@ -172,7 +172,7 @@ func (s *bookingService) CheckAvailability(idMongo string, startDate time.Time, 
 	fmt.Println("Entro al Check Availabilty")
 	hotel, _ := s.GetHotelInfo(idMongo)
 	fmt.Println("GetHotelInfo:", hotel)
-	bookings := bookingClient.GetBookingsByHotel(idMongo)
+	bookings := booking.GetBookingsByHotel(idMongo)
 	fmt.Println("Las bookings: ", bookings)
 
 	roomsAvailable := hotel.Rooms
@@ -220,27 +220,9 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 		return hotelsAvailable, errors.New("error, la reserva no puede terminar antes de comenzar")
 	}
 
-	//agarro las 3 primeras letras de la ciudad
-	var cityFormatted string
-	if len(city) >= 3 {
-		cityFormatted = city[0:3]
-	} else {
-		cityFormatted = city
-	}
-	//crea una clave de cacheo única basada en la ciudad y las fechas de reserva
-	cacheKey := fmt.Sprintf("%s/%s/%s", cityFormatted, bookingStart.Format("02-01-2006"), bookingEnd.Format("02-01-2006"))
-	fmt.Println("La cache key es:", cacheKey)
-
 	//intenta obtener el resultado del cache. Parsea el resultado JSON y lo devuelve.
 
 	fmt.Println("llego 1")
-	cacheDTO, err := cache.Get(cacheKey)
-	fmt.Println("result", cacheDTO)
-
-	if err == nil {
-		fmt.Println("hit de cache")
-		return cacheDTO, nil
-	}
 
 	hotels, err2 := s.GetAllHotelsByCity(city)
 	if err2 != nil {
@@ -281,10 +263,6 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 	for hotelDto := range resultsCh {
 		hotelsAvailable = append(hotelsAvailable, hotelDto)
 	}
-
-	jsonResult, _ := json.Marshal(hotelsAvailable)
-	//ttl 10 seg
-	cache.Set(cacheKey, jsonResult, 10)
 
 	return hotelsAvailable, nil
 }
