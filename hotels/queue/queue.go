@@ -26,7 +26,8 @@ func init() {
 
 func (q queueProducer) InitQueue() {
 	//conn, err := amqp.Dial("amqp://user:password@rabbitmq:5672/")
-	conn, err := amqp.Dial("amqp://user:password@rabbit:5672/")
+	//conn, err := amqp.Dial("amqp://user:password@rabbit:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		log.Info("Failed to connect to RabbitMQ")
 		log.Fatal(err)

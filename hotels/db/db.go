@@ -16,14 +16,20 @@ var HotelsCollection *mongo.Collection
 
 func Disconect_db() {
 
-	client.Disconnect(context.TODO())
+	err := client.Disconnect(context.TODO())
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Info("Disconnected from MongoDB")
 }
 
 func Init_db() {
 
 	//crea una conexión con la base de datos MongoDB
-	clientOpts := options.Client().ApplyURI("mongodb://root:pass@mongodatabase:27017/?authSource=admin&authMechanism=SCRAM-SHA-256")
-
+	//clientOpts := options.Client().ApplyURI("mongodb://root:pass@mongodatabase:27017/?authSource=admin&authMechanism=SCRAM-SHA-256")
+	//clientOpts := options.Client().ApplyURI("mongodb://mongo:27017")
+	//clientOpts := options.Client().ApplyURI("mongodb://root:pass@mongo:27017/?authSource=admin&authMechanism=SCRAM-SHA-256")
+	clientOpts := options.Client().ApplyURI("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10")
 	cli, err := mongo.Connect(context.TODO(), clientOpts)
 	client = cli
 
