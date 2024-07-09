@@ -3,12 +3,12 @@ package main
 import (
 	"uba/app"
 	"uba/db"
-	"uba/utils"
+	utils "uba/utils/cache"
 )
 
 func main() {
-
+	utils.InitCache()
 	db.StartDbEngine()
 	app.StartRoute()
-	utils.Init_Cache()
+
 }
