@@ -1,14 +1,96 @@
-version: '3.9'
+version: '3'
+
 services:
-  mongo-server:
-    image: mongo:latest
-    container_name: mongo-server
+  arqsw2-db:
+    build: ./Db
+    environment:
+      MYSQL_DATABASE: arqsw2
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - arqsw2
+
+  uba:
+    build: ./uba
+    depends_on:
+      arqsw2-db:
+        condition: service_healthy
+    ports:
+      - 8080
+    networks:
+      - arqsw2
+
+  memcached:
+    image: memcached:1.6.16
+    restart: always
+    ports:
+      - "11211:11211"
+
+  nginx_uba:
+    image: nginx
+    volumes:
+      - ./uba/nginx/uba.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - uba
+    ports:
+      - 8080:80
+    networks:
+      - arqsw2
+
+  mongodatabase:
+    image: mongo
     ports:
       - "27017:27017"
-  mongo-client:
-    image: mongo-express:latest
-    container_name: mongo-client
+    networks:
+      - arqsw2 
+
+  hotels:
+    build: ./hotels
     depends_on:
-      - mongo-server
+      mongodatabase:
+        condition: service_started
     ports:
-      - "8081:8081"
+      - 8090
+    networks:
+      - arqsw2
+
+  nginx_hotels:
+    image: nginx
+    volumes:
+      - ./hotels/nginx/hotels.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - hotels
+    ports:
+      - 8090:90
+    networks:
+      - arqsw2
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - arqsw2
+
+  nginx_search:
+    image: nginx
+    volumes:
+      - ./search/nginx/search.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - search
+    ports:
+      - 8000:81
+    networks:
+      - arqsw2               
+
+networks:
+  arqsw2:
+    driver: bridge
