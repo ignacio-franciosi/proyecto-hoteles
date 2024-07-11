@@ -17,7 +17,7 @@ type SolrClient struct {
 
 func NewSolrClient(host string, port int, collection string) *SolrClient {
 	logger.Debug(fmt.Sprintf("Connecting to Solr at %s:%d", host, port))
-	Client := solr.NewJSONClient(fmt.Sprintf("http://%s:%d", config.SOLRHOST, config.SOLRPORT))
+	Client := solr.NewJSONClient(fmt.Sprintf("http://%s:%d", config.SOLRHOST, config.SOLRPORT, config.SOLRCOLLECTION))
 
 	var err error
 

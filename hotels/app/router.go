@@ -21,6 +21,6 @@ func StartRoute() {
 
 	log.Info("Starting server")
 
-	router.Run(":8091")
+	router.Run(":8090")
 
 }
