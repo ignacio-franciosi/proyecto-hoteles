@@ -22,9 +22,12 @@ func init() {
 	// DB Connections Paramters
 	DBName := "arqsw2" //sacar a un config
 	DBUser := "root"
-	DBPass := "root"
+	//DBPass := "root"
+	DBPass := ""
 	//DBPass := os.Getenv("MVC_DB_PASS")
+
 	DBHost := "arqsw2-db"
+	//DBHost := "localhost"
 	// ------------------------
 
 	db, err = gorm.Open(mysql.Open(DBUser+":"+DBPass+"@tcp("+DBHost+":3306)/"+DBName+"?charset=utf8&parseTime=True"),
