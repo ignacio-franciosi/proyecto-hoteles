@@ -94,11 +94,16 @@ func (s *hotelService) GetHotelById(id string) (dto.HotelDto, error) {
 
 	var hotelDto dto.HotelDto
 
-	hotel := client.HotelClient.GetHotelById(id)
-
-	if hotel.HotelId.Hex() == "000000000000000000000000" {
+	hotel, err := client.HotelClient.GetHotelById(id)
+	/*
+		if hotel.HotelId.Hex() == "000000000000000000000000" {
+			return hotelDto, errors.New("hotel not found")
+		}
+	*/
+	if err != nil {
 		return hotelDto, errors.New("hotel not found")
 	}
+
 	hotelDto.HotelId = hotel.HotelId.Hex()
 	hotelDto.Name = hotel.Name
 	hotelDto.Description = hotel.Description
@@ -113,7 +118,12 @@ func (s *hotelService) GetHotelById(id string) (dto.HotelDto, error) {
 
 func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 
-	hotel := client.HotelClient.GetHotelById(id)
+	var hotelDto dto.HotelDto
+
+	hotel, err := client.HotelClient.GetHotelById(id)
+	if err != nil {
+		return hotelDto, errors.New("hotel not found")
+	}
 
 	if hotel.HotelId.Hex() == "000000000000000000000000" {
 		return dto.HotelDto{}, errors.New("hotel not found")
@@ -141,7 +151,7 @@ func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 	}
 
 	body := map[string]interface{}{
-		"id":      hotel.HotelId.Hex(),
+		"HoteId":  hotel.HotelId.Hex(),
 		"message": "delete",
 	}
 
@@ -153,7 +163,6 @@ func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 		return dto.HotelDto{}, err
 	}
 
-	var hotelDto dto.HotelDto
 	hotelDto.HotelId = hotel.HotelId.Hex()
 
 	return hotelDto, err
@@ -161,7 +170,10 @@ func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 
 func (s *hotelService) UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, error) {
 
-	hotel := client.HotelClient.GetHotelById(hotelDto.HotelId)
+	hotel, err := client.HotelClient.GetHotelById(hotelDto.HotelId)
+	if err != nil {
+		return hotelDto, errors.New("hotel not found")
+	}
 
 	if hotel.HotelId.Hex() == "000000000000000000000000" {
 		return hotelDto, errors.New("hotel not found")
@@ -176,20 +188,20 @@ func (s *hotelService) UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, error) 
 	hotel.City = hotelDto.City
 	hotel.Photos = hotelDto.Photos
 
-	hotel = client.HotelClient.UpdateHotelById(hotelDto.HotelId, hotel)
+	updateHotel := client.HotelClient.UpdateHotelById(hotelDto.HotelId, hotel)
 
-	if hotel.HotelId.Hex() == "000000000000000000000000" {
+	if updateHotel.HotelId.Hex() == "000000000000000000000000" {
 		return hotelDto, errors.New("error updating hotel")
 	}
 
 	body := map[string]interface{}{
-		"id":      hotel.HotelId.Hex(),
+		"HotelId": hotel.HotelId.Hex(),
 		"message": "update",
 	}
 
 	jsonBody, _ := json.Marshal(body)
 
-	err := queue.QueueProducer.Publish(jsonBody)
+	err = queue.QueueProducer.Publish(jsonBody)
 
 	if err != nil {
 		return hotelDto, err

@@ -16,7 +16,7 @@ type hotelClient struct{}
 
 type hotelClientInterface interface {
 	InsertHotel(hotel model.Hotel) model.Hotel
-	GetHotelById(id string) model.Hotel
+	GetHotelById(id string) (model.Hotel, error)
 	GetAllHotels() model.Hotels
 	DeleteHotelById(id string) error
 	UpdateHotelById(id string, hotel model.Hotel) model.Hotel
@@ -45,22 +45,22 @@ func (c hotelClient) InsertHotel(hotel model.Hotel) model.Hotel {
 	return hotel
 }
 
-func (c hotelClient) GetHotelById(id string) model.Hotel {
+func (c hotelClient) GetHotelById(id string) (model.Hotel, error) {
 	var hotel model.Hotel
 
 	objID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		fmt.Println(err)
-		return hotel
+		//fmt.Println(err)
+		return hotel, err
 	}
 
 	err = db.HotelsCollection.FindOne(context.TODO(), bson.D{{"_id", objID}}).Decode(&hotel)
 	if err != nil {
-		fmt.Println(err)
-		return hotel
+		//fmt.Println(err)
+		return hotel, err
 	}
-	return hotel
+	return hotel, nil
 }
 
 func (c hotelClient) GetAllHotels() model.Hotels {
@@ -85,7 +85,10 @@ func (c hotelClient) GetAllHotels() model.Hotels {
 
 func (c hotelClient) DeleteHotelById(id string) error {
 
-	objID, _ := primitive.ObjectIDFromHex(id)
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
 
 	result, err := db.HotelsCollection.DeleteOne(context.TODO(), bson.D{{"_id", objID}})
 
@@ -104,7 +107,8 @@ func (c hotelClient) DeleteHotelById(id string) error {
 func (c hotelClient) UpdateHotelById(id string, hotel model.Hotel) model.Hotel {
 
 	db := db.MongoDb
-	_, err := primitive.ObjectIDFromHex(id)
+
+	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Debug("Failed to convert hex ID to ObjectID")
 		return model.Hotel{}
@@ -123,7 +127,7 @@ func (c hotelClient) UpdateHotelById(id string, hotel model.Hotel) model.Hotel {
 		}},
 	}
 
-	result, err := db.Collection("hotels").UpdateOne(context.TODO(), bson.D{{"_id", hotel.HotelId}}, update)
+	result, err := db.Collection("hotels").UpdateOne(context.TODO(), bson.D{{"_id", objID}}, update)
 	if err != nil {
 		log.Debug("Failed to update hotel")
 		return model.Hotel{}

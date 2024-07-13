@@ -31,7 +31,7 @@ func InsertHotel(c *gin.Context) {
 
 func GetHotelById(c *gin.Context) {
 
-	id := c.Param("id")
+	id := c.Param("HotelId")
 	var hotelDto dto.HotelDto
 
 	hotelDto, err := service.HotelService.GetHotelById(id)
@@ -58,7 +58,7 @@ func GetAllHotels(c *gin.Context) {
 }
 
 func DeleteHotel(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("HotelId")
 
 	hotel, err := service.HotelService.DeleteHotel(id)
 
@@ -71,7 +71,7 @@ func DeleteHotel(c *gin.Context) {
 }
 
 func UpdateHotel(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("HotelId")
 	var hotelDto dto.HotelDto
 	err := c.BindJSON(&hotelDto)
 

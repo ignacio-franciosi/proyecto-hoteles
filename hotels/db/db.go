@@ -26,7 +26,7 @@ func Disconect_db() {
 func Init_db() {
 
 	//clientOpts := options.Client().ApplyURI("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10")
-	clientOpts := options.Client().ApplyURI("mongodb://arqsw2-mongo:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10")
+	clientOpts := options.Client().ApplyURI("mongodb://mongo:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10")
 
 	cli, err := mongo.Connect(context.TODO(), clientOpts)
 	client = cli
