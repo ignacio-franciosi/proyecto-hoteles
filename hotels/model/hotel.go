@@ -9,11 +9,10 @@ type Hotel struct {
 	Name        string             `bson:"name"`
 	Description string             `bson:"description"`
 	Amenities   string             `bson:"amenities"`
-	Stars       string             `bson:"stars"`
+	Stars       int                `bson:"stars"`
 	Rooms       int                `bson:"rooms"`
 	Price       float32            `bson:"price"`
 	City        string             `bson:"city"`
-	Photos      string             `bson:"photos"`
 }
 
 type Hotels []Hotel

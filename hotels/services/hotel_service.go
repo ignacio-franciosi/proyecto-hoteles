@@ -1,238 +1,210 @@
 package services
 
-/*
 import (
-	"fmt"
+	"encoding/json"
+	"errors"
+	"hotels/client"
 	"hotels/dto"
-
-	client "hotels/services/repositories"
-
-	e "hotels/utils/errors"
-
-	log "github.com/sirupsen/logrus"
+	"hotels/model"
+	"hotels/queue"
+	"hotels/utils"
+	"net/http"
 )
 
-type HotelService interface {
-	GetHotelById(id string) (dto.HotelDto, e.ApiError)
-	GetHotels() (dto.HotelDto, e.ApiError)
-	InsertHotel(hotel dto.HotelDto) (dto.HotelDto, e.ApiError)
-	QueueHotels(hotels dto.HotelsDto) e.ApiError
-	DeleteHotel(id string) e.ApiError
-	UpdateHotelById(hotel dto.HotelDto) (dto.HotelDto, e.ApiError)
+type hotelService struct {
+	HTTPClient utils.HttpClientInterface
 }
 
-type HotelServiceImpl struct {
-	hotel *client.HotelClient
-	queue *client.QueueClient
+type hotelServiceInterface interface {
+	GetHotelById(id string) (dto.HotelDto, error)
+	GetAllHotels() (dto.HotelsDto, error)
+	InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, error)
+	DeleteHotel(id string) (dto.HotelDto, error)
+	UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, error)
 }
 
-func NewHotelServiceImpl(
-	hotel *client.HotelClient,
-	queue *client.QueueClient,
-) *HotelServiceImpl {
-	return &HotelServiceImpl{
-		hotel: hotel,
-		queue: queue,
+var HotelService hotelServiceInterface
+
+func init() {
+	HotelService = &hotelService{
+		HTTPClient: &utils.HttpClient{},
 	}
 }
 
-//get hotelid de antes por si acaso
-/*
-func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelResponseDto, e.ApiError) {
+func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, error) {
 
-	var hotelDto dto.HotelDto
-	var hotelResponseDto dto.HotelResponseDto
+	var hotel model.Hotel
 
-	hotelDto, err := s.hotel.GetHotelById(id)
+	hotel.Name = hotelDto.Name
+	hotel.Description = hotelDto.Description
+	hotel.Amenities = hotelDto.Amenities
+	hotel.Stars = hotelDto.Stars
+	hotel.Rooms = hotelDto.Rooms
+	hotel.Price = hotelDto.Price
+	hotel.City = hotelDto.City
+
+	hotel = client.HotelClient.InsertHotel(hotel)
+
+	hotelDto.HotelId = hotel.HotelId.Hex()
+
+	if hotel.HotelId.Hex() == "000000000000000000000000" {
+		return hotelDto, errors.New("error creating hotel")
+	}
+
+	body := map[string]interface{}{
+		"Id":      hotel.HotelId.Hex(),
+		"Message": "create",
+	}
+
+	jsonBody, _ := json.Marshal(body)
+
+	err := queue.QueueProducer.Publish(jsonBody)
 
 	if err != nil {
-		log.Debug("Error getting hotel from mongo")
-		return hotelResponseDto, err
-	}
-
-	if hotelDto.HotelId == "000000000000000000000000" {
-		return hotelResponseDto, e.NewBadRequestApiError("hotel not found")
-	}
-
-	log.Debug("mongo")
-
-	return hotelResponseDto, nil
-
-}
-
-func (s *HotelServiceImpl) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
-
-	var hotelDto dto.HotelDto
-	//var hotelResponseDto dto.HotelResponseDto
-
-	hotelDto, err := s.hotel.GetHotelById(id)
-
-	if err != nil {
-		log.Debug("Error getting hotel from mongo")
 		return hotelDto, err
 	}
 
-	if hotelDto.HotelId == "000000000000000000000000" {
-		return hotelDto, e.NewBadRequestApiError("hotel not found")
-	}
-
-	log.Debug("mongo")
-
 	return hotelDto, nil
-
 }
 
-func (s *HotelServiceImpl) GetHotels() (dto.HotelsDto, e.ApiError) {
+func (s *hotelService) GetAllHotels() (dto.HotelsDto, error) {
 
+	var hotels model.Hotels = client.HotelClient.GetAllHotels()
 	var hotelsDto dto.HotelsDto
 
-	hotelsDto, err := s.hotel.GetAllHotels()
-	if err != nil {
-		log.Debug("Error getting all hotels from mongo")
-		return hotelsDto, err
+	for _, hotel := range hotels {
+		var hotelDto dto.HotelDto
+		hotelDto.HotelId = hotel.HotelId.Hex()
+		hotelDto.Name = hotel.Name
+		hotelDto.Description = hotel.Description
+		hotelDto.Stars = hotel.Stars
+		hotelDto.Rooms = hotel.Rooms
+		hotelDto.Price = hotel.Price
+		hotelDto.City = hotel.City
+		hotelDto.Amenities = hotel.Amenities
+
+		hotelsDto = append(hotelsDto, hotelDto)
 	}
 
 	return hotelsDto, nil
 }
 
-// Inserta hoteles el la DB y notifica la cola RabbitMQ
-func (s *HotelServiceImpl) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
+func (s *hotelService) GetHotelById(id string) (dto.HotelDto, error) {
 
-	var hotelInsertDto dto.HotelDto
+	var hotelDto dto.HotelDto
 
-	hotelInsertDto, err := s.hotel.InsertHotel(hotelDto)
+	hotel, err := client.HotelClient.GetHotelById(id)
+	/*
+		if hotel.HotelId.Hex() == "000000000000000000000000" {
+			return hotelDto, errors.New("hotel not found")
+		}
+	*/
 	if err != nil {
-		return hotelDto, e.NewBadRequestApiError("error inserting hotel")
+		return hotelDto, errors.New("hotel not found")
 	}
 
-	if hotelInsertDto.HotelId == "000000000000000000000000" {
-		return hotelDto, e.NewBadRequestApiError("error in insert")
-	}
+	hotelDto.HotelId = hotel.HotelId.Hex()
+	hotelDto.Name = hotel.Name
+	hotelDto.Description = hotel.Description
+	hotelDto.Stars = hotel.Stars
+	hotelDto.Rooms = hotel.Rooms
+	hotelDto.Price = hotel.Price
+	hotelDto.City = hotel.City
+	hotelDto.Amenities = hotel.Amenities
 
-	hotelDto.HotelId = hotelInsertDto.HotelId
-
-	//Inserta el ID del hotel en la cola RabbitMQ
-	err = s.queue.SendMessage(hotelDto.HotelId, "create", "") //err = s.queue.QueueHotels(hotelDto.HotelId)
-
-	if err != nil {
-		return hotelDto, e.NewBadRequestApiError("Error notifying hotel creation to RabbitMQ")
-	}
-
-	err = s.queue.SendMessage(hotelDto.HotelId, "update", "") //hotelDto, err = s.queue.InsertHotel(hotelDto)
-
-	if err != nil {
-		return hotelDto, e.NewBadRequestApiError("Error inserting in queue")
-	}
 	return hotelDto, nil
 }
 
-// Actualiza la información del hotel en la base de datos,
-// notifica la actualización a la cola de RabbitMQ
-func (s *HotelServiceImpl) UpdateHotelById(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
+func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 
-	var updatedHotelDto dto.HotelDto
+	var hotelDto dto.HotelDto
 
-	// Actualiza el hotel en la base de datos
-	updatedHotelDto, err := s.hotel.UpdateHotelById(hotelDto)
+	hotel, err := client.HotelClient.GetHotelById(id)
 	if err != nil {
-		return hotelDto, e.NewBadRequestApiError("error updating hotel")
+		return hotelDto, errors.New("hotel not found")
 	}
 
-	// Verifica si la actualización fue exitosa
-	if updatedHotelDto.HotelId == "" {
-		return hotelDto, e.NewBadRequestApiError("error in update")
+	if hotel.HotelId.Hex() == "000000000000000000000000" {
+		return dto.HotelDto{}, errors.New("hotel not found")
 	}
 
-	// Inserta el ID del hotel actualizado en la cola RabbitMQ
-	err = s.queue.SendMessage(updatedHotelDto.HotelId, "update", "") //err = s.queue.QueueHotels(updatedHotelDto.HotelId)
+	url := "http://user-reservationnginx:8090/amadeus/" + id
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
+	if err != nil {
+		return dto.HotelDto{}, err
+	}
+
+	res, err := s.HTTPClient.Do(req)
+	if err != nil {
+		return dto.HotelDto{}, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return dto.HotelDto{}, errors.New("status not OK")
+	}
+
+	err = client.HotelClient.DeleteHotelById(id)
 
 	if err != nil {
-		return hotelDto, e.NewBadRequestApiError("Error notifying hotel update to RabbitMQ")
+		return dto.HotelDto{}, err
 	}
 
-	return updatedHotelDto, nil
+	body := map[string]interface{}{
+		"HoteId":  hotel.HotelId.Hex(),
+		"message": "delete",
+	}
+
+	jsonBody, _ := json.Marshal(body)
+
+	err = queue.QueueProducer.Publish(jsonBody)
+
+	if err != nil {
+		return dto.HotelDto{}, err
+	}
+
+	hotelDto.HotelId = hotel.HotelId.Hex()
+
+	return hotelDto, err
 }
 
-func (s *HotelServiceImpl) QueueHotels(hotelsDto dto.HotelsDto) e.ApiError {
-	// Crea un canal para mantener el seguimiento del progreso de procesamiento.
-	processed := make(chan string, len(hotelsDto))
+func (s *hotelService) UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, error) {
 
-	for i := range hotelsDto {
-		hotel := hotelsDto[i]
-		go func() {
-
-			// Variable para almacenar la acción (create o update).
-			var action string
-
-			// Insertar el hotel en MongoDB
-			hotel, err := s.hotel.InsertHotel(hotel)
-			if err != nil {
-				processed <- "error"
-				log.Debug(err)
-				return
-			}
-
-			// Define la acción en función de si se creó o actualizó el hotel
-			if hotel.HotelId == "" {
-				action = "create"
-			} else {
-				action = "update"
-			}
-
-			// Notificar a RabbitMQ cuando se crea o modifica un hotel
-			err = s.queue.SendMessage(hotel.HotelId, action, "")
-			if err != nil {
-				processed <- "error"
-				log.Debug(err)
-				return
-			}
-
-			processed <- "complete"
-		}()
-	}
-
-	// Notifica cuando se completa la operación.
-	go func() {
-		// Verifica si hubo errores en el procesamiento antes de notificar.
-		completeCount := 0
-		errorCount := 0
-		for i := 0; i < len(hotelsDto); i++ {
-			result := <-processed
-			if result == "error" {
-				errorCount++
-			} else if result == "complete" {
-				completeCount++
-			}
-		}
-
-		// Determina si hubo errores de procesamiento
-		action := "processed"
-		if errorCount > 0 {
-			action = "processed with errors"
-		}
-
-		// Llama a SendMessage para notificar la operación
-		err := s.queue.SendMessage("all-hotels", action, fmt.Sprintf("Processed %d hotels with %d errors", completeCount, errorCount))
-		if err != nil {
-			log.Debug(err)
-		}
-	}()
-
-	return nil
-}
-
-// Elimina un hotel de la base de datos y notificar la eliminación a través de una cola de mensajes
-func (s *HotelServiceImpl) DeleteHotelById(id string) e.ApiError {
-
-	err := s.hotel.DeleteHotel(id)
+	hotel, err := client.HotelClient.GetHotelById(hotelDto.HotelId)
 	if err != nil {
-		log.Error(err)
-		return err
+		return hotelDto, errors.New("hotel not found")
 	}
 
-	err = s.queue.SendMessage(id, "delete", fmt.Sprintf("%s.delete", id))
-	log.Error(err)
+	if hotel.HotelId.Hex() == "000000000000000000000000" {
+		return hotelDto, errors.New("hotel not found")
+	}
 
-	return nil
+	hotel.Name = hotelDto.Name
+	hotel.Description = hotelDto.Description
+	hotel.Amenities = hotelDto.Amenities
+	hotel.Stars = hotelDto.Stars
+	hotel.Rooms = hotelDto.Rooms
+	hotel.Price = hotelDto.Price
+	hotel.City = hotelDto.City
+
+	updateHotel := client.HotelClient.UpdateHotelById(hotelDto.HotelId, hotel)
+
+	if updateHotel.HotelId.Hex() == "000000000000000000000000" {
+		return hotelDto, errors.New("error updating hotel")
+	}
+
+	body := map[string]interface{}{
+		"HotelId": hotel.HotelId.Hex(),
+		"message": "update",
+	}
+
+	jsonBody, _ := json.Marshal(body)
+
+	err = queue.QueueProducer.Publish(jsonBody)
+
+	if err != nil {
+		return hotelDto, err
+	}
+
+	return hotelDto, nil
+
 }
-*/

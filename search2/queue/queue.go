@@ -2,6 +2,7 @@ package queue
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"search2/dto"
@@ -80,7 +81,9 @@ func Consume() {
 func handleQueueMessage(messageDto dto.QueueMessageDto) {
 
 	if messageDto.Message == "create" || messageDto.Message == "update" {
-		resp, err := http.Get("http://localhost:8000/hotel/" + messageDto.Id)
+
+		fmt.Println("id que se le pasa a la url: ", messageDto.Id)
+		resp, err := http.Get("http://arqsw2-hotels:8090/hotels/" + messageDto.Id)
 
 		if err != nil {
 			log.Error("Error in HTTP request ", err)
@@ -91,6 +94,8 @@ func handleQueueMessage(messageDto dto.QueueMessageDto) {
 
 		body, err := io.ReadAll(resp.Body)
 
+		fmt.Println("response leida:", body)
+
 		if err != nil {
 			log.Error("Error reading response ", err)
 			return
@@ -99,6 +104,8 @@ func handleQueueMessage(messageDto dto.QueueMessageDto) {
 		var hotelDto dto.HotelDto
 
 		err = json.Unmarshal(body, &hotelDto)
+
+		fmt.Println("el err:", err)
 
 		if err != nil {
 			log.Error("Error parsing JSON ", err)

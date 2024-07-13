@@ -2,6 +2,7 @@ package queue
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -64,6 +65,8 @@ func (q queueProducer) Publish(body []byte) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	fmt.Println("body que se le pasa al publish", body)
 
 	err := channel.PublishWithContext(
 		ctx,

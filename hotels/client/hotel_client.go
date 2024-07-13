@@ -123,7 +123,6 @@ func (c hotelClient) UpdateHotelById(id string, hotel model.Hotel) model.Hotel {
 			{Key: "rooms", Value: hotel.Rooms},
 			{Key: "city", Value: hotel.City},
 			{Key: "price", Value: hotel.Price},
-			{Key: "photos", Value: hotel.Photos},
 		}},
 	}
 

@@ -1,7 +1,7 @@
 package solr
 
 import (
-	"github.com/rtt/Go-Solr"
+	solr "github.com/rtt/Go-Solr"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -11,7 +11,7 @@ func InitSolr() {
 
 	var err error
 
-	SolrClient, err = solr.Init("solr", 8983, "hotels")
+	SolrClient, err = solr.Init("my-solr", 8983, "hotelsSearch")
 	if err != nil {
 		log.Info("Failed to connect to Solr")
 		log.Fatal(err)

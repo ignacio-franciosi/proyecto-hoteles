@@ -156,7 +156,7 @@ func (s hotelService) DeleteHotelById(id string) error {
 	document := map[string]interface{}{
 		"delete": []interface{}{
 			map[string]interface{}{
-				"hotel_id": id,
+				"id": id,
 			},
 		},
 	}
@@ -177,7 +177,7 @@ func unmarshalSolrResponse(responses dto.SolrResponsesDto) dto.HotelsDto {
 	for _, response := range responses {
 		var hotelDto dto.HotelDto
 
-		hotelDto.HotelId = response.HotelId
+		hotelDto.HotelId = response.HotelId[0]
 		hotelDto.Name = response.Name[0]
 		hotelDto.Rooms = response.Rooms[0]
 		hotelDto.Description = response.Description[0]
