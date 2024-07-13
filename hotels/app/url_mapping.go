@@ -2,7 +2,6 @@ package app
 
 import (
 	hotelController "hotels/controllers"
-	//"Hotel/controller"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -16,11 +15,7 @@ func mapUrls() {
 
 	router.POST("/hotel", hotelController.InsertHotel)
 
-	//router.POST("/hotels", hotelController.QueueHotels)
-
 	router.PUT("/hotel/:HotelId", hotelController.UpdateHotel)
-
-	//router.PUT("/hotels", hotelController.QueueHotels)
 
 	router.DELETE("/hotel/:HotelId", hotelController.DeleteHotel)
 

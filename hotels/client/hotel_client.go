@@ -51,13 +51,11 @@ func (c hotelClient) GetHotelById(id string) (model.Hotel, error) {
 	objID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		//fmt.Println(err)
 		return hotel, err
 	}
 
 	err = db.HotelsCollection.FindOne(context.TODO(), bson.D{{"_id", objID}}).Decode(&hotel)
 	if err != nil {
-		//fmt.Println(err)
 		return hotel, err
 	}
 	return hotel, nil
