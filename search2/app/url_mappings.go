@@ -9,8 +9,8 @@ import (
 func mapUrls() {
 
 	// Add all methods and its mappings
-	router.GET("/hotel/:id", controller.GetHotelById)
-	router.GET("/hotel", controller.GetHotels) //se le puede agregar city a este url, ej: http://localhost:8000/hotel?city=Paris
+	router.GET("/hotel/:id", controller.GetHotelById) //el id de hotel (mongo), NO el id que genera solr
+	router.GET("/hotel", controller.GetHotels)        //se le puede agregar city a este url, ej: http://localhost:8000/hotel?city=Paris
 
 	log.Info("Finishing mappings configurations")
 }

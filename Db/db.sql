@@ -30,27 +30,24 @@ SET time_zone = "+00:00";
 --
 use arqsw2;
 CREATE TABLE `hotels` (
-  `id` bigint(20) NOT NULL,
-  `idMongo` varchar(300) NOT NULL,
-  `idAmadeus` varchar(300) NOT NULL,
-  `idAmadeus` varchar(300) NOT NULL,
+  `id_hotel` bigint(20) NOT NULL,
+  `id_mongo` varchar(300) NOT NULL,
+  `id_amadeus` varchar(300) NOT NULL,
   `rooms` bigint(20) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `city` varchar(250) NOT NULL
   `city` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `hotels`
 --
-
+/*
 INSERT INTO `hotels` (`id`, `idMongo`, `idAmadeus`, `rooms`, `price`, `city`) VALUES
-(1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 10, 25, 'New York'),
-(1, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10, 'Cordoba');
 
-(1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 10, 25.00, 'New York'),
-(2, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10.00, 'Cordoba');
 
+(1, '6547a2c13b81d9c3e11a298c', 'MCLONGHM', 3, 25.00, 'Miami'),
+(2, '6547a2c13b81d9c3e11a298d', 'HJCOR490', 5, 10.00, 'Miami');
+*/
 -- --------------------------------------------------------
 
 --
@@ -58,7 +55,7 @@ INSERT INTO `hotels` (`id`, `idMongo`, `idAmadeus`, `rooms`, `price`, `city`) VA
 --
 
 CREATE TABLE `bookings` (
-  `id` bigint(20) NOT NULL,
+  `id_booking` bigint(20) NOT NULL,
   `start_date` varchar(300) NOT NULL,
   `end_date` varchar(300) NOT NULL,
   `id_mongo` varchar(300) NOT NULL,
@@ -73,7 +70,7 @@ CREATE TABLE `bookings` (
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) NOT NULL,
+  `id_user` bigint(20) NOT NULL,
   `name` varchar(300) NOT NULL,
   `last_name` varchar(300) NOT NULL,
   `email` varchar(500) NOT NULL,
@@ -85,10 +82,10 @@ CREATE TABLE `users` (
 --
 -- Volcado de datos para la tabla `users`
 --
-
+/*
 INSERT INTO `users` (`id`, `name`, `last_name`, `email`, `password`, `user_type`, `dni`) VALUES
 (1, 'igna', 'franciosi', 'igna@gmail.com', '5f4dcc3b5aa765d61d8327deb882cf99', 0, 44098756);
-
+*/
 --
 -- Índices para tablas volcadas
 --
@@ -97,19 +94,19 @@ INSERT INTO `users` (`id`, `name`, `last_name`, `email`, `password`, `user_type`
 -- Índices de la tabla `hotels`
 --
 ALTER TABLE `hotels`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_hotel`);
 
 --
 -- Índices de la tabla `bookings`
 --
 ALTER TABLE `bookings`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_booking`);
 
 --
 -- Índices de la tabla `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -120,19 +117,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `hotels`
 --
 ALTER TABLE `hotels`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_hotel` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_booking` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Restricciones para tablas volcadas

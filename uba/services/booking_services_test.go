@@ -15,11 +15,11 @@ type TestBookings struct {
 }
 
 func (t *TestBookings) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, error) {
-	if bookingDto.Id == 0 {
+	if bookingDto.IdBooking == 0 {
 		return dto.BookingDto{}, e.NewApiError("Error al insertar la reserva", "booking_insert_error", http.StatusInternalServerError, nil)
 	}
 	// Simulate successful insertion by setting a non-zero ID
-	bookingDto.Id = 1
+	bookingDto.IdBooking = 1
 	return bookingDto, nil
 }
 
@@ -27,7 +27,7 @@ func (t *TestBookings) GetAllHotelsByCity(city string) (dto.HotelsDto, error) {
 	if city == "Miami" {
 		return dto.HotelsDto{
 			dto.HotelDto{
-				Id:        1,
+				IdHotel:   1,
 				IdMongo:   "1",
 				IdAmadeus: "1",
 				Rooms:     1,
@@ -53,7 +53,7 @@ func (t *TestBookings) CheckAllAvailability(city string, startDate string, endDa
 func (t *TestBookings) GetHotelInfo(idMongo string) (dto.HotelDto, error) {
 	if idMongo == "1" {
 		return dto.HotelDto{
-			Id:        1,
+			IdHotel:   1,
 			IdMongo:   "1",
 			IdAmadeus: "1",
 			Rooms:     1,
@@ -68,7 +68,7 @@ func TestInsertBooking(t *testing.T) {
 	// Si cambio el valor de los id puedo ver los errores
 
 	booking := dto.BookingDto{
-		Id:         1,
+		IdBooking:  1,
 		StartDate:  "2024-02-20",
 		EndDate:    "2024-02-21",
 		IdMongo:    "1",
@@ -100,7 +100,7 @@ func TestGetHotelInfo(t *testing.T) {
 	a.Nil(err)
 
 	expectedHotel := dto.HotelDto{
-		Id:        1,
+		IdHotel:   1,
 		IdMongo:   "1",
 		IdAmadeus: "1",
 		Rooms:     1,
@@ -125,7 +125,7 @@ func TestGetAllHotelsByCity(t *testing.T) {
 
 	// Asegúrate de que los valores de la reserva coincidan con lo esperado
 	expectedHotel := dto.HotelDto{
-		Id:        1,
+		IdHotel:   1,
 		IdMongo:   "1",
 		IdAmadeus: "1",
 		Rooms:     1, // Ajusta según tus expectativas

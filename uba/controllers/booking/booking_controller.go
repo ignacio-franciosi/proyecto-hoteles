@@ -20,7 +20,7 @@ func InsertBooking(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	fmt.Println("el bookingdto de controller: ", bookingDto)
 	bookingDto, er := service.BookingService.InsertBooking(bookingDto)
 
 	if er != nil {

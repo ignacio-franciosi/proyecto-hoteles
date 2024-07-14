@@ -16,7 +16,7 @@ func InsertBooking(booking model.Booking) model.Booking {
 	if result.Error != nil {
 		log.Error("")
 	}
-	log.Debug("Reserva Creada: ", booking.Id)
+	log.Debug("Reserva Creada: ", booking.IdBooking)
 	return booking
 }
 

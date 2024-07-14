@@ -1,7 +1,7 @@
 package model
 
 type Booking struct {
-	Id         int     `gorm:"primaryKey"`
+	IdBooking  int     `gorm:"primaryKey"`
 	StartDate  string  `gorm:"type:varchar(16);not null"`
 	EndDate    string  `gorm:"type:varchar(16);not null"`
 	IdMongo    string  `gorm:"type:varchar(250);not null"`

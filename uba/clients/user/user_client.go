@@ -19,7 +19,7 @@ func init() {
 func GetUserById(id int) model.User {
 	var user model.User
 
-	Db.Where("id = ?", id).First(&user)
+	Db.Where("id_user = ?", id).First(&user)
 	log.Debug("User: ", user)
 
 	return user
@@ -57,7 +57,7 @@ func InsertUser(user model.User) model.User {
 		log.Error("Couldn't create user")
 		return model.User{}
 	}
-	log.Debug("User Created: ", user.Id)
+	log.Debug("User Created: ", user.IdUser)
 	//Si la inserción es exitosa, el usuario recién creado se almacena
 	//en la caché con su correo electrónico como clave y un tiempo de vida de 24 horas
 

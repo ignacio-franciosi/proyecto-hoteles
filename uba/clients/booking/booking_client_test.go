@@ -12,14 +12,14 @@ type MockBookingClient struct{}
 func (m *MockBookingClient) InsertBooking(booking model.Booking) model.Booking {
 	// Simular la lógica de inserción en la base de datos
 	// Se establece un ID para la booking
-	booking.Id = 1 // Si modifico a cero, genera la alerta
+	booking.IdBooking = 1 // Si modifico a cero, genera la alerta
 	return booking
 }
 
 func (m *MockBookingClient) GetBookingsByHotel(idMongo string) model.Booking {
 	// Simular la búsqueda en la base de datos
 	booking := model.Booking{
-		Id:         1,
+		IdBooking:  1,
 		IdUser:     1,
 		IdMongo:    "1",
 		StartDate:  "20-02-2024",
@@ -33,7 +33,7 @@ func (m *MockBookingClient) GetBookingsByHotel(idMongo string) model.Booking {
 func (m *MockBookingClient) GetAllHotelsByCity(city string) model.Hotel {
 
 	hotel := model.Hotel{
-		Id:        1,
+		IdHotel:   1,
 		IdMongo:   "1",
 		IdAmadeus: "1",
 		Rooms:     1,
@@ -62,7 +62,7 @@ func TestInsertBooking(t *testing.T) {
 	insert := mockClient.InsertBooking(newBooking)
 
 	// Verificar que la booking tenga un ID asignado
-	assert.NotZero(t, insert.Id, "La booking no se pudo realizar")
+	assert.NotZero(t, insert.IdBooking, "La booking no se pudo realizar")
 
 	// Verificar otros atributos de la booking
 	assert.Equal(t, newBooking.IdUser, insert.IdUser)

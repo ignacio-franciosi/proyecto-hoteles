@@ -17,7 +17,7 @@ services:
     networks:
       - arqsw2
 
-  uba:
+  arqsw-uba:
     build: ./uba
     depends_on:
       arqsw2-db:
@@ -27,34 +27,29 @@ services:
     networks:
       - arqsw2
 
-  memcached:
-    image: memcached:1.6.16
-    restart: always
-    ports:
-      - "11211:11211"
 
   nginx_uba:
     image: nginx
     volumes:
       - ./uba/nginx/uba.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - uba
+      - arqsw2-uba
     ports:
       - 8080:80
     networks:
       - arqsw2
 
-  mongodatabase:
+  mongo:
     image: mongo
     ports:
       - "27017:27017"
     networks:
       - arqsw2 
 
-  hotels:
+  arqsw2-hotels:
     build: ./hotels
     depends_on:
-      mongodatabase:
+      mongo:
         condition: service_started
     ports:
       - 8090
@@ -66,7 +61,7 @@ services:
     volumes:
       - ./hotels/nginx/hotels.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - hotels
+      - arqsw2-hotels
     ports:
       - 8090:90
     networks:
@@ -80,12 +75,31 @@ services:
     networks:
       - arqsw2
 
-  nginx_search:
+  my-solr:
+    image: solr:latest
+    ports:
+      - "8983:8983"
+    networks:
+      - arqsw2  
+
+  arqsw2-search2:
+    build: ./search2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      my-solr:
+        condition: service_started
+    ports:
+      - 8000
+    networks:
+      - arqsw2        
+
+nginx_search:
     image: nginx
     volumes:
-      - ./search/nginx/search.conf:/etc/nginx/conf.d/default.conf
+      - ./search2/nginx/search.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - search
+      - arqsw2-search
     ports:
       - 8000:81
     networks:

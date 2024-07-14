@@ -1,7 +1,7 @@
 package model
 
 type Hotel struct {
-	Id        int     `gorm:"primaryKey"`
+	IdHotel   int     `gorm:"primaryKey"`
 	IdMongo   string  `gorm:"type:varchar(250);not null;unique"`
 	IdAmadeus string  `gorm:"type:varchar(250);not null;unique"`
 	Rooms     int     `gorm:"type:integer;not null"`

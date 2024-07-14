@@ -33,7 +33,7 @@ func (t *TestBookings) GetAllHotelsByCity(city string) (dto.HotelsDto, error) {
 	if city == "Miami" {
 		return dto.HotelsDto{
 			dto.HotelDto{
-				Id:        1,
+				IdHotel:   1,
 				IdMongo:   "1",
 				IdAmadeus: "1",
 				Rooms:     1,

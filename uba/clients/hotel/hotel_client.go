@@ -16,7 +16,7 @@ func InsertHotel(hotel model.Hotel) model.Hotel {
 		log.Error("Error creating hotel: ", result.Error)
 	}
 
-	log.Debug("Hotel Created: ", hotel.Id)
+	log.Debug("Hotel Created: ", hotel.IdHotel)
 	return hotel
 }
 

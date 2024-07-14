@@ -42,15 +42,15 @@ func init() {
 }
 
 func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, error) {
-
+	fmt.Println("el booking dto: ", bookingDto)
+	fmt.Println("Numero de user:", bookingDto.IdUser)
 	userDto := user.GetUserById(bookingDto.IdUser)
-	hotelDto, err := s.GetHotelInfo(bookingDto.IdMongo)
+	fmt.Println("UserDto:", userDto)
 
-	if err != nil {
-		return dto.BookingDto{}, errors.New("error retrieving hotel information")
-	}
-
-	if userDto.Id == 0 {
+	fmt.Println("Numero de hotel:", bookingDto.IdMongo)
+	hotelDto := hotel.GetHotelById(bookingDto.IdMongo)
+	fmt.Println("HotelDto:", hotelDto)
+	if userDto.IdUser == 0 {
 		return bookingDto, errors.New("user not found")
 	}
 
@@ -95,7 +95,7 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 
 		booking2.StartDate = bookingDto.StartDate
 		booking2.EndDate = bookingDto.EndDate
-		booking2.Id = bookingDto.Id
+		booking2.IdBooking = bookingDto.IdBooking
 		booking2.IdUser = bookingDto.IdUser
 		booking2.IdMongo = bookingDto.IdMongo
 		//------------------------------------------------------
@@ -109,7 +109,7 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 
 		booking2 = booking.InsertBooking(booking2)
 
-		bookingDto.Id = booking2.Id
+		bookingDto.IdBooking = booking2.IdBooking
 		bookingDto.TotalPrice = booking2.TotalPrice
 
 		return bookingDto, nil
@@ -119,8 +119,8 @@ func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDt
 }
 
 func (s *bookingService) GetHotelInfo(idMongo string) (dto.HotelDto, error) {
-	resp, err := s.HTTPClient.Get("http://localhost:8080/hotel/" + idMongo)
-
+	resp, err := s.HTTPClient.Get("http://arqsw2-hotels:8090/hotels/" + idMongo)
+	fmt.Println("la url:", resp)
 	if err != nil {
 		log.Error("Error in HTTP request ", err)
 		return dto.HotelDto{}, err
@@ -155,7 +155,7 @@ func (s *bookingService) GetAllHotelsByCity(city string) (dto.HotelsDto, error) 
 	for _, hotel := range hotels {
 		var hotelDto dto.HotelDto
 
-		hotelDto.Id = hotel.Id
+		hotelDto.IdHotel = hotel.IdHotel
 		hotelDto.IdMongo = hotel.IdMongo
 		hotelDto.IdAmadeus = hotel.IdAmadeus
 		hotelDto.City = hotel.City
@@ -243,7 +243,7 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 
 			if s.CheckAvailability(hotel.IdMongo, bookingStart, bookingEnd) {
 				var hotelDto dto.HotelDto
-				hotelDto.Id = hotel.Id
+				hotelDto.IdHotel = hotel.IdHotel
 				hotelDto.IdMongo = hotel.IdMongo
 				hotelDto.IdAmadeus = hotel.IdAmadeus
 				hotelDto.Rooms = hotel.Rooms

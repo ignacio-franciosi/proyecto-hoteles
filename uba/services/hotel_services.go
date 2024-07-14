@@ -25,7 +25,6 @@ func init() {
 func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiError) {
 	var hotel model.Hotel
 
-	hotel.Id = hotelDto.Id
 	hotel.IdAmadeus = hotelDto.IdAmadeus
 	hotel.IdMongo = hotelDto.IdMongo
 	hotel.Rooms = hotelDto.Rooms
@@ -36,7 +35,7 @@ func (s *hotelService) InsertHotel(hotelDto dto.HotelDto) (dto.HotelDto, e.ApiEr
 
 	var response dto.HotelDto
 
-	response.Id = hotel.Id
+	response.IdHotel = hotel.IdHotel
 	response.IdAmadeus = hotel.IdAmadeus
 	response.IdMongo = hotel.IdMongo
 	response.Rooms = hotel.Rooms
@@ -54,7 +53,7 @@ func (s *hotelService) GetHotelById(id string) (dto.HotelDto, e.ApiError) {
 		return hotelDto, e.NewBadRequestApiError("Hotel no encontrado")
 	}
 
-	hotelDto.Id = hotel.Id
+	hotelDto.IdHotel = hotel.IdHotel
 	hotelDto.IdMongo = hotel.IdMongo
 	hotelDto.IdAmadeus = hotel.IdAmadeus
 	hotelDto.Rooms = hotel.Rooms

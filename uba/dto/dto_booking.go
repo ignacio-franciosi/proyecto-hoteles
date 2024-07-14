@@ -1,7 +1,7 @@
 package dto
 
 type BookingDto struct {
-	Id         int     `json:"id"`
+	IdBooking  int     `json:"id_booking"`
 	StartDate  string  `json:"startDate"`
 	EndDate    string  `json:"endDate"`
 	IdMongo    string  `json:"idMongo"`
