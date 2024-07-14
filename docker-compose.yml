@@ -3,6 +3,7 @@ version: '3'
 services:
   arqsw2-db:
     build: ./Db
+    container_name: arqsw2-db
     environment:
       MYSQL_DATABASE: arqsw2
       MYSQL_ROOT_PASSWORD: root
@@ -17,8 +18,9 @@ services:
     networks:
       - arqsw2
 
-  arqsw-uba:
+  arqsw2-uba:
     build: ./uba
+    container_name: arqsw2-uba
     depends_on:
       arqsw2-db:
         condition: service_healthy
@@ -30,17 +32,19 @@ services:
 
   nginx_uba:
     image: nginx
+    container_name: nginx_uba
     volumes:
       - ./uba/nginx/uba.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - arqsw2-uba
     ports:
-      - 8080:80
+      - "8080:80"
     networks:
       - arqsw2
 
   mongo:
     image: mongo
+    container_name: mongo
     ports:
       - "27017:27017"
     networks:
@@ -48,6 +52,7 @@ services:
 
   arqsw2-hotels:
     build: ./hotels
+    container_name: arqsw2-hotels
     depends_on:
       mongo:
         condition: service_started
@@ -58,17 +63,19 @@ services:
 
   nginx_hotels:
     image: nginx
+    container_name: nginx_hotels
     volumes:
       - ./hotels/nginx/hotels.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - arqsw2-hotels
     ports:
-      - 8090:90
+      - "8090:90"
     networks:
       - arqsw2
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -77,6 +84,7 @@ services:
 
   my-solr:
     image: solr:latest
+    container_name: my-solr
     ports:
       - "8983:8983"
     networks:
@@ -84,9 +92,10 @@ services:
 
   arqsw2-search2:
     build: ./search2
+    container_name: arqsw2-search2
     depends_on:
       rabbitmq:
-        condition: service_healthy
+        condition: service_started
       my-solr:
         condition: service_started
     ports:
@@ -94,14 +103,15 @@ services:
     networks:
       - arqsw2        
 
-nginx_search:
+  nginx_search2:
     image: nginx
+    container_name: nginx_search2
     volumes:
-      - ./search2/nginx/search.conf:/etc/nginx/conf.d/default.conf
+      - ./search2/nginx/search2.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - arqsw2-search
+      - arqsw2-search2
     ports:
-      - 8000:81
+      - "8000:81"
     networks:
       - arqsw2               
 
