@@ -28,3 +28,27 @@ func GetHotelById(id string) model.Hotel {
 
 	return hotel
 }
+
+func DeleteHotel(hotel model.Hotel) error {
+	err := Db.Delete(&hotel).Error
+
+	if err != nil {
+		log.Debug("Failed to delete hotel")
+	} else {
+		log.Debug("Hotel deleted: ", hotel.IdHotel)
+	}
+	return err
+}
+
+func UpdateHotel(hotel model.Hotel) model.Hotel {
+
+	result := Db.Save(&hotel)
+
+	if result.Error != nil {
+		log.Debug("Failed to update hotel")
+		return model.Hotel{}
+	}
+
+	log.Debug("Updated hotel: ", hotel.IdHotel)
+	return hotel
+}

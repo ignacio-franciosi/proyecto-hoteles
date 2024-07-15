@@ -19,6 +19,8 @@ func mapUrls() {
 	//Hotel Mapping (listo)
 	router.POST("/hotel", hotelController.InsertHotel)
 	router.GET("/hotel/:id", hotelController.GetHotelById)
+	router.DELETE("/hotel/:id", hotelController.DeleteHotel)
+	router.PUT("/hotel/:id", hotelController.UpdateHotel)
 
 	//Reserva Mapping (listo)
 	router.POST("/booking", bookingController.InsertBooking)

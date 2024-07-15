@@ -8,7 +8,6 @@ import (
 	"hotels/model"
 	"hotels/queue"
 	"hotels/utils"
-	"net/http"
 )
 
 type hotelService struct {
@@ -128,19 +127,12 @@ func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 		return dto.HotelDto{}, errors.New("hotel not found")
 	}
 
-	url := "http://user-reservationnginx:8090/amadeus/" + id
-	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		return dto.HotelDto{}, err
 	}
 
-	res, err := s.HTTPClient.Do(req)
 	if err != nil {
 		return dto.HotelDto{}, err
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return dto.HotelDto{}, errors.New("status not OK")
 	}
 
 	err = client.HotelClient.DeleteHotelById(id)
