@@ -83,7 +83,7 @@ html, body {
 
 
 /*ESTILOS DEL LOGIN*/
-#h1Login {
+#h1Login, #h1Register {
     font-family: Georgia, serif;
     text-Align: center;
     color: #2a443b;
@@ -93,7 +93,7 @@ html, body {
     transform: translate(-50%, -50%);
 }
 
-#formLogin {
+#formLogin, #formRegister {
     position: absolute;
     top: 55%;
     left: 50%;
@@ -111,7 +111,7 @@ html, body {
     }
 }
 
-#inputEmailLogin, #inputPasswordLogin {
+#inputEmailLogin, #inputPasswordLogin, #inputEmailRegister, #inputNameRegister, #inputLastNameRegister, #inputDniRegister, #inputPasswordRegister {
     margin-Bottom: 10px;
     padding: 15px;
     color:black;

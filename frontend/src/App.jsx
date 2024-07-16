@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
 import HotelsList from "./pages/HotelsList.jsx";
 import LoginButton from './components/LoginButton.jsx';
 import BackButton from "./components/BackButton.jsx";
@@ -24,6 +25,7 @@ const App = ()=> {
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path ="/login" element={<Login />} />
+                <Route path ="/register" element={<Register />} />
                 <Route path="/hotels-list" element={<HotelsList />} />
                 <Route path="/hotel-list/:hotel_id" element={<HotelDetails />} />
                 <Route path="/dashAdmin" element={<HotelDetails />} />

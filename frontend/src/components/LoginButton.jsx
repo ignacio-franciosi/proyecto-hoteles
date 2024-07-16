@@ -1,29 +1,34 @@
 import React, {useEffect, useState} from "react";
 import './Components.css'
 import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
 
 const LoginButton = () => {
     const navigate = useNavigate();
-    const userEmail = localStorage.getItem('email');
+    const userEmail = Cookies.get("email");
     const login = () => {
         navigate("/login");
     };
     const [isAuthenticated, setIsAuthenticated] = useState(false); // Supongamos que esta variable controla el estado de autenticación.
-   function logoutButton() {
+
+    function logoutButton() {
         const message = "Deseas cerrar sesión?";
         const result = window.confirm(message);
 
         if (result) {
-            localStorage.clear();
-            localStorage.setItem('user_id', -1);
+            Cookies.set('user_id', "-1");
+            Cookies.set('token', "");
+            Cookies.set('email', "");
             alert("Sesión cerrada! vuelva pronto ;)");
+            navigate("/")
             document.location.reload()
+
         }
     }
 
     useEffect(() => {
         // Lógica para verificar la autenticación (usando JWT u otra lógica)
-        const token = localStorage.getItem("token"); // Recupera el token JWT almacenado en localStorage
+        const token = Cookies.get("token"); // Recupera el token JWT almacenado en localStorage
         if (token) {
             // Verifica si el token es válido
             setIsAuthenticated(true);

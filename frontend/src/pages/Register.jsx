@@ -87,7 +87,7 @@ const Register = () => {
                 });
                 if (response.ok) {
                     openAlert2()
-                    navigate('/login');
+                    navigate('/');
                 } else {
                     openAlert3()
                     console.log('el usuario ya existe');

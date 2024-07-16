@@ -21,7 +21,6 @@ const Login = () => {
         Cookies.set('user_id', "-1")
         Cookies.set('user_id', "")
         Cookies.set('email', "")
-        Cookies.set('name', "")
         Cookies.set('token', "")
     };
     const closeAlert1 = () => {
@@ -32,7 +31,6 @@ const Login = () => {
         Cookies.set('user_id', "-1")
         Cookies.set('user_id', "")
         Cookies.set('email', "")
-        Cookies.set('name', "")
         Cookies.set('token', "")
     };
     const closeAlert2 = () => {
@@ -40,8 +38,11 @@ const Login = () => {
     };
 
     function navigateTo(responseData) {
-        if (responseData.user.userType) {
+        if (responseData.user_type) {
             navigate("/dashboardAdmin")
+        }
+        else{
+            navigate("/")
         }
     }
 
@@ -73,9 +74,8 @@ const Login = () => {
                 if (response.ok) {
                     console.log('Usuario válido');
                     const responseData = await response.json();
-                    Cookies.set('user_id', responseData.user.id)
+                    Cookies.set('user_id', responseData.id_user)
                     Cookies.set('email', email)
-                    Cookies.set('name', responseData.user.name)
                     Cookies.set('token', responseData.token)
 
                     navigateTo(responseData);
@@ -87,7 +87,6 @@ const Login = () => {
             } catch (error) {
                 Cookies.set('user_id', "")
                 Cookies.set('email', "")
-                Cookies.set('name', "")
                 Cookies.set('token', "")
                 Cookies.set('client_id', "")
                 console.log('Error al realizar la solicitud al backend:', error);
