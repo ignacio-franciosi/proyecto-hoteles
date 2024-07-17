@@ -39,7 +39,7 @@ const Login = () => {
 
     function navigateTo(responseData) {
         if (responseData.user_type) {
-            navigate("/dashboardAdmin")
+            navigate("/dashAdmin")
         }
         else{
             navigate("/")

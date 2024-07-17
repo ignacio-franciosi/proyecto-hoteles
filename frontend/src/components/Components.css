@@ -35,21 +35,30 @@ h1{
     position: fixed;
 }
 
-#loginButton{
-    position: absolute;
-    right: 2%;
-    top: 4%;
-    color: #ffffff;
-    background-color: rgba(83, 91, 242, 0);
-
-}
+#loginButton, #backButton, #hotelButton, #adminButton,
 #backButton{
     position: absolute;
-    left: 2%;
-    top: 4%;
+
     color: #ffffff;
     background-color: rgba(83, 91, 242, 0);
 }
+#loginButton{
+    right: 2%;
+    top: 4%;
+}
+#backButton{
+    left: 2%;
+    top: 4%;
+}
+#hotelButton{
+    left: 5%;
+    top: 4%;
+}
+#adminButton{
+    left: 10%;
+    top: 4%;
+}
+
 p{
     text-align: center;
 }

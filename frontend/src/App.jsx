@@ -9,8 +9,12 @@ import Register from './pages/Register.jsx';
 import HotelsList from "./pages/HotelsList.jsx";
 import LoginButton from './components/LoginButton.jsx';
 import BackButton from "./components/BackButton.jsx";
+import Buttons from "./components/Buttons.jsx";
 import HotelDetails from "./pages/HotelDetails.jsx"
-import ContainerPage from "./pages/ContainerView.jsx"
+import ContainerView from "./pages/ContainerView.jsx"
+import DashAdmin from "./pages/DashAdmin.jsx"
+import EditHotels from "./pages/EditHotels.jsx"
+import Users from "./pages/users.jsx"
 import './App.css';
 
 const App = ()=> {
@@ -21,15 +25,18 @@ const App = ()=> {
             <Header />
             <BackButton />
             <LoginButton />
+            <Buttons />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path ="/login" element={<Login />} />
                 <Route path ="/register" element={<Register />} />
                 <Route path="/hotels-list" element={<HotelsList />} />
-                <Route path="/hotel-list/:hotel_id" element={<HotelDetails />} />
-                <Route path="/dashAdmin" element={<HotelDetails />} />
-                <Route path="/dashAdmin/container" element={<ContainerPage />} />
+                <Route path="/hotels-list/:hotel_id" element={<HotelDetails />} />
+                <Route path="/dashAdmin" element={<DashAdmin />} />
+                <Route path="/dashAdmin/container-view" element={<ContainerView />} />
+                <Route path="/dashAdmin/edit-hotels" element={<EditHotels />} />
+                <Route path="/dashAdmin/users" element={<Users />} />
             </Routes>
             <Footer />
         </Router>
