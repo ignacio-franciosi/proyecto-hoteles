@@ -6,7 +6,7 @@ type Hotel struct {
 	IdAmadeus string  `gorm:"type:varchar(250);not null;unique"`
 	Rooms     int     `gorm:"type:integer;not null"`
 	Price     float64 `gorm:"type:decimal(10,2); not null"`
-	City      string  `gorm:"type:varchar(250);not null;unique"`
+	City      string  `gorm:"type:varchar(250);not null"`
 }
 
 type Hotels []Hotel
