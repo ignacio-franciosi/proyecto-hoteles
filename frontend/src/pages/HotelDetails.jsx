@@ -1,16 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import "../App.css"
 import {useNavigate, useParams} from 'react-router-dom';
+import Cookies from "js-cookie";
 
 const HotelDetails = () => {
     const {hotel_id} = useParams();
     const [hotel, setHotel] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-    const startDate1 = localStorage.getItem("startDate");
-    const endDate1 = localStorage.getItem("endDate");
-    const user_id = Number(localStorage.getItem('user_id'));
-    const tokenUser = localStorage.getItem("token");
+    const startDate1 = Cookies.get("startDate");
+    const endDate1 = Cookies.get("endDate");
+    const user_id = Number(Cookies.get('user_id'));
+    const tokenUser = Cookies.get("token");
+
+    useEffect(() => {
+        const fetchHotel = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/hotel/${hotel_id}`);
+                const data = await response.json();
+                setHotel(data);
+            } catch (error) {
+                console.log('Error al obtener el hotel:', error);
+            }
+        };
+
+        fetchHotel();
+    }, [hotel_id]);
+
 
 
     const handleSubmit = async (e) => {
@@ -38,14 +54,14 @@ const HotelDetails = () => {
 
                 if (response.ok) {
                     alert("Su reserva ha sido confirmada");
-                    navigate("/home");
+                    navigate("/");
 
                 } else {
                     alert("No hay habitaciones disponibles");
                 }
                 if (startDate1 === null || endDate1 === null) {
                     alert("no ha completado los días de reserva!")
-                    navigate("/home")
+                    navigate("/")
                 }
 
             } catch (error) {
@@ -55,20 +71,6 @@ const HotelDetails = () => {
         }
 
     };
-
-    useEffect(() => {
-        const fetchHotel = async () => {
-            try {
-                const response = await fetch(`http://localhost:8090/hotels/${hotel_id}`);
-                const data = await response.json();
-                setHotel(data);
-            } catch (error) {
-                console.log('Error al obtener el hotel:', error);
-            }
-        };
-
-        fetchHotel();
-    }, [hotel_id]);
 
     return (
         <div id="backHotelDetails">

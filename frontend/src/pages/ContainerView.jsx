@@ -2,7 +2,7 @@ import React from 'react';
 import ContainerList from '../components/DockerComponents/ContainerList.jsx';
 import ContainerActions from '../components/DockerComponents/ContainerActions.jsx';
 
-const Container = () => {
+const ContainerView = () => {
     return (
 
         <div className="App">
@@ -12,4 +12,4 @@ const Container = () => {
         </div>
 )
 }
-export default Container
+export default ContainerView

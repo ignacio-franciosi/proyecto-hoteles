@@ -19,6 +19,9 @@ const LoginButton = () => {
             Cookies.set('user_id', "-1");
             Cookies.set('token', "");
             Cookies.set('email', "");
+            Cookies.set('city', "");
+            Cookies.set('startDate', "");
+            Cookies.set('endDate', "");
             alert("Sesión cerrada! vuelva pronto ;)");
             navigate("/")
             document.location.reload()
