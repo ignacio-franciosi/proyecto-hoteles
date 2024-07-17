@@ -1,12 +1,22 @@
+--London--
 • JW MARRIOTT GROSVENOR HOUSE LONDON, LONDON, IDAmadeus: MCLONGHM   ------------> (en este SIEMPRE hay disponibilidad)
-• HOTEL RESIDENCE EUROPE, PARIS, IDAmadeus: ACPAR733                  
-• ACACIAS ETOILE, PARIS, IDAmadeus:ACPARA87
-• HILTON CABANA MIAMI BEACH, MIAMI, IDAmadeus: HHMIA561
-• SHERATON MIAMI AIRPORT HOTEL, MIAMI, IDAmadeus: SIMIA620
-• HOTEL ACCURSIO, MILAN, IDAmadeus: ACMIL449
-• HOTEL ROYAL VICTORIA-VARENNA, MILAN, IDAmadeus: EUMILRVI
-• HOWARD JOHNSON RIO CEBALLOS, CORDOBA, IDAmadeus: HJCOR029
+• LA GAFFE LONDON, LONDON, IDAmadeus: ACLONGAF     
+• ALLOFT LONDON EXCEL, LONDON, IDAmadeus: ALLON591                  -------------> tiene disponibilidad    
+• DAYS INN SOUTH, LONDON, IDAmadeus: DILON568                       -------------> no tiene disponibilidad
+
+--Miami--
+• SHERATON MIAMI AIRPORT HOTEL, MIAMI, IDAmadeus: SIMIA620         --------------> tiene
+• SB MIA SOFT, MIAMI, IDAmadeus: SBMIASOF                          --------------> tiene
+• BEST WESTERN MIAMI AIRPORT, MIAMI, IDAmadeus: BWMIA388           --------------> tiene
+• RAMADA MIAMI SPRINGS, MIAMI, IDAmadeus: RAMIA729                ----------------> no tiene
+
+--Cordoba--
 • SIERRAS HOTEL AND CASINO, CORDOBA, IDAmadeus: HJCOR490            ------------> (en este NUNCA hay disponibilidad)
-• BARCELO SANTS, BARCELONA, IDAmadeus: BNBCNARC
-• MIRAMAR BADALONA, BARCELONA, IDAmadeus: HABCNMIR
-• WASHINGTON JEFFERSON HOTEL, NEW YORK CITY, IDAmadeus: LENYC500
+• AMERIAN PARK HOTEL, CORDOBA, IDAmadeus: WVCOR001                   ------------> no tiene
+• HOLIDAY INN, CORDOBA, IDAmadeus: HICORCFE                         -------------> si tiene
+
+--Milan--
+• SHERATON MILAN, MILAN, IDAmadeus: SIMXP138                        ------------> si tiene
+• NOVOTEL MALPENSA MILAN AIRPORT, MILAN, IDAmadeus: RTMXPMAL        --------------> si tiene
+• HOTEL VILLE DE LE ROSE, MILAN, IDAmadeus: ONMXPVDR                 -------------> no tiene
+
