@@ -8,7 +8,7 @@ import Register from "pages/Register.jsx";
 import DashAdmin from "./pages/DashAdmin.jsx";
 import ContainerView from "./pages/ContainerView.jsx";
 import EditHotels from "./pages/EditHotels.jsx"
-import Users from "./pages/users.jsx"
+import Users from "./pages/Users.jsx"
 
 const Home = lazy(() => import("pages/Home.jsx"));
 //estas son las rutas de las paginas de nuestro programa a

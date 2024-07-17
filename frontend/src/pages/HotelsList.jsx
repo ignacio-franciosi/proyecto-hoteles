@@ -31,7 +31,6 @@ const HotelsList = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 console.log('Received data:', data); // Log para verificar los datos recibidos
                 setHotels(Array.isArray(data) ? data : []);

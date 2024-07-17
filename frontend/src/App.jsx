@@ -14,7 +14,7 @@ import HotelDetails from "./pages/HotelDetails.jsx"
 import ContainerView from "./pages/ContainerView.jsx"
 import DashAdmin from "./pages/DashAdmin.jsx"
 import EditHotels from "./pages/EditHotels.jsx"
-import Users from "./pages/users.jsx"
+import Users from "./pages/Users.jsx"
 import './App.css';
 
 const App = ()=> {
