@@ -29,7 +29,7 @@ func (s hotelService) InsertUpdateHotel(hotelDto dto.HotelDto) error {
 	document := map[string]interface{}{
 		"add": []interface{}{
 			map[string]interface{}{
-				"hotel_id":    hotelDto.HotelId,
+				"id":          hotelDto.HotelId,
 				"name":        hotelDto.Name,
 				"rooms":       hotelDto.Rooms,
 				"description": hotelDto.Description,
@@ -177,7 +177,7 @@ func unmarshalSolrResponse(responses dto.SolrResponsesDto) dto.HotelsDto {
 	for _, response := range responses {
 		var hotelDto dto.HotelDto
 
-		hotelDto.HotelId = response.HotelId[0]
+		hotelDto.HotelId = response.Id
 		hotelDto.Name = response.Name[0]
 		hotelDto.Rooms = response.Rooms[0]
 		hotelDto.Description = response.Description[0]

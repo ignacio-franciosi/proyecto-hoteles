@@ -54,7 +54,7 @@ func (c hotelClient) GetHotelById(id string) (*solr.DocumentCollection, error) {
 
 	q := solr.Query{
 		Params: solr.URLParamMap{
-			"q": []string{"hotel_id:" + id},
+			"q": []string{"id:" + id},
 		},
 	}
 

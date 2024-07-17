@@ -131,10 +131,6 @@ func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 		return dto.HotelDto{}, err
 	}
 
-	if err != nil {
-		return dto.HotelDto{}, err
-	}
-
 	err = client.HotelClient.DeleteHotelById(id)
 
 	if err != nil {
@@ -142,8 +138,8 @@ func (s *hotelService) DeleteHotel(id string) (dto.HotelDto, error) {
 	}
 
 	body := map[string]interface{}{
-		"HoteId":  hotel.HotelId.Hex(),
-		"message": "delete",
+		"Id":      hotel.HotelId.Hex(),
+		"Message": "delete",
 	}
 
 	jsonBody, _ := json.Marshal(body)
@@ -185,7 +181,7 @@ func (s *hotelService) UpdateHotel(hotelDto dto.HotelDto) (dto.HotelDto, error) 
 	}
 
 	body := map[string]interface{}{
-		"HotelId": hotel.HotelId.Hex(),
+		"Id":      hotel.HotelId.Hex(),
 		"message": "update",
 	}
 

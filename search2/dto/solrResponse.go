@@ -2,7 +2,6 @@ package dto
 
 type SolrResponseDto struct {
 	Id          string    `json:"id"`
-	HotelId     []string  `json:"hotel_id"`
 	Name        []string  `json:"name" validate:"required"`
 	Rooms       []int     `json:"rooms" validate:"required"`
 	Description []string  `json:"description" validate:"required"`
