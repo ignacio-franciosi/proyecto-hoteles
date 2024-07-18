@@ -12,61 +12,61 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var scalableServices = []string{"arqsw2-uba", "arqsw2-search2", "arqsw2-hotels"}
+var scalableServices = []string{"arqsw2-hotels", "arqsw2-search2", "arqsw2-uba"}
 
-func GetInfo() (dto.ContainersInfoDto, error) {
+func GetStats() (dto.ContainersStatsDto, error) {
 
-	var containersInfo dto.ContainersInfoDto
+	var containersStats dto.ContainersStatsDto
 
 	command := exec.Command("docker", "stats", "--no-stream", "--format", "{{json .}}")
 
 	stdout, err := command.StdoutPipe()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	err = command.Start()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	scanner := bufio.NewScanner(stdout)
 
 	for scanner.Scan() {
-		var containerInfo dto.ContainerInfoDto
+		var containerStats dto.ContainerStatsDto
 
-		err = json.Unmarshal(scanner.Bytes(), &containerInfo)
+		err = json.Unmarshal(scanner.Bytes(), &containerStats)
 		if err != nil {
-			return dto.ContainersInfoDto{}, err
+			return dto.ContainersStatsDto{}, err
 		}
 
-		containersInfo = append(containersInfo, containerInfo)
+		containersStats = append(containersStats, containerStats)
 	}
 
 	err = scanner.Err()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	err = command.Wait()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
-	return containersInfo, nil
+	return containersStats, nil
 }
 
-func GetInfoByService(service string) (dto.ContainersInfoDto, error) {
+func GetStatsByService(service string) (dto.ContainersStatsDto, error) {
 
 	if !serviceExists(service) {
-		return dto.ContainersInfoDto{}, errors.New("service does not exist")
+		return dto.ContainersStatsDto{}, errors.New("service does not exist")
 	}
 
-	var containersInfo dto.ContainersInfoDto
+	var containersStats dto.ContainersStatsDto
 
 	containers, err := getContainersIdsByService(service)
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	cmdArgs := append([]string{"stats", "--no-stream", "--format", "{{json .}}"}, containers...)
@@ -75,38 +75,38 @@ func GetInfoByService(service string) (dto.ContainersInfoDto, error) {
 
 	stdout, err := command.StdoutPipe()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	err = command.Start()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	scanner := bufio.NewScanner(stdout)
 
 	for scanner.Scan() {
-		var containerInfo dto.ContainerInfoDto
+		var containerStats dto.ContainerStatsDto
 
-		err = json.Unmarshal(scanner.Bytes(), &containerInfo)
+		err = json.Unmarshal(scanner.Bytes(), &containerStats)
 		if err != nil {
-			return dto.ContainersInfoDto{}, err
+			return dto.ContainersStatsDto{}, err
 		}
 
-		containersInfo = append(containersInfo, containerInfo)
+		containersStats = append(containersStats, containerStats)
 	}
 
 	err = scanner.Err()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
 	err = command.Wait()
 	if err != nil {
-		return dto.ContainersInfoDto{}, err
+		return dto.ContainersStatsDto{}, err
 	}
 
-	return containersInfo, nil
+	return containersStats, nil
 }
 
 func ScaleService(service string) (int, error) {

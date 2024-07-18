@@ -12,11 +12,10 @@ func AutoScale(service string) {
 
 	log.Infof("Autoscaling %s", service)
 
-	//La función entra en un bucle infinito, ejecutándose para monitorear y escalar el servicio continuamente.
 	for {
 		var avgCpuUsage float64
-		//Obtener Info del Servicio
-		stats, err := GetInfoByService(service)
+
+		stats, err := GetStatsByService(service)
 		if err != nil {
 			log.Errorf("Error getting %s stats: %v", service, err)
 			continue
@@ -24,7 +23,6 @@ func AutoScale(service string) {
 
 		containersAmount := len(stats)
 
-		//Calcular el Uso Promedio de CPU
 		for _, container := range stats {
 
 			stringCPU := strings.Trim(container.CPU, "%")
@@ -42,6 +40,7 @@ func AutoScale(service string) {
 		//Escalado hacia arriba
 		//Si el uso promedio de CPU es mayor o igual al 60% o el número de contenedores es menor que 2,
 		//escala el servicio hacia arriba llamando a ScaleService (crea uno nuevo).
+
 		if avgCpuUsage >= 60 || containersAmount < 2 {
 			instances, err := ScaleService(service)
 			if err != nil {
@@ -55,6 +54,8 @@ func AutoScale(service string) {
 			//Si el uso promedio de CPU es menor que 20% y el número de contenedores es mayor que 2,
 			//elimina un contenedor llamando a DeleteContainer.
 
+		} else if avgCpuUsage < 20 && containersAmount > 2 {
+
 			err = DeleteContainer(stats[containersAmount-1].Id)
 			if err != nil {
 				log.Errorf("Error deleting %s container: %s", service, err)
@@ -63,7 +64,7 @@ func AutoScale(service string) {
 
 			log.Infof("Scaling down %s to %d instances", service, containersAmount-1)
 		}
-		//Duermo la funcion por 20 segundos
+
 		time.Sleep(20 * time.Second)
 	}
 }

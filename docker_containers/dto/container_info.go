@@ -1,6 +1,6 @@
 package dto
 
-type ContainerInfoDto struct {
+type ContainerStatsDto struct {
 	Id       string `json:"ID"`
 	Name     string `json:"Name"`
 	CPU      string `json:"CPUPerc"`
@@ -8,4 +8,4 @@ type ContainerInfoDto struct {
 	MemUsage string `json:"MemUsage"`
 }
 
-type ContainersInfoDto []ContainerInfoDto
+type ContainersStatsDto []ContainerStatsDto
