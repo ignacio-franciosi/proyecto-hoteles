@@ -41,7 +41,7 @@ func AutoScale(service string) {
 
 		//Escalado hacia arriba
 		//Si el uso promedio de CPU es mayor o igual al 60% o el número de contenedores es menor que 2,
-		//escala el servicio hacia arriba llamando a ScaleService.
+		//escala el servicio hacia arriba llamando a ScaleService (crea uno nuevo).
 		if avgCpuUsage >= 60 || containersAmount < 2 {
 			instances, err := ScaleService(service)
 			if err != nil {

@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var scalableServices = []string{"uba"}
+var scalableServices = []string{"arqsw2-uba", "arqsw2-search2", "arqsw2-hotels"}
 
 func GetInfo() (dto.ContainersInfoDto, error) {
 
