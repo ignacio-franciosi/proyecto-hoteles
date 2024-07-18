@@ -105,15 +105,17 @@ const HotelDetails = () => {
                             <button className={"buttonModal"} onClick={handleNextImage}>Siguiente</button>
                         </div>
                     </div>
-                    <p id="paragraphDetails">Estrellas: {hotel.stars}</p>
-                    <p id="paragraphDetails">Descripción: {hotel.description}</p>
-                    <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
-                    <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
-                    <form onSubmit={handleSubmit}>
-                        <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la
-                            ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
-                        <button id="butonDetails" type="submit">Reservar</button>
-                    </form>
+
+                        <p id="paragraphDetails">Estrellas: {hotel.stars}</p>
+                        <p id="paragraphDetails">Descripción: {hotel.description}</p>
+                        <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
+                        <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
+                        <form onSubmit={handleSubmit}>
+                            <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la
+                                ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
+                            <button id="butonDetails" type="submit">Reservar</button>
+                        </form>
+
                 </div>
             ) : (
                 <div className={"noHotels"}>
