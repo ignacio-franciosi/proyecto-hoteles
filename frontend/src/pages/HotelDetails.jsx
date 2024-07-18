@@ -7,6 +7,8 @@ const HotelDetails = () => {
     const {hotel_id} = useParams();
     const [hotel, setHotel] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [images, setImages] = useState([]);
     const navigate = useNavigate();
     const startDate1 = Cookies.get("startDate");
     const endDate1 = Cookies.get("endDate");
@@ -19,6 +21,8 @@ const HotelDetails = () => {
                 const response = await fetch(`http://localhost:8000/hotel/${hotel_id}`);
                 const data = await response.json();
                 setHotel(data);
+                // Aquí asumimos que hay 5 imágenes por hotel, ajusta según sea necesario
+                setImages(Array.from({length: 5}, (_, i) => `/HotelsImages/${hotel_id}/${i + 1}.jpg`));
             } catch (error) {
                 console.log('Error al obtener el hotel:', error);
             }
@@ -27,7 +31,19 @@ const HotelDetails = () => {
         fetchHotel();
     }, [hotel_id]);
 
+    const handleNextImage = () => {
 
+        setCurrentImageIndex((prevIndex) =>
+            prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+
+    };
+
+    const handlePrevImage = () => {
+        setCurrentImageIndex((prevIndex) =>
+            prevIndex === 0 ? images.length - 1 : prevIndex - 1
+        );
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,7 +55,6 @@ const HotelDetails = () => {
             navigate("/login")
         } else {
             try {
-
                 const response = await fetch(`http://localhost:8080/booking`, {
                     method: 'POST',
                     headers: {
@@ -56,22 +71,17 @@ const HotelDetails = () => {
                 if (response.ok) {
                     alert("Su reserva ha sido confirmada");
                     navigate("/");
-
                 }
                 if (startDate1 === "" || endDate1 === "" || startDate1 === null || endDate1 === null) {
                     alert("no ha completado los días de reserva!")
                     navigate("/")
-                }
-                else {
+                } else {
                     alert("No hay habitaciones disponibles");
                 }
-
             } catch (error) {
                 console.log('Error al realizar la solicitud al backend:', error);
             }
-
         }
-
     };
 
     return (
@@ -79,19 +89,37 @@ const HotelDetails = () => {
             {hotel ? (
                 <div id="hotelDetails">
                     <h1 id="h1HotelDetails">Hotel {hotel.name}</h1>
-                    <p id="paragraphDetails">Estrellas: {hotel.stars}</p>
-                    <p id="paragraphDetails">Descripción: {hotel.description}</p>
-                    <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
-                    <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
-                    <form onSubmit={handleSubmit}>
-                        <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la
-                            ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
-                        <button id="butonDetails" type="submit">Reservar</button>
-                    </form>
+                    <div className="image-carousel">
+                        <img
+                            src={images[currentImageIndex]}
+                            alt={`Hotel ${hotel.name}`}
+                            style={{width: '300px', height: 'auto'}}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/path/to/default/image.jpg';
+                            }}
+                        />
+                        <div>
+                            <button className={"buttonModal"} onClick={handlePrevImage}>Anterior</button>
+
+                            <button className={"buttonModal"} onClick={handleNextImage}>Siguiente</button>
+                        </div>
+                    </div>
+
+                        <p id="paragraphDetails">Estrellas: {hotel.stars}</p>
+                        <p id="paragraphDetails">Descripción: {hotel.description}</p>
+                        <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
+                        <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
+                        <form onSubmit={handleSubmit}>
+                            <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la
+                                ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
+                            <button id="butonDetails" type="submit">Reservar</button>
+                        </form>
+
                 </div>
             ) : (
                 <div className={"noHotels"}>
-                    <h2>No se encontraron hoteles.</h2>
+                    <h2>No se encontró el hotel!!!.</h2>
                 </div>
             )}
             {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}

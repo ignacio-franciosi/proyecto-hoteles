@@ -51,7 +51,7 @@ const Users = () => {
                                 <h2 id="h2HotelSearch">Nombre: {user.name}</h2>
                                 <h2 id="h2HotelSearch">Apellido: {user.lastName}</h2>
                                 <h2 id="h2HotelSearch">DNI: {user.dni}</h2>
-                                <h2 id="h2HotelSearch">Tipo: {user.userType}</h2>
+                                <h2 id="h2HotelSearch">Email: {user.email}</h2>
                             </div>
                         </div>
                     ))}

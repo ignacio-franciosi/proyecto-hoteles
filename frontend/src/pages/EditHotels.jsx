@@ -3,13 +3,14 @@ import "./../App.css";
 import {useNavigate} from "react-router-dom";
 
 const EditHotels = () => {
-    const navigate = useNavigate();
     const [hotels, setHotels] = useState([]);
     const [selectedHotel, setSelectedHotel] = useState(null);
     const [showForm, setShowForm] = useState(false);
-    function newHotel(){
-        navigate("/dashAdmin/upload-hotels")
-    }
+    // Función para obtener la ruta de la primera imagen del hotel
+    const getFirstHotelImage = (hotel_id) => {
+        return `/HotelsImages/${hotel_id}/1.jpg`;
+    };
+
     const updateHotel = async (hotel) => {
         const endpoints = [
             `http://localhost:8080/hotel/${hotel.hotel_id}`,
@@ -93,13 +94,19 @@ const EditHotels = () => {
 
     return (
         <div id="backHotelSearch">
-
-            <button id={"ButtonDetails"} onClick={newHotel}>Crear nuevo hotel</button>
             {hotels.length > 0 ? (
                 <div className="hotelContainer">
                     {hotels.map((hotel) => (
                         <div key={hotel.hotel_id} className="hotelCard">
-                            <img id="imgSearch" src={hotel.photos} alt={hotel.name} />
+                            <img
+                                src={getFirstHotelImage(hotel.hotel_id)}
+                                alt={`Hotel ${hotel.name}`}
+                                style={{width: '200px', height: 'auto'}}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = '/path/to/default/image.jpg';
+                                }}
+                            />
                             <div>
                                 <h2 id="h2HotelSearch">{hotel.name}</h2>
                                 <h2 id="h2HotelSearch">{hotel.hotel_id}</h2>
@@ -111,7 +118,7 @@ const EditHotels = () => {
                             >
                                 Editar
                             </button>
-                            <br/>
+                            <br/><br/>
                             <button
                                 id="butonSearch"
                                 onClick={() => deleteHotel(hotel.hotel_id)}

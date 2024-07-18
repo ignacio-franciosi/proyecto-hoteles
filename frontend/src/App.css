@@ -11,6 +11,9 @@
 
 html, body {
     background-color: #e9e0cb;
+    background-image:linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),  url("../src/images/home/suiza.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 
 }
 #bodyHome{
@@ -18,6 +21,7 @@ html, body {
     justify-content: space-around; /* Ajusta según tus necesidades de espaciado */
     align-items: center; /* Ajusta según tus necesidades de alineación vertical */
     flex-wrap: wrap; /* Permite el ajuste automático a la siguiente línea */
+
 }
 .TitleForm{
     transform: translate(-200%, -10%);
@@ -153,7 +157,7 @@ html, body {
 .hotelCard h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: #0E8388;
+    color: #666;
 }
 
 .hotelCard img {
@@ -161,6 +165,7 @@ html, body {
     height: auto;
     margin-bottom: 10px;
     cursor: pointer;
+    color: #666;
 }
 
 .hotelCard p {
@@ -169,7 +174,7 @@ html, body {
 }
 
 .hotelCard button {
-    background-color: #007f7f;
+    background-color: #7d7373;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -179,7 +184,7 @@ html, body {
 }
 
 .hotelCard button:hover {
-    background-color: #005f5f;
+    background-color: #000000;
 }
 
 #backHotelSearch {
@@ -237,17 +242,18 @@ html, body {
 }
 
 #h1HotelDetails {
-    color: #ffffff;
     font-family: Georgia, serif;
+    text-Align: center;
+    color: #2a443b;
 }
 
 #paragraphDetails {
     text-align: left;
-    color: #2C3333;
+    color: #ffffff;
 }
 
 #confirmacion {
-    color: #0fe332;
+    color: #ffffff;
     text-shadow: 1px 1px 2px black;
 }
 
@@ -283,7 +289,7 @@ html, body {
     padding: 16px;
     width: 300px;
     text-align: center;
-    background-color: #415a77;
+    background-color: #7d7373;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     color: white;
 }
@@ -301,6 +307,7 @@ html, body {
 .textButton{
     color: white;
 }
+/*pop up edit*/
 .popup {
     position: fixed;
     top: 0;
@@ -315,6 +322,7 @@ html, body {
 
 .popup-content {
     background-color: white;
+    color: black;
     padding: 20px;
     border-radius: 5px;
     position: relative;
@@ -328,4 +336,14 @@ html, body {
     right: 10px;
     font-size: 18px;
     cursor: pointer;
+}
+/*container view*/
+#h1Container{
+    font-family: Georgia, serif;
+    text-Align: center;
+    color: #2a443b;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(100%, -110%);
 }
