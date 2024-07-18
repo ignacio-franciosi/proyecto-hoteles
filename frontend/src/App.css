@@ -153,7 +153,7 @@ html, body {
 .hotelCard h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: #0E8388;
+    color: #666;
 }
 
 .hotelCard img {
@@ -161,6 +161,7 @@ html, body {
     height: auto;
     margin-bottom: 10px;
     cursor: pointer;
+    color: #666;
 }
 
 .hotelCard p {
@@ -169,7 +170,7 @@ html, body {
 }
 
 .hotelCard button {
-    background-color: #007f7f;
+    background-color: #7d7373;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -179,7 +180,7 @@ html, body {
 }
 
 .hotelCard button:hover {
-    background-color: #005f5f;
+    background-color: #000000;
 }
 
 #backHotelSearch {
@@ -237,8 +238,9 @@ html, body {
 }
 
 #h1HotelDetails {
-    color: #ffffff;
     font-family: Georgia, serif;
+    text-Align: center;
+    color: #2a443b;
 }
 
 #paragraphDetails {
@@ -283,7 +285,7 @@ html, body {
     padding: 16px;
     width: 300px;
     text-align: center;
-    background-color: #415a77;
+    background-color: #7d7373;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     color: white;
 }
@@ -316,6 +318,7 @@ html, body {
 
 .popup-content {
     background-color: white;
+    color: black;
     padding: 20px;
     border-radius: 5px;
     position: relative;

@@ -1,55 +1,95 @@
-import React, {useEffect} from 'react';
-import ContainerList from '../components/DockerComponents/ContainerList.jsx';
-import ContainerActions from '../components/DockerComponents/ContainerActions.jsx';
-import {useNavigate} from "react-router-dom";
-import Cookies from "js-cookie";
+import {useEffect, useState} from "react";
 
 
 const ContainerView = () => {
-    const token = Cookies.get("token")
-    const user_id = Cookies.get("user_id")
-    const navigate = useNavigate();
+    const [containers, setContainers] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true)
+
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchStats = async () => {
+
             try {
-                const response = await fetch(`http://localhost:8080/user/${user_id}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch admin');
-                }
-                const userData = await response.json();
-                console.log(userData.name, userData.dni, userData.userType)
-                if (!userData.userType) {
-                    navigate("/")
-                }
+                const response = await fetch("http://localhost:8004/stats");
+                if (response.ok) {
+                    const data = await response.json();
 
+                    const sortedData = data.sort((a, b) => a.Name.localeCompare(b.Name));
+                    setContainers(sortedData);
+                } else {
+                    const data = await response.json()
+                    const errorMessage = data.error || 'Error';
+                    throw new Error(errorMessage);
+                }
             } catch (error) {
-                console.error('Error fetching user:', error);
-                navigate("/");
+                console.error(error);
+                setError(error.message);
+            } finally {
+                setLoading(false)
             }
-
         };
-        fetchUser();
-    }, [user_id, token]);
 
+        fetchStats();
+
+        const intervalId = setInterval(fetchStats, 1000);
+
+        return () => clearInterval(intervalId);
+    }, [])
+
+
+    if (loading) {
+        return (
+            <>
+                <h1 id="h1Login">Cargando...</h1>
+
+            </>
+        )
+    }
+
+    if (error) {
+        window.location.reload();
+        return (
+            <>
+                <h1 id={"h1Logini"}>Error: {error}</h1>
+
+            </>
+        );
+    }
+
+    if (!containers) {
+        return (
+            <>
+                <h1 id="h1Login">No hay contenedores en ejecución</h1>
+            </>
+        )
+    }
 
     return (
-        <div id="backHotelSearch">
-            <div className={"hotelContainer"}>
-                <h1 id="h1Container">Infrastructure Management</h1>
-                <br/>
-                <div className="hotelCard">
+        <>
+            <h1 id={"h1Home"}>Administración de infraestructura</h1>
+            <br/>
+            <br/>
+            <div id={"backHotelSearch"}>
+                <div className="hotelContainer">
+                    {containers.map((container) => (
 
-                    <ContainerActions/>
+                        <div key={container.ID} className={"hotelCard"}>
+                            <div>
+                                <p>ID: {container.ID}</p>
+                                <p>Nombre: {container.Name}</p>
+                                <p>CPU: {container.CPUPerc}</p>
+                                <p>Memoria: {container.MemPerc}</p>
+                                <p>Uso: {container.MemUsage}</p>
+                            </div>
+                        </div>
+                    ))}
 
-                </div>
-                <div className={"hotelCard"}>
-
-                    <ContainerList/>
 
                 </div>
             </div>
-        </div>
+        </>
     )
 }
-export default ContainerView
+
+export default ContainerView;

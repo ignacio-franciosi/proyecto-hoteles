@@ -205,7 +205,7 @@ p{
 
 .close:hover,
 .close:focus {
-    color: #7d7373;
+    color: #666;
     text-decoration: none;
     cursor: pointer;
 

@@ -91,7 +91,7 @@ const HotelDetails = () => {
                 </div>
             ) : (
                 <div className={"noHotels"}>
-                    <h2>No se encontraron hoteles.</h2>
+                    <h2>No se encontró el hotel!!!.</h2>
                 </div>
             )}
             {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}

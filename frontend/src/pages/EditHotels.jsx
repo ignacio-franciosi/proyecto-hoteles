@@ -106,7 +106,7 @@ const EditHotels = () => {
                             >
                                 Editar
                             </button>
-                            <br/>
+                            <br/><br/>
                             <button
                                 id="butonSearch"
                                 onClick={() => deleteHotel(hotel.hotel_id)}
