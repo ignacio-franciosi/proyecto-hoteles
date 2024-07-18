@@ -1,20 +1,116 @@
-/* comentario*/
-#header{
-    font-family: impact, serif;
-    font-size: 100%;
-    text-Align: center;
-    background-color: #7d7373;
-    color: #ffffff;
+/* nav */
+.externDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: fixed;
     width: 100%;
-    z-index: 1000;
     top: 0;
-    border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
-}
-h1{
+    z-index: 50;
+    background-color: rgb(125, 115, 115);
     color: #ffffff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.logoDiv {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    h1 {
+        color: white;
+    }
+}
+
+.menuButton, .menuButton:hover {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+
+}
+
+
+.linksDiv {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-end;
+    font-weight: normal;
+    transition: max-height 0.3s ease-in-out;
+    overflow: hidden;
+    max-height: 0;
+}
+
+.linksDiv.open {
+    max-height: 200px; /* Ajustar según sea necesario */
+}
+
+.listDiv {
+    color: white;
+}
+
+.listStyles {
+    display: flex;
+    gap: 8px;
+    font-size: 18px;
+    flex-direction: column;
+}
+
+.listStyles li {
+    color: white;
+    margin-left: 10%;
+}
+
+#loginButton, #backButton {
+    background-color: rgba(83, 91, 242, 0);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .linksDiv {
+        flex-direction: row;
+        max-height: none;
+    }
+
+    .listStyles {
+        flex-direction: row;
+    }
+
+    .menuButton {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .menuButton {
+        display: block;
+    }
+
+    .linksDiv {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .listStyles {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .listStyles li {
+        margin: 10px 0;
+
+    }
+
+    #loginButton, #backButton {
+        margin: 10px 0;
+    }
+}
+
 #footer{
     position: fixed;
     bottom: 0;
@@ -109,7 +205,7 @@ p{
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: #7d7373;
     text-decoration: none;
     cursor: pointer;
 

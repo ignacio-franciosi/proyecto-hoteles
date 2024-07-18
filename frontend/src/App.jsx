@@ -7,9 +7,6 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import HotelsList from "./pages/HotelsList.jsx";
-import LoginButton from './components/LoginButton.jsx';
-import BackButton from "./components/BackButton.jsx";
-import Buttons from "./components/Buttons.jsx";
 import HotelDetails from "./pages/HotelDetails.jsx"
 import ContainerView from "./pages/ContainerView.jsx"
 import DashAdmin from "./pages/DashAdmin.jsx"
@@ -25,9 +22,6 @@ const App = ()=> {
     <div>
         <Router>
             <Header />
-            <BackButton />
-            <LoginButton />
-            <Buttons />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />

@@ -3,13 +3,10 @@ import "./../App.css";
 import {useNavigate} from "react-router-dom";
 
 const EditHotels = () => {
-    const navigate = useNavigate();
     const [hotels, setHotels] = useState([]);
     const [selectedHotel, setSelectedHotel] = useState(null);
     const [showForm, setShowForm] = useState(false);
-    function newHotel(){
-        navigate("/dashAdmin/upload-hotels")
-    }
+
     const updateHotel = async (hotel) => {
         const endpoints = [
             `http://localhost:8080/hotel/${hotel.hotel_id}`,
@@ -93,8 +90,6 @@ const EditHotels = () => {
 
     return (
         <div id="backHotelSearch">
-
-            <button id={"ButtonDetails"} onClick={newHotel}>Crear nuevo hotel</button>
             {hotels.length > 0 ? (
                 <div className="hotelContainer">
                     {hotels.map((hotel) => (
