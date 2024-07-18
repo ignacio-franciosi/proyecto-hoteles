@@ -121,7 +121,17 @@ services:
       - "8000:81"
     networks:
       - arqsw2               
-
+  frontend:
+    build: ./frontend
+    depends_on:
+      arqsw2-db:
+        condition: service_healthy
+    ports:
+      - "5173:5173"
+    networks:
+      - arqsw2
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 networks:
   arqsw2:
     driver: bridge
