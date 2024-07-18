@@ -12,9 +12,14 @@ const HotelsList = () => {
         navigate(`/hotels-list/${hotel_id}`);
     };
 
-    const startDate = Cookies.get("startDate") || '';
+    const startDate = Cookies.get("startDateanda ver contenedores, cambio colores") || '';
     const endDate = Cookies.get("endDate") || '';
     const city = Cookies.get("city") || '';
+
+    // Función para obtener la ruta de la primera imagen del hotel
+    const getFirstHotelImage = (hotel_id) => {
+        return `/HotelsImages/${hotel_id}/1.jpg`;
+    };
 
     useEffect(() => {
         const fetchHotels = async () => {
@@ -32,7 +37,7 @@ const HotelsList = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('Received data:', data); // Log para verificar los datos recibidos
+                console.log('Received data:', data);
                 setHotels(Array.isArray(data) ? data : []);
             } catch (error) {
                 console.log('Error al obtener la lista de hoteles:', error);
@@ -49,10 +54,17 @@ const HotelsList = () => {
                 <div className="hotelContainer">
                     {hotels.map((hotel) => (
                         <div key={hotel.hotel_id} className="hotelCard">
-                            <img id="imgSearch" src={hotel.photos} alt={hotel.name}/>
+                            <img
+                                src={getFirstHotelImage(hotel.hotel_id)}
+                                alt={`Hotel ${hotel.name}`}
+                                style={{width: '200px', height: 'auto'}}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = '/path/to/default/image.jpg';
+                                }}
+                            />
                             <div>
                                 <h2 id="h2HotelSearch">{hotel.name}</h2>
-                                <h2 id="h2HotelSearch">{hotel.hotel_id}</h2>
                                 <p id="paragraphSearch">Estrellas: {hotel.stars}</p>
                                 <p id="paragraphSearch">Precio por noche: ${hotel.price}</p>
                                 <p id="paragraphSearch">Ciudad: {hotel.city}</p>
