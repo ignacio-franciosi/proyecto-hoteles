@@ -36,6 +36,7 @@ const HotelDetails = () => {
 
         if (user_id === -1 || tokenUser === null) {
             alert("Debes iniciar sesión para poder reservar!");
+            navigate("/login")
         } else {
             try {
 
@@ -56,12 +57,13 @@ const HotelDetails = () => {
                     alert("Su reserva ha sido confirmada");
                     navigate("/");
 
-                } else {
-                    alert("No hay habitaciones disponibles");
                 }
-                if (startDate1 === null || endDate1 === null) {
+                if (startDate1 === "" || endDate1 === "" || startDate1 === null || endDate1 === null) {
                     alert("no ha completado los días de reserva!")
                     navigate("/")
+                }
+                else {
+                    alert("No hay habitaciones disponibles");
                 }
 
             } catch (error) {

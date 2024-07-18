@@ -14,7 +14,9 @@ import HotelDetails from "./pages/HotelDetails.jsx"
 import ContainerView from "./pages/ContainerView.jsx"
 import DashAdmin from "./pages/DashAdmin.jsx"
 import EditHotels from "./pages/EditHotels.jsx"
-import Users from "./pages/users.jsx"
+import UploadHotels from "./pages/UploadHotels.jsx"
+import Users from "./pages/Users.jsx"
+
 import './App.css';
 
 const App = ()=> {
@@ -36,6 +38,7 @@ const App = ()=> {
                 <Route path="/dashAdmin" element={<DashAdmin />} />
                 <Route path="/dashAdmin/container-view" element={<ContainerView />} />
                 <Route path="/dashAdmin/edit-hotels" element={<EditHotels />} />
+                <Route path="/dashAdmin/upload-hotels" element={<UploadHotels />} />
                 <Route path="/dashAdmin/users" element={<Users />} />
             </Routes>
             <Footer />
