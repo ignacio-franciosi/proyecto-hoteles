@@ -7,12 +7,12 @@ import (
 	"io"
 	"sync"
 	"time"
-
 	"uba/clients/booking"
 	"uba/clients/hotel"
 	"uba/clients/user"
 	"uba/dto"
 	"uba/model"
+	cache "uba/utils/cache"
 
 	httpUtils "uba/utils/http"
 
@@ -21,6 +21,7 @@ import (
 
 type bookingService struct {
 	HTTPClient httpUtils.HttpClientInterface
+	Cache      cache.CacheInterface
 }
 
 type bookingServiceInterface interface {
@@ -38,14 +39,13 @@ var (
 func init() {
 	BookingService = &bookingService{
 		HTTPClient: &httpUtils.HttpClient{},
+		Cache:      &cache.Cache{},
 	}
 }
 
 func (s *bookingService) InsertBooking(bookingDto dto.BookingDto) (dto.BookingDto, error) {
-	fmt.Println("el booking dto: ", bookingDto)
-	fmt.Println("Numero de user:", bookingDto.IdUser)
+
 	userDto := user.GetUserById(bookingDto.IdUser)
-	fmt.Println("UserDto:", userDto)
 
 	fmt.Println("Numero de hotel:", bookingDto.IdMongo)
 	hotelDto := hotel.GetHotelById(bookingDto.IdMongo)
@@ -168,14 +168,12 @@ func (s *bookingService) GetAllHotelsByCity(city string) (dto.HotelsDto, error) 
 }
 
 func (s *bookingService) CheckAvailability(idMongo string, startDate time.Time, endDate time.Time) bool {
-	fmt.Println("Entro al Check Availabilty")
+
 	hotel, _ := s.GetHotelInfo(idMongo)
-	fmt.Println("GetHotelInfo:", hotel)
+
 	bookings := booking.GetBookingsByHotel(idMongo)
-	fmt.Println("Las bookings: ", bookings)
 
 	roomsAvailable := hotel.Rooms
-	fmt.Println("hab disponibles segun la funcion:", roomsAvailable)
 
 	for _, booking := range bookings {
 		bookingStart, err := time.Parse("02-01-2006", booking.StartDate)
@@ -220,8 +218,20 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 	}
 
 	//intenta obtener el resultado del cache. Parsea el resultado JSON y lo devuelve.
+	cacheKey := fmt.Sprintf("%s/%s/%s", city, bookingStart.Format("02-01-06"), bookingEnd.Format("02-01-06"))
+	result, err := s.Cache.Get(cacheKey)
 
-	fmt.Println("llego 1")
+	if err == nil {
+
+		err = json.Unmarshal(result, &hotelsAvailable)
+
+		if err != nil {
+			return dto.HotelsDto{}, errors.New("error unmarshaling json")
+		}
+
+		return hotelsAvailable, nil
+
+	}
 
 	hotels, err2 := s.GetAllHotelsByCity(city)
 	if err2 != nil {
@@ -262,6 +272,9 @@ func (s *bookingService) CheckAllAvailability(city string, startDate string, end
 	for hotelDto := range resultsCh {
 		hotelsAvailable = append(hotelsAvailable, hotelDto)
 	}
+
+	jsonResult, _ := json.Marshal(hotelsAvailable)
+	s.Cache.Set(cacheKey, jsonResult)
 
 	return hotelsAvailable, nil
 }

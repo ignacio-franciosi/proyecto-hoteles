@@ -37,9 +37,8 @@ func CheckAvailability(c *gin.Context) {
 	startDate := c.Query("startDate")
 	endDate := c.Query("endDate")
 
-	fmt.Println("Los valores que entran al checkALL:", city, startDate, endDate)
 	hotelsAvailable, err := service.BookingService.CheckAllAvailability(city, startDate, endDate)
-	fmt.Println("hotelsAv", hotelsAvailable)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
