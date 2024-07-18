@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetInfo(c *gin.Context) {
+func GetStats(c *gin.Context) {
 
-	stats, err := client.GetInfo()
+	stats, err := client.GetStats()
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -20,11 +20,11 @@ func GetInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, stats)
 }
 
-func GetInfoByService(c *gin.Context) {
+func GetStatsByService(c *gin.Context) {
 
 	service := c.Param("service")
 
-	stats, err := client.GetInfoByService(service)
+	stats, err := client.GetStatsByService(service)
 
 	if err != nil {
 
