@@ -25,19 +25,45 @@ const HotelsList = () => {
         const fetchHotels = async () => {
             try {
                 let response;
+                const data = [];
+                
                 if (startDate === '' && endDate === '' && city === '') {
                     response = await fetch('http://localhost:8000/hotel');
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    data = await response.json();
+
                 } else if (startDate === '' && endDate === '') {
                     response = await fetch(`http://localhost:8000/hotel?city=${city}`);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    data = await response.json();
+
                 } else {
-                    response = await fetch(`http://localhost:8080/available?city=${city}&startDate=${startDate}&endDate=${endDate}`);
+                    let sqlResponse;
+                    sqlResponse = await fetch(`http://localhost:8080/available?city=${city}&startDate=${startDate}&endDate=${endDate}`);
+                    if (!sqlResponse.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const sqlData = await sqlResponse.json();
+                    
+                    for (const hotel of sqlData) {
+                        console.log('entro al for');
+                        response = await fetch(`http://localhost:8000/hotel/${hotel.id_mongo}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const hotelData = await response.json();
+                        data.push(hotelData);
+                        console.log('dataaaa loop:', response);
+                    }    
                 }
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Received data:', data);
                 setHotels(Array.isArray(data) ? data : []);
             } catch (error) {
                 console.log('Error al obtener la lista de hoteles:', error);
