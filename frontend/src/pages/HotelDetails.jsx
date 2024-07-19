@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import "../App.css"
+import "../App.css";
 import {useNavigate, useParams} from 'react-router-dom';
 import Cookies from "js-cookie";
 
@@ -10,10 +10,18 @@ const HotelDetails = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [images, setImages] = useState([]);
     const navigate = useNavigate();
-    const startDate1 = Cookies.get("startDate");
-    const endDate1 = Cookies.get("endDate");
+    const startDate = Cookies.get("startDate");
+    const endDate = Cookies.get("endDate");
     const user_id = Number(Cookies.get('user_id'));
     const tokenUser = Cookies.get("token");
+
+    const convertDateFormat = (dateString) => {
+        const [year, month, day] = dateString.split('-');
+        return `${day}-${month}-${year}`;
+    };
+
+    const formattedStartDate = convertDateFormat(startDate);
+    const formattedEndDate = convertDateFormat(endDate);
 
     useEffect(() => {
         const fetchHotel = async () => {
@@ -32,11 +40,9 @@ const HotelDetails = () => {
     }, [hotel_id]);
 
     const handleNextImage = () => {
-
         setCurrentImageIndex((prevIndex) =>
             prevIndex === images.length - 1 ? 0 : prevIndex + 1
         );
-
     };
 
     const handlePrevImage = () => {
@@ -47,13 +53,21 @@ const HotelDetails = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const inputValue = e.target[0].value;
-        const splitValues = inputValue.split(' - ');
 
         if (user_id === -1 || tokenUser === null) {
             alert("Debes iniciar sesión para poder reservar!");
             navigate("/login")
-        } else {
+
+        }
+        if (startDate === '' || endDate === ''){
+            alert('completa las fechas');
+            navigate("/");
+        }
+        if (formattedStartDate > formattedEndDate) {
+            alert('La "Fecha desde" no puede ser mayor que "Fecha hasta".');
+            navigate("/");
+        }
+        else {
             try {
                 const response = await fetch(`http://localhost:8080/booking`, {
                     method: 'POST',
@@ -61,8 +75,8 @@ const HotelDetails = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        startDate: startDate1,
-                        endDate: endDate1,
+                        startDate: formattedStartDate,
+                        endDate: formattedEndDate,
                         idMongo: hotel_id,
                         idUser: user_id
                     }),
@@ -71,10 +85,6 @@ const HotelDetails = () => {
                 if (response.ok) {
                     alert("Su reserva ha sido confirmada");
                     navigate("/");
-                }
-                if (startDate1 === "" || endDate1 === "" || startDate1 === null || endDate1 === null) {
-                    alert("no ha completado los días de reserva!")
-                    navigate("/")
                 } else {
                     alert("No hay habitaciones disponibles");
                 }
@@ -101,21 +111,18 @@ const HotelDetails = () => {
                         />
                         <div>
                             <button className={"buttonModal"} onClick={handlePrevImage}>Anterior</button>
-
                             <button className={"buttonModal"} onClick={handleNextImage}>Siguiente</button>
                         </div>
                     </div>
-
-                        <p id="paragraphDetails">Estrellas: {hotel.stars}</p>
-                        <p id="paragraphDetails">Descripción: {hotel.description}</p>
-                        <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
-                        <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
-                        <form onSubmit={handleSubmit}>
-                            <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la
-                                ciudad de {hotel.city} desde el día {startDate1} hasta el día {endDate1}</h3>
-                            <button id="butonDetails" type="submit">Reservar</button>
-                        </form>
-
+                    <p id="paragraphDetails">Estrellas: {hotel.stars}</p>
+                    <p id="paragraphDetails">Descripción: {hotel.description}</p>
+                    <p id="paragraphDetails">Precio por noche: ${hotel.price}</p>
+                    <p id="paragraphDetails">Amenities: {hotel.amenities}</p>
+                    <form onSubmit={handleSubmit}>
+                        <h3 id="confirmacion">Usted está por reservar una habitación del hotel "{hotel.name}" en la
+                            ciudad de {hotel.city} desde el día {formattedStartDate} hasta el día {formattedEndDate}</h3>
+                        <button id="butonDetails" type="submit">Reservar</button>
+                    </form>
                 </div>
             ) : (
                 <div className={"noHotels"}>

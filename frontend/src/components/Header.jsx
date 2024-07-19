@@ -28,6 +28,7 @@ const Nav = () => {
         Cookies.remove('city');
         Cookies.remove('startDate');
         Cookies.remove('endDate');
+        Cookies.remove('hotel_id');
         navigate("/");
         window.location.reload();
     };

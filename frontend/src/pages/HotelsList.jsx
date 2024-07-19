@@ -12,7 +12,7 @@ const HotelsList = () => {
         navigate(`/hotels-list/${hotel_id}`);
     };
 
-    const startDate = Cookies.get("startDateanda ver contenedores, cambio colores") || '';
+    const startDate = Cookies.get("startDate") || '';
     const endDate = Cookies.get("endDate") || '';
     const city = Cookies.get("city") || '';
 
@@ -25,7 +25,7 @@ const HotelsList = () => {
         const fetchHotels = async () => {
             try {
                 let response;
-                const data = [];
+                let data = [];
                 
                 if (startDate === '' && endDate === '' && city === '') {
                     response = await fetch('http://localhost:8000/hotel');
@@ -60,7 +60,6 @@ const HotelsList = () => {
                         }
                         const hotelData = await response.json();
                         data.push(hotelData);
-                        console.log('dataaaa loop:', response);
                     }    
                 }
 
